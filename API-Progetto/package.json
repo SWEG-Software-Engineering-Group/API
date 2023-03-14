@@ -10,8 +10,12 @@
     "node": ">=14.15.0"
   },
   "dependencies": {
+    "@aws-sdk/lib-dynamodb": "^3.290.0",
     "@middy/core": "^3.4.0",
     "@middy/http-json-body-parser": "^3.4.0",
+    "aws-sdk": "^2.1334.0",
+    "dynamodb": "^1.3.0",
+    "dynamodb-localhost": "github:99x/dynamodb-localhost#db30898f8c40932c7177be7b2f1a81360d12876d",
     "serverless-dynamodb-local": "^0.2.40"
   },
   "devDependencies": {

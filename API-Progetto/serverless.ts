@@ -21,7 +21,7 @@ const serverlessConfiguration: AWS = {
   },
   resources: {
     Resources: {
-      userTable: {
+      usersTable: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
           TableName: environment.dynamo.userData.tableName,
