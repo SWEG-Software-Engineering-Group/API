@@ -33,7 +33,19 @@ interface Environment {
     | "me-south-1"
     | "sa-east-1";
     dynamo: {
-        userData: {
+        UserTable: {
+            tableName: string;
+            arn: string;
+        },
+        TokenTable: {
+            tableName: string;
+            arn: string;
+        },
+        TenantTable: {
+            tableName: string;
+            arn: string;
+        },
+        TextCategoryTable: {
             tableName: string;
             arn: string;
         },
@@ -50,10 +62,23 @@ interface Environment {
 const environment: Environment = {
     awsRegion: "eu-west-2",
     dynamo: {
-        userData: {
-            tableName: "userData",
+        UserTable: {
+            tableName: "userTable",
             arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/userData",
         },
+        TokenTable: {
+            tableName: "TokenTable",
+            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TokenTable",
+        },
+        TenantTable: {
+            tableName: "TenantTable",
+            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TenantTable",
+        },
+        TextCategoryTable: {
+            tableName: "TextCategoryTable",
+            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TextCategoryTable",
+        },
+
     },
     lambda: {
         subnets: [

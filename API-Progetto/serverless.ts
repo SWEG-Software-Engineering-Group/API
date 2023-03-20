@@ -21,14 +21,14 @@ const serverlessConfiguration: AWS = {
   },
   resources: {
     Resources: {
-      usersTable: {
+      userTable: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
-          TableName: environment.dynamo.userData.tableName,
+          TableName: environment.dynamo.UserTable.tableName,
           BillingMode: 'PAY_PER_REQUEST',
           AttributeDefinitions: [
             {
-              AttributeName: 'username',
+              AttributeName: "username",
               AttributeType: 'S',
             },
           ],
@@ -36,6 +36,79 @@ const serverlessConfiguration: AWS = {
             {
               AttributeName: 'username',
               KeyType: 'HASH',
+            },
+          ],
+        },
+      },
+      TokenTable: {
+        Type: 'AWS::DynamoDB::Table',
+        Properties: {
+          TableName: environment.dynamo.TokenTable.tableName,
+          BillingMode: 'PAY_PER_REQUEST',
+          AttributeDefinitions: [
+            {
+              AttributeName: "idTenant",
+              AttributeType: 'S',
+            },
+            {
+              AttributeName: "name",
+              AttributeType: 'S',
+            },
+          ],
+          KeySchema: [
+            {
+              AttributeName: 'idTenant',
+              KeyType: 'HASH',
+            },
+            {
+              AttributeName: 'name',
+              KeyType: 'RANGE',
+            },
+          ],
+        },
+      },
+      TenantTable: {
+        Type: 'AWS::DynamoDB::Table',
+        Properties: {
+          TableName: environment.dynamo.TenantTable.tableName,
+          BillingMode: 'PAY_PER_REQUEST',
+          AttributeDefinitions: [
+            {
+              AttributeName: 'id',
+              AttributeType: 'S',
+            },
+          ],
+          KeySchema: [
+            {
+              AttributeName: 'id',
+              KeyType: 'HASH',
+            },
+          ],
+        },
+      },
+      TextCategoryTable: {
+        Type: 'AWS::DynamoDB::Table',
+        Properties: {
+          TableName: environment.dynamo.TextCategoryTable.tableName,
+          BillingMode: 'PAY_PER_REQUEST',
+          AttributeDefinitions: [
+            {
+              AttributeName: 'idTenant',
+              AttributeType: 'S',
+            },
+            {
+              AttributeName: 'languageidCategorytextId',
+              AttributeType: 'S',
+            },
+          ],
+          KeySchema: [
+            {
+              AttributeName: 'idTenant',
+              KeyType: 'HASH',
+            },
+            {
+              AttributeName: 'languageidCategorytextId',
+              KeyType: 'RANGE',
             },
           ],
         },
