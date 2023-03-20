@@ -28,7 +28,27 @@ const serverlessConfiguration: AWS = {
           BillingMode: 'PAY_PER_REQUEST',
           AttributeDefinitions: [
             {
-              AttributeName: "username",
+              AttributeName: 'username',
+              AttributeType: 'S',
+            },
+            {
+              AttributeName: 'password',
+              AttributeType: 'S',
+            },
+            {
+              AttributeName: 'email',
+              AttributeType: 'S',
+            },
+            {
+              AttributeName: 'role',
+              AttributeType: 'N',
+            },
+            {
+              AttributeName: 'name',
+              AttributeType: 'S',
+            },
+            {
+              AttributeName: 'surname',
               AttributeType: 'S',
             },
           ],

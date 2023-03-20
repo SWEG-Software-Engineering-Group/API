@@ -49,6 +49,22 @@ interface Environment {
             tableName: string;
             arn: string;
         },
+        tenantTable: {
+            tableName: string;
+            arn: string;
+        },
+        tokenTable: {
+            tableName: string;
+            arn: string;
+        },
+        textCategoryTable: {
+            tableName: string;
+            arn: string;
+        },
+        textTable: {
+            tableName: string;
+            arn: string;
+        },
     };
     lambda: {
         subnets: string[];
