@@ -7,7 +7,7 @@ import schema from './schema';
 
 const putTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   await dbputTenant({
-    id: "1",
+    id: Math.floor(Math.random() * 15).toString(),
     tenantName: event.body.tenantName,
     admins: event.body.admins,
     users: event.body.users,
@@ -16,7 +16,7 @@ const putTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (even
     defaultLanguage: event.body.defaultLanguage
   });
   return formatJSONResponse({
-    message: `Hello ${event.body.name}, welcome to the exciting Serverless world!`,
+    message: `Created tenant ${event.body.tenantName}, welcome to the exciting SWEG world!`,
     event,
   });
 };
