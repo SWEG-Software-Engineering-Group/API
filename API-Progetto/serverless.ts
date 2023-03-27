@@ -1,7 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 import { environment } from 'src/environement/environement';
 import hello from '@functions/hello';
-import { putTenant } from '@functions/index';
+import { putTenant, originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText } from '@functions/index';
 
 const serverlessConfiguration: AWS = {
   service: 'api-progetto',
@@ -117,7 +117,18 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { hello, putTenant },
+  functions: {
+    hello,
+    putTenant,
+    originalTexts,
+    allCategories,
+    rejectedText,
+    untranslatedTexts,
+    pendingTranslations,
+    textbyid,
+    approveText,
+    rejectText
+  },
   package: { individually: true },
   custom: {
     esbuild: {

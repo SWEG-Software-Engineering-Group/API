@@ -1,8 +1,10 @@
+import { Text } from "./Text";
+
 interface TextCategory {
   idTenant: string;
   languageidCategorytextId: string;
   isDefault: boolean;
-  text: string;
+  txt: Text;
 }
 
 export { TextCategory };

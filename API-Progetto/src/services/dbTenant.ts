@@ -1,6 +1,6 @@
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
-import { environment } from "src/environement/environement";
 import { Tenant } from "src/types/Tenant";
+import { environment } from "src/environement/environement";
 import { ddbDocClient } from "./dbConnection";
 
 const dbputTenant = async (tenant: Tenant) => {
