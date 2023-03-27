@@ -1,4 +1,4 @@
-import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
 import { environment } from "src/environement/environement";
 import { Tenant } from "src/types/Tenant";
 import { ddbDocClient } from "./dbConnection";
@@ -17,4 +17,20 @@ const dbputTenant = async (tenant: Tenant) => {
     }
 }
 
-export { dbputTenant };
+const dbgetTenant = async (tenant: string) => {
+    const params = {
+        TableName: environment.dynamo.TenantTable.tableName,
+        Key: { name: tenant },
+    };
+    try {
+        const tenant = await ddbDocClient.send(new GetCommand(params));
+
+        console.log("Success - GET", tenant);
+        return tenant.Item as Tenant;
+    } catch (err) {
+        console.log("Error", err.stack);
+        throw { err };
+    }
+};
+
+export { dbputTenant, dbgetTenant };

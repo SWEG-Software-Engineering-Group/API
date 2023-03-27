@@ -2,7 +2,7 @@ interface TextCategory {
   idTenant: string;
   languageidCategorytextId: string;
   isDefault: boolean;
-  text: string;
+  texts: Array<string>;
 }
 
 export { TextCategory };
