@@ -2,6 +2,7 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbgetUser } from 'src/services/dbUser';
+import { checkAdminInTenant } from 'src/services/dbTenant';
 import { User } from 'src/types/User';
 import schema from './schema';
 
@@ -43,6 +44,11 @@ const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     if (userName === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 
+    //check user is admin inside this tenant
+    if (false)
+        if (checkAdminInTenant(tenant, "Username"))
+            return formatJSONResponse({ "error": "user not in this tenant" });
+    //TO DO
 
     try {
         //check requested tenant exist
@@ -56,12 +62,6 @@ const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     catch(error){
         return formatJSONResponse({ "error": "db connection failed OR tenant does not exist OR other" });
     }
-
-    //check user is inside this tenant
-    if(false)
-        if (!tenant.admins.includes("Username")) 
-            return formatJSONResponse({ "error": "user not in this tenant" });
-    //TO DO
 
     //return result
     delete user.password;

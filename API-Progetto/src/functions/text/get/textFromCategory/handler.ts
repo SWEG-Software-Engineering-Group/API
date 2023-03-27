@@ -2,6 +2,7 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbgetCategory } from 'src/services/dbText';
+import { checkUserInTenant } from 'src/services/dbTenant';
 import { TextCategory } from 'src/types/TextCategory';
 import schema from './schema';
 
@@ -31,7 +32,7 @@ const getCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     //TO DO
 
     //sanitize input and check if is empty
-    if (event.pathParameters.TenantId == null || event.pathParameters.category)
+    if (event.pathParameters.TenantId == null || event.pathParameters.category == null)
         return formatJSONResponse({ "error": "no valid input" });
 
     var sanitizer = require('sanitize')();
@@ -41,6 +42,11 @@ const getCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     if (name === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 
+    //check user is admin inside this tenant
+    if (false)
+        if (checkUserInTenant(tenant, "Username"))
+            return formatJSONResponse({ "error": "user not in this tenant" });
+    //TO DO
 
     try {
         //check requested tenant exist
@@ -54,12 +60,6 @@ const getCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     catch(error){
         return formatJSONResponse({ "error": "db connection failed OR tenant does not exist OR other" });
     }
-
-    //check user is inside this tenant
-    if(false)
-        if (!tenant.admins.includes("Username")) 
-            return formatJSONResponse({ "error": "user not in this tenant" });
-    //TO DO
 
     //return result
     return formatJSONResponse({ "category": category });

@@ -1,8 +1,9 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetAllTexts } from 'src/services/dbText';
-import { Text } from 'src/types/Text';
+import { dbgetLanguage } from 'src/services/dbText';
+import { checkUserInTenant } from 'src/services/dbTenant';
+import { TextCategory } from 'src/types/TextCategory';
 import schema from './schema';
 
 const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -32,22 +33,28 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     //TO DO
 
     //sanitize input and check if is empty
-    if (event.pathParameters.TenantId == null)
+    if (event.pathParameters.TenantId == null || event.pathParameters.language == null)
         return formatJSONResponse({ "error": "no valid input" });
 
     var sanitizer = require('sanitize')();
 
-    let name = sanitizer.value(event.pathParameters.TenantId, /^[A-Za-z0-9]+$/)
-    if (name === '')
+    let tenant = sanitizer.value(event.pathParameters.TenantId, /^[A-Za-z0-9]+$/)
+    let name = sanitizer.value(event.pathParameters.language, /^[A-Za-z0-9]+$/)
+    if (name === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 
+    //check user is admin inside this tenant
+    if (false)
+        if (checkUserInTenant(tenant, "Username"))
+            return formatJSONResponse({ "error": "user not in this tenant" });
+    //TO DO
 
     try {
         //check requested tenant exist
         //TO DO
 
         //collect the data from db
-        var text: Text = await dbgetAllTexts(name);
+        var texts: TextCategory = await dbgetLanguage(tenant, name);
         //if connection fails do stuff
         //TO DO
     }
@@ -55,14 +62,8 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
         return formatJSONResponse({ "error": "db connection failed OR tenant does not exist OR other" });
     }
 
-    //check user is inside this tenant
-    if(false)
-        if (!tenant.admins.includes("Username")) 
-            return formatJSONResponse({ "error": "user not in this tenant" });
-    //TO DO
-
     //return result
-    return formatJSONResponse({ "texts": text });
+    return formatJSONResponse({ "texts": texts });
 };
 
 export const main = middyfy(getAllTexts);

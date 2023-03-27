@@ -23,4 +23,42 @@ const dbgetCategory = async (tenant: string, name: string) => {
     }
 };
 
+const dbgetLanguage = async (tenant: string, name: string) => {
+    const params = {
+        TableName: environment.dynamo.TextCategoryTable.tableName,
+        Key: {
+            idTenant: tenant,
+            idGruppo: name
+        },
+    };
+    try {
+        const category = await ddbDocClient.send(new GetCommand(params));
+
+        console.log("Success - GET", user);
+        return category.Item as TextCategory;
+    } catch (err) {
+        console.log("Error", err.stack);
+        throw { err };
+    }
+};
+
+const dbgetText = async (tenant: string, name: string) => {
+    const params = {
+        TableName: environment.dynamo.TextCategoryTable.tableName,
+        Key: {
+            idTenant: tenant,
+            idGruppo: name
+        },
+    };
+    try {
+        const category = await ddbDocClient.send(new GetCommand(params));
+
+        console.log("Success - GET", user);
+        return category.Item as TextCategory;
+    } catch (err) {
+        console.log("Error", err.stack);
+        throw { err };
+    }
+};
+
 export { dbgetCategory };

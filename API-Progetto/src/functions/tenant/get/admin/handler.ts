@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetTenant } from 'src/services/dbTenant';
+import { dbgetTenant, checkAdminInTenant } from 'src/services/dbTenant';
 import { Tenant } from 'src/types/Tenant';
 import schema from './schema';
 
@@ -28,6 +28,7 @@ const getTenantAdmins: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
 
 
     //check user is allowed to use this function
+    //if (cognito.token.isvalid())
     //TO DO
 
     //sanitize input and check if is empty
@@ -39,6 +40,12 @@ const getTenantAdmins: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     let name = sanitizer.value(event.pathParameters.TenantId, /^[A-Za-z0-9]+$/)
     if (name === '')
         return formatJSONResponse({ "error": "input is empty" });
+
+    //check user is admin inside this tenant
+    if (false)
+        if (checkAdminInTenant(name, "Username"))
+            return formatJSONResponse({ "error": "user not in this tenant" });
+    //TO DO
 
 
     try {
@@ -53,12 +60,6 @@ const getTenantAdmins: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     catch(error){
         return formatJSONResponse({ "error": "db connection failed OR tenant does not exist OR other" });
     }
-
-    //check user is inside this tenant
-    if(false)
-        if (!tenant.admins.includes("Username")) 
-            return formatJSONResponse({ "error": "user not in this tenant" });
-    //TO DO
 
     //return result
     return formatJSONResponse({ "users": tenant.admins });

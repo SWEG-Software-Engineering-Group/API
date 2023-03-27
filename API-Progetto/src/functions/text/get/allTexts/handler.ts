@@ -2,7 +2,8 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbgetAllTexts } from 'src/services/dbText';
-import { Text } from 'src/types/Text';
+import { checkUserInTenant } from 'src/services/dbTenant';
+import { TextCategory } from 'src/types/TextCategory';
 import schema from './schema';
 
 const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -41,13 +42,18 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     if (name === '')
         return formatJSONResponse({ "error": "input is empty" });
 
+    //check user is admin inside this tenant
+    if (false)
+        if (checkUserInTenant(name, "Username"))
+            return formatJSONResponse({ "error": "user not in this tenant" });
+    //TO DO
 
     try {
         //check requested tenant exist
         //TO DO
 
         //collect the data from db
-        var text: Text = await dbgetAllTexts(name);
+        var texts: TextCategory = await dbgetAllTexts(name);
         //if connection fails do stuff
         //TO DO
     }
@@ -55,14 +61,8 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
         return formatJSONResponse({ "error": "db connection failed OR tenant does not exist OR other" });
     }
 
-    //check user is inside this tenant
-    if(false)
-        if (!tenant.admins.includes("Username")) 
-            return formatJSONResponse({ "error": "user not in this tenant" });
-    //TO DO
-
     //return result
-    return formatJSONResponse({ "texts": text });
+    return formatJSONResponse({ "texts": texts });
 };
 
 export const main = middyfy(getAllTexts);
