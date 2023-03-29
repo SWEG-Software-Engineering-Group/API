@@ -1,4 +1,4 @@
-import { PutCommand, ScanCommand, ScanCommandInput, GetCommand, GetCommandInput, DeleteCommand, UpdateCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, ScanCommand, ScanCommandInput, GetCommand, GetCommandInput, DeleteCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { Tenant } from "src/types/Tenant";
 import { environment } from "src/environement/environement";
 import { ddbDocClient } from "./dbConnection";
@@ -175,7 +175,6 @@ const dbresetTenant = async (tenant: string) => {
         return { "error": error };
     }
 };
-export { dbputTenant, dbgetTenants, dbgetTenantinfo, dbgetDefaultLanguage, dbgetSecondaryLanguage, dbdeleteTenant, dbresetTenant };
 const dbgetTenant = async (tenant: string) => {
     const params = {
         TableName: environment.dynamo.TenantTable.tableName,
@@ -191,5 +190,4 @@ const dbgetTenant = async (tenant: string) => {
         throw { err };
     }
 };
-
-export { checkUserInTenant, checkAdminInTenant, dbputTenant, dbgetTenant };
+export { dbputTenant, dbgetTenants, dbgetTenantinfo, dbgetDefaultLanguage, dbgetSecondaryLanguage, dbdeleteTenant, dbresetTenant, dbgetTenant, checkAdminInTenant, checkUserInTenant };

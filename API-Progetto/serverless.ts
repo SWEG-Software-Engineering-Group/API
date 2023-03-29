@@ -118,7 +118,6 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant },
   functions: {
     hello,
     putTenant,
@@ -129,8 +128,20 @@ const serverlessConfiguration: AWS = {
     pendingTranslations,
     textbyid,
     approveText,
-    rejectText
-    , getTenantAdmins, getTenantUsers, getUserInfo, getAllTexts, getTextFromCategory, getTextFromLanguage, getText
+    rejectText,
+    getDefaultLanguage,
+    getSecondaryLanguage,
+    deleteTenants,
+    getTenants,
+    getTenant,
+    resetTenant,
+    getTenantAdmins, 
+    getTenantUsers, 
+    getUserInfo, 
+    getAllTexts, 
+    getTextFromCategory, 
+    getTextFromLanguage, 
+    getText
   },
   package: { individually: true },
   custom: {
