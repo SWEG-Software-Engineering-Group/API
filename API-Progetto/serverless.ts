@@ -1,7 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 import { environment } from 'src/environement/environement';
 import hello from '@functions/hello';
-import { putTenant, originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText } from '@functions/index';
+import { putTenant, originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText, getTenantAdmins, getTenantUsers, getUserInfo, getAllTexts, getText, getTextFromCategory, getTextFromLanguage } from '@functions/index';
 
 const serverlessConfiguration: AWS = {
   service: 'api-progetto',
@@ -128,6 +128,7 @@ const serverlessConfiguration: AWS = {
     textbyid,
     approveText,
     rejectText
+    , getTenantAdmins, getTenantUsers, getUserInfo, getAllTexts, getTextFromCategory, getTextFromLanguage, getText
   },
   package: { individually: true },
   custom: {
