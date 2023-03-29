@@ -90,7 +90,7 @@ const environment: Environment = {
     },
     cognito: {
         userPoolArn:
-            "arn:aws:cognito-idp:eu-west-2:xxxxxxxxx:userpool/eu-west-2_wyPnveAIG",
+            "arn:aws:cognito-idp:us-east-1:574522373582:userpool/us-east-1_7DljzL67C",
     },
 };
 
