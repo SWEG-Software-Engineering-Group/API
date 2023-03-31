@@ -15,7 +15,7 @@ const dbgetCategory = async (tenant: string, name: string) => {
     try {
         const category = await ddbDocClient.send(new GetCommand(params));
 
-        console.log("Success - GET", user);
+        
         return category.Item as TextCategory;
     } catch (err) {
         console.log("Error", err.stack);
@@ -34,7 +34,7 @@ const dbgetLanguage = async (tenant: string, name: string) => {
     try {
         const category = await ddbDocClient.send(new GetCommand(params));
 
-        console.log("Success - GET", user);
+        
         return category.Item as TextCategory;
     } catch (err) {
         console.log("Error", err.stack);
@@ -53,12 +53,29 @@ const dbgetText = async (tenant: string, name: string) => {
     try {
         const category = await ddbDocClient.send(new GetCommand(params));
 
-        console.log("Success - GET", user);
+        
         return category.Item as TextCategory;
     } catch (err) {
         console.log("Error", err.stack);
         throw { err };
     }
 };
+const dbgetAllTexts = async (tenant: string, name: string) => {
+    const params = {
+        TableName: environment.dynamo.TextCategoryTable.tableName,
+        Key: {
+            idTenant: tenant,
+            idGruppo: name
+        },
+    };
+    try {
+        const category = await ddbDocClient.send(new GetCommand(params));
 
-export { dbgetCategory };
+        
+        return category.Item as TextCategory;
+    } catch (err) {
+        console.log("Error", err.stack);
+        throw { err };
+    }
+};
+export { dbgetCategory, dbgetLanguage, dbgetText,dbgetAllTexts };

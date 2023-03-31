@@ -9,7 +9,7 @@ import schema from './schema';
 
 const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    await updateText(event.pathParameters.TenantID, event.pathParameters.language, event.pathParameters.category, event.pathParameters.id, state.rifiutato);
+    await updateText(event.pathParameters.TenantID, event.pathParameters.language, event.pathParameters.textCategory5, event.pathParameters.textId, state.rifiutato);
 
     return formatJSONResponse({ "message": "success" });
 

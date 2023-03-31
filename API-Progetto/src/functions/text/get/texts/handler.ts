@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbSearchSpecific } from 'src/services/dbText';
+//import { dbSearchSpecific } from 'src/services/dbText';
 import { checkUserInTenant } from 'src/services/dbTenant';
 import { TextCategory } from 'src/types/TextCategory';
 import schema from './schema';
@@ -33,7 +33,7 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     //TO DO
 
     //sanitize input and check if is empty
-    if (event.pathParameters.TenantId == null || event.pathParameters.language == null, event.pathParameters.category == null)
+    if (event.pathParameters.TenantId == null || event.pathParameters.language == null, event.pathParameters.textCategory2 == null)
         return formatJSONResponse({ "error": "no valid input" });
 
     var sanitizer = require('sanitize')();
@@ -56,7 +56,7 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
         //TO DO
 
         //collect the data from db
-        var texts: TextCategory = await dbSearchSpecific(tenant, language, category);
+        //var texts: TextCategory = await dbSearchSpecific(tenant, language, category);
         //if connection fails do stuff
         //TO DO
     }
@@ -65,6 +65,7 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     }
 
     //return result
+    var texts = "";
     return formatJSONResponse({ "texts": texts });
 };
 

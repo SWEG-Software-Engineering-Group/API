@@ -38,7 +38,7 @@ const getCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     var sanitizer = require('sanitize')();
 
     let tenant = sanitizer.value(event.pathParameters.TenantId, /^[A-Za-z0-9]+$/)
-    let name = sanitizer.value(event.pathParameters.category, /^[A-Za-z0-9]+$/)
+    let name = sanitizer.value(event.pathParameters.textCategory1, /^[A-Za-z0-9]+$/)
     if (name === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 
