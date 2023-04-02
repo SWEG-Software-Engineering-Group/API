@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetTenant, checkAdminInTenant } from 'src/services/dbTenant';
+import { dbgetTenant, dbcheckAdminInTenant } from 'src/services/dbTenant';
 import { Tenant } from 'src/types/Tenant';
 import schema from './schema';
 
@@ -43,7 +43,7 @@ const getTenantAdmins: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
 
     //check user is admin inside this tenant
     if (false)
-        if (checkAdminInTenant(name, "Username"))
+        if (dbcheckAdminInTenant(name, "Username"))
             return formatJSONResponse({ "error": "user not in this tenant" });
     //TO DO
 

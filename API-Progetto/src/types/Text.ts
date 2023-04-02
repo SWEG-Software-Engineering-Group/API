@@ -1,9 +1,12 @@
 interface Text {
-  text: string;
-  state: number;
-  feedback: string | null;
-  comment: string | null;
-  link: string | null;
+    text: string;
+    stato: number;
+    feedback: string | null;
+    comment: string | null;
+    link: string | null;
 }
 
-export { Text };
+enum state {
+    testoOriginale, daTradurre, daVerificare, verificato, rifiutato
+}
+export { Text, state };

@@ -2,11 +2,12 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbgetLanguage } from 'src/services/dbText';
-import { checkUserInTenant } from 'src/services/dbTenant';
+import { dbcheckUserInTenant } from 'src/services/dbTenant';
 import { TextCategory } from 'src/types/TextCategory';
+import { state } from 'src/types/Text';
 import schema from './schema';
 
-const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const getTextLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
      * INPUT:   Tenant (String)
      * OUTPUT:  Tenant => ContentUser
@@ -45,7 +46,7 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
 
     //check user is admin inside this tenant
     if (false)
-        if (checkUserInTenant(tenant, "Username"))
+        if (dbcheckUserInTenant(tenant, "Username"))
             return formatJSONResponse({ "error": "user not in this tenant" });
     //TO DO
 
@@ -54,7 +55,7 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
         //TO DO
 
         //collect the data from db
-        var texts: TextCategory = await dbgetLanguage(tenant, name);
+        var category: TextCategory[] = await dbgetLanguage(tenant, name, state.verificato);
         //if connection fails do stuff
         //TO DO
     }
@@ -63,7 +64,7 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     }
 
     //return result
-    return formatJSONResponse({ "texts": texts });
+    return formatJSONResponse({ "categories": category });
 };
 
-export const main = middyfy(getAllTexts);
+export const main = middyfy(getTextLanguage);

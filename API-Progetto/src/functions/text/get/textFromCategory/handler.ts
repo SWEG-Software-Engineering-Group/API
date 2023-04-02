@@ -2,11 +2,11 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbgetCategory } from 'src/services/dbText';
-import { checkUserInTenant } from 'src/services/dbTenant';
+import { dbcheckUserInTenant } from 'src/services/dbTenant';
 import { TextCategory } from 'src/types/TextCategory';
 import schema from './schema';
 
-const getCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const getTextCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
      * INPUT:   Tenant (String), category (String)
      * OUTPUT:  Tenant => category (TextCategoryOBJ)
@@ -44,7 +44,7 @@ const getCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
 
     //check user is admin inside this tenant
     if (false)
-        if (checkUserInTenant(tenant, "Username"))
+        if (dbcheckUserInTenant(tenant, "Username"))
             return formatJSONResponse({ "error": "user not in this tenant" });
     //TO DO
 
@@ -53,7 +53,7 @@ const getCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
         //TO DO
 
         //collect the data from db
-        var category: TextCategory = await dbgetCategory(tenant, name);
+        var category: TextCategory[] = await dbgetCategory(tenant, name);
         //if connection fails do stuff
         //TO DO
     }
@@ -62,7 +62,7 @@ const getCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     }
 
     //return result
-    return formatJSONResponse({ "category": category });
+    return formatJSONResponse({ "categories": category });
 };
 
-export const main = middyfy(getCategory);
+export const main = middyfy(getTextCategory);

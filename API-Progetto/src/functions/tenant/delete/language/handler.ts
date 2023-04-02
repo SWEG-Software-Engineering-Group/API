@@ -1,18 +1,17 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetUser } from 'src/services/dbUser';
+import { dbgetDefaultLanguage, dbdeleteLanguage } from 'src/services/dbTenant';
 import { dbcheckAdminInTenant } from 'src/services/dbTenant';
-import { User } from 'src/types/User';
 import schema from './schema';
 
-const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const deleteLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
-     * INPUT:   Tenant (String), User (String)
-     * OUTPUT:  Tenant => ContentUser
+     * INPUT:   Tenant (String), language (String)
+     * OUTPUT:  Tenant => Remove(TextCategory[], language)
      * 
-     * DESCRIPTION: returns the ContentUsers requested inside a Tenant with all its informations, else return error.
-     *      password must be removed from the fields.
+     * DESCRIPTION: remove all categories from a language (thus delete all translations), else return error.
+     *      cannot remove the the original language.
      * 
      * SAFETY:  
      *  -   check authorization of the user for this function with Cognito (user, admin, superadmin);
@@ -23,10 +22,9 @@ const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
      *  -   user is not authorized for this function;
      *  -   input is empty;
      *  -   connection to db failed;
-     *  -   tenant requested does not exist;
-     *  -   user requested does not exist;
+     *  -   language requested does not exist;
+     *  -   language requested is original language;
      *  -   user is not authorized inside this tenant;
-     *  -   tenant list of users is empty; 
      */
 
 
@@ -34,14 +32,14 @@ const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     //TO DO
 
     //sanitize input and check if is empty
-    if (event.pathParameters.TenantId == null || event.pathParameters.UserId == null)
+    if (event.pathParameters.TenantId == null || event.pathParameters.language == null)
         return formatJSONResponse({ "error": "no valid input" });
 
     var sanitizer = require('sanitize')();
 
     let tenant = sanitizer.value(event.pathParameters.TenantId, /^[A-Za-z0-9]+$/)
-    let userName = sanitizer.value(event.pathParameters.UserId, /^[A-Za-z0-9]+$/)
-    if (userName === '' || tenant === '')
+    let language = sanitizer.value(event.pathParameters.language, /^[A-Za-z0-9]+$/)
+    if (language     === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 
     //check user is admin inside this tenant
@@ -54,18 +52,25 @@ const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
         //check requested tenant exist
         //TO DO
 
-        //collect the data from db
-        var user: User = await dbgetUser(userName);
+        //check language is not default
+        var result: string = await dbgetDefaultLanguage (tenant);
+        if (result === "")
+            return formatJSONResponse({ "error": "an error happened somwhere in the db" });
+        if (result === language)
+            return formatJSONResponse({ "error": "language is original" });
+
+        //execute the delete
+        await dbdeleteLanguage(tenant, language);
+
         //if connection fails do stuff
         //TO DO
     }
     catch(error){
-        return formatJSONResponse({ "error": "db connection failed OR tenant does not exist OR other" });
+        return formatJSONResponse({ "error": error });
     }
 
     //return result
-    delete user.password;
-    return formatJSONResponse({ "user": user });
+    return formatJSONResponse({ "result": "OK" });
 };
 
-export const main = middyfy(getUserInfo);
+export const main = middyfy(deleteLanguage);
