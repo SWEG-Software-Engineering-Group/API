@@ -6,7 +6,7 @@ export default {
     {
       http: {
         method: 'get',
-            path: '{TenantId}/{textCategory1}/textFromCategory',
+            path: '{TenantId}/{textCategory}/textFromCategory',
       },
     },
   ],

@@ -5,11 +5,12 @@ import { dbGetTexts, updateText } from 'src/services/dbTextCategory';
 import { state } from 'src/types/Text';
 import { TextCategory } from 'src/types/TextCategory';
 
+
 import schema from './schema';
 
-const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const rejectText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    await updateText(event.pathParameters.TenantID, event.pathParameters.language, event.pathParameters.textCategory5, event.pathParameters.textId, state.rifiutato);
+    await updateText(event.pathParameters.TenantID, event.pathParameters.language, event.pathParameters.textCategory, event.pathParameters.textId, state.rifiutato);
 
     return formatJSONResponse({ "message": "success" });
 
@@ -18,4 +19,4 @@ const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
   }
 };
 
-export const main = middyfy(getText);
+export const main = middyfy(rejectText);

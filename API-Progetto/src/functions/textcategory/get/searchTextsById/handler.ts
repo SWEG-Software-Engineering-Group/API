@@ -6,10 +6,10 @@ import { TextCategory } from 'src/types/TextCategory';
 
 import schema from './schema';
 
-const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const getTextById: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   var res: TextCategory[] = null;
   try {
-    res = await dbGetTexts(event.pathParameters.TenantID, event.pathParameters.language, event.pathParameters.textCategory3, event.pathParameters.textId);
+    res = await dbGetTexts(event.pathParameters.TenantID, event.pathParameters.language, event.pathParameters.textCategory, event.pathParameters.textId);
 
     return formatJSONResponse({ "texts": res });
 
@@ -18,4 +18,4 @@ const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
   }
 };
 
-export const main = middyfy(getText);
+export const main = middyfy(getTextById);

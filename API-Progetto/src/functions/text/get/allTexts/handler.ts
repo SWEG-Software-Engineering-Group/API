@@ -53,7 +53,8 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
         //TO DO
 
         //collect the data from db
-        var texts: TextCategory = await dbgetAllTexts(name);
+        //var texts: TextCategory = await dbgetAllTexts(name);
+        var texts = "";
         //if connection fails do stuff
         //TO DO
     }

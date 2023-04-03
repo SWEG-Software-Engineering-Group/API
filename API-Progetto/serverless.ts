@@ -1,7 +1,33 @@
 import type { AWS } from '@serverless/typescript';
 import { environment } from 'src/environement/environement';
 import hello from '@functions/hello';
-import { putTenant, originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText, getTenantAdmins, getTenantUsers, getUserInfo, getAllTexts, getText, getTextFromCategory, getTextFromLanguage, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant } from '@functions/index';
+import { 
+  deleteTenant,
+  getTenantAdmins,
+  getTenants,
+  getDefaultLanguage,
+  getSecondaryLanguage,
+  getTenant,
+  getTenantUsers,
+  putTenant,
+  resetTenant,
+
+  getAllTexts,
+  getCategory,
+  getLanguage,
+  getTexts,
+
+  getCategories,
+  getOriginalTexts,
+  getPendingTranslations,
+  getRejectedTexts,
+  getTextById,
+  getUntranslatedTexts,
+  approveText,
+  rejectText,
+
+  getUserInfo
+} from '@functions/index';
 
 
 const serverlessConfiguration: AWS = {
@@ -120,28 +146,28 @@ const serverlessConfiguration: AWS = {
   // import the function via paths
   functions: {
     hello,
-    putTenant,
-    originalTexts,
-    allCategories,
-    rejectedText,
-    untranslatedTexts,
-    pendingTranslations,
-    textbyid,
-    approveText,
-    rejectText,
+    deleteTenant,
+    getTenantAdmins,
+    getTenants,
     getDefaultLanguage,
     getSecondaryLanguage,
-    deleteTenants,
-    getTenants,
     getTenant,
+    getTenantUsers,
+    putTenant,
     resetTenant,
-    getTenantAdmins, 
-    getTenantUsers, 
-    getUserInfo, 
-    getAllTexts, 
-    getTextFromCategory, 
-    getTextFromLanguage, 
-    getText
+    getAllTexts,
+    getCategory,
+    getLanguage,
+    getTexts,
+    getCategories,
+    getOriginalTexts,
+    getPendingTranslations,
+    getRejectedTexts,
+    getTextById,
+    getUntranslatedTexts,
+    approveText,
+    rejectText,
+    getUserInfo
   },
   package: { individually: true },
   custom: {

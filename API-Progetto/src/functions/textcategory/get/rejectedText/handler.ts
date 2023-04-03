@@ -6,7 +6,7 @@ import { state, Text } from 'src/types/Text';
 
 import schema from './schema';
 
-const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const getRejectedTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   var res: Text[] = null;
   try {
     res = await textsOfState(event.pathParameters.TenantID, event.pathParameters.language, state.rifiutato);
@@ -16,4 +16,4 @@ const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
   return formatJSONResponse({ "texts": res });
 };
 
-export const main = middyfy(getText);
+export const main = middyfy(getRejectedTexts);

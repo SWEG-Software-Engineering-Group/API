@@ -6,7 +6,7 @@ import { checkUserInTenant } from 'src/services/dbTenant';
 import { TextCategory } from 'src/types/TextCategory';
 import schema from './schema';
 
-const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const getLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
      * INPUT:   Tenant (String)
      * OUTPUT:  Tenant => ContentUser
@@ -66,4 +66,4 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     return formatJSONResponse({ "texts": texts });
 };
 
-export const main = middyfy(getAllTexts);
+export const main = middyfy(getLanguage);
