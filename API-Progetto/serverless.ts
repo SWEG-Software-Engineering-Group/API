@@ -87,10 +87,10 @@ const serverlessConfiguration: AWS = {
           ],
         },
       },
-      TextCategoryTable: {
+      TextInfoTable: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
-          TableName: environment.dynamo.TextCategoryTable.tableName,
+          TableName: environment.dynamo.TextInfoTable.tableName,
           BillingMode: 'PAY_PER_REQUEST',
           AttributeDefinitions: [
             {
@@ -98,7 +98,7 @@ const serverlessConfiguration: AWS = {
               AttributeType: 'S',
             },
             {
-              AttributeName: 'languageidCategorytextId',
+              AttributeName: 'categoryIdtextId',
               AttributeType: 'S',
             },
           ],
@@ -108,11 +108,38 @@ const serverlessConfiguration: AWS = {
               KeyType: 'HASH',
             },
             {
-              AttributeName: 'languageidCategorytextId',
+              AttributeName: 'categoryIdtextId',
               KeyType: 'RANGE',
             },
           ],
         },
+          },
+      TextTable: {
+          Type: 'AWS::DynamoDB::Table',
+          Properties: {
+              TableName: environment.dynamo.TextTable.tableName,
+              BillingMode: 'PAY_PER_REQUEST',
+              AttributeDefinitions: [
+                  {
+                      AttributeName: 'idTenant',
+                      AttributeType: 'S',
+                  },
+                  {
+                      AttributeName: 'languagetextId',
+                      AttributeType: 'S',
+                  },
+              ],
+              KeySchema: [
+                  {
+                      AttributeName: 'idTenant',
+                      KeyType: 'HASH',
+                  },
+                  {
+                      AttributeName: 'languagetextId',
+                      KeyType: 'RANGE',
+                  },
+              ],
+          },
       },
     },
   },

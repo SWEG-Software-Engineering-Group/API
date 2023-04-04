@@ -45,7 +45,11 @@ interface Environment {
             tableName: string;
             arn: string;
         },
-        TextCategoryTable: {
+        TextInfoTable: {
+            tableName: string;
+            arn: string;
+        },
+        TextTable: {
             tableName: string;
             arn: string;
         },
@@ -74,9 +78,13 @@ const environment: Environment = {
             tableName: "TenantTable",
             arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TenantTable",
         },
-        TextCategoryTable: {
-            tableName: "TextCategoryTable",
-            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TextCategoryTable",
+        TextInfoTable: {
+            tableName: "TextInfoTable",
+            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TextInfoTable",
+        },
+        TextTable: {
+            tableName: "TextTable",
+            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TextTable",
         },
 
     },
