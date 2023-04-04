@@ -1,7 +1,6 @@
 import type { AWS } from '@serverless/typescript';
-import { environment } from 'src/environement/environement';
-import hello from '@functions/hello';
-import { putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant } from '@functions/index';
+import { environment } from 'src/environment/environment';
+import { hello, putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant } from '@functions/index';
 
 
 const serverlessConfiguration: AWS = {
@@ -19,6 +18,32 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+    },
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: "Allow",
+            Action: [
+              "dynamodb:BatchGetItem",
+              "dynamodb:GetItem",
+              "dynamodb:DeleteItem",
+              "dynamodb:Query",
+              "dynamodb:Scan",
+              "dynamodb:BatchWriteItem",
+              "dynamodb:PutItem",
+              "dynamodb:UpdateItem",
+              "dynamodb:Scan",
+            ],
+            Resource: [
+              environment.dynamo.UserTable.arn,
+              environment.dynamo.TenantTable.arn,
+              environment.dynamo.TokenTable.arn,
+              environment.dynamo.TextCategoryTable.arn,
+            ],
+          },
+        ],
+      },
     },
   },
   resources: {
@@ -118,7 +143,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: {putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant },
+  functions: {hello, putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant },
   package: { individually: true },
   custom: {
     esbuild: {
