@@ -1,6 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
+import { v4 as uuidv4 } from 'uuid';
 import { dbpostOriginalText } from 'src/services/dbText';
 import { dbcheckUserInTenant } from 'src/services/dbTenant';
 import schema from './schema';
@@ -52,11 +53,12 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
     //TO DO
 
     try {
+        let uuid=uuidv4();
         //check requested tenant exist
         //TO DO
 
         //collect the data from db
-        await dbpostOriginalText(tenant, text, category);
+        await dbpostOriginalText(tenant, text, language+"#"+category+"#"+uuid);
         //if connection fails do stuff
         //TO DO
     }

@@ -17,7 +17,8 @@
     "dynamodb": "^1.3.0",
     "dynamodb-localhost": "github:99x/dynamodb-localhost#db30898f8c40932c7177be7b2f1a81360d12876d",
     "sanitize": "^2.1.2",
-    "serverless-dynamodb-local": "^0.2.40"
+    "serverless-dynamodb-local": "^0.2.40",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@serverless/typescript": "^3.0.0",

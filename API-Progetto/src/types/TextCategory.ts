@@ -1,8 +1,10 @@
+import { Text } from "./Text";
+
 interface TextCategory {
-  idTenant: string;
-  languageidCategorytextId: string;
-  isDefault: boolean;
-  texts: Array<string>;
+    idTenant: string;
+    languageidCategorytextId: string;
+    isDefault: boolean;
+    txt: Text;
 }
 
 export { TextCategory };
