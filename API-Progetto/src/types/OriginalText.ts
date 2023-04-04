@@ -1,9 +1,8 @@
-interface Text {
-    Tenant: string;
+interface OriginalText {
     ID: string;
     language: string;
     category: string;
     comment: string | null;
     link: string | null;
 }
-export { Text };
+export { OriginalText };

@@ -1,6 +1,5 @@
 import { state } from "./Text";
 interface Translation {
-    Tenant: string;
     ID: string;
     language: string;
     category: string;

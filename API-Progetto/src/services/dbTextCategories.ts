@@ -1,21 +1,82 @@
 import { GetCommand, GetCommandInput, ScanCommand, ScanCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput, GetCommandInput} from "@aws-sdk/lib-dynamodb";
 import { environment } from "src/environement/environement";
-import { TextCategory } from "src/types/TextCategory";
-import { state, Text } from "src/types/Text";
+import { Text, state } from "src/types/Text";
+import { TextInfo } from "src/types/TextInfo";
+import { OriginalText } from "src/types/OriginalText";
+import { Translation } from "src/types/Translation";
+import { Tenant, Category } from "src/types/Tenant";
 import { ddbDocClient } from "./dbConnection";
 
 const dbgetAllTexts = async (tenant: string) => {
-    //SCAN and return all TextCategories of one Tenant
+    //SCAN and return all Texts from one Tenant
     //input: tenant
-    //output: TextCategory[] / Error
-    const params: ScanCommandInput = {
-        TableName: environment.dynamo.TextCategoryTable.tableName,
-        FilterExpression: "idTenant = :t",
-        ExpressionAttributeValues: { ":t": tenant },
-    };
+    //output: { a:{OriginalText[]}, b:{Translation[]}}  } / Error
     try {
-        const category = await ddbDocClient.send(new ScanCommand(params));
-        return category.Items as TextCategory[];
+        //get language and categories of the tenant
+        const language = await ddbDocClient.send(new GetCommand({
+                TableName: environment.dynamo.TextInfoTable.tableName,
+                Key: { id: tenant },
+                ProjectionExpression: "defaultLanguage",
+        } as GetCommandInput));
+        //if I put both defautLanguage and categories inside ProjectionExpression form a single db call
+        //then I don't know how to separate them from the output result
+        const categories = await (await ddbDocClient.send(new GetCommand({
+            TableName: environment.dynamo.TenantTable.tableName,
+            Key: { id: tenant },
+            ProjectionExpression: "categories",
+        } as GetCommandInput))).Item as Category[];
+
+        //request all the data from the Text and metadata tables
+        const param1: ScanCommandInput = {
+            TableName: environment.dynamo.TextInfoTable.tableName,
+            FilterExpression: "idTenant = :t",
+            ExpressionAttributeValues: { ":t": tenant },
+        };
+        const param2: ScanCommandInput = {
+            TableName: environment.dynamo.TextTable.tableName,
+            FilterExpression: "idTenant = :t",
+            ExpressionAttributeValues: { ":t": tenant },
+        };
+        const info = await (await ddbDocClient.send(new ScanCommand(param1))).Items as TextInfo[];
+        const txt = await (await ddbDocClient.send(new ScanCommand(param2))).Items as Text[];
+        if (info == null || txt == null)
+            return { "error": "error reading texts from db" };
+
+        //merge the data inside a collection or OriginalText or Translation objects
+        var ori=[];
+        var tran=[];
+
+        txt.forEach(function (text) {
+            //iterate over every row of Text table
+            let lang = text.languageIdtextId.split("#")[0];
+            let id = text.languageIdtextId.split("#")[1];
+            //seach the meta by textId
+            let meta = info.find(element => element.categoryIdtextId.split("#")[1] === id); 
+            //construct the object merging records from the two tables
+            //separate ori/trans based on wherever the language is the original one
+            if (lang === language) {
+                ori.push({
+                    ID: id,
+                    language: lang,
+                    //get the name based on the categoryId
+                    category: categories.find(element => element.id === meta.categoryIdtextId.split("#")[0]).name, 
+                    comment: meta.comment,
+                    link: meta.link,
+                })
+            }
+            else {
+                tran.push({
+                    ID: id,
+                    language: lang,
+                    //get the name based on the categoryId
+                    category: categories.find(element => element.id === meta.categoryIdtextId.split("#")[0]).name,
+                    state: text.stato,
+                    feedback: text.feedback,
+                });
+            }
+        });
+
+        return {a: ori, b: tran};
     } catch (err) {
         throw { err };
     }
