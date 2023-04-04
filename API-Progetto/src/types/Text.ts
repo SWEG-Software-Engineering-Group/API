@@ -1,9 +1,8 @@
 interface Text {
-    text: string;
+    idTenant: string;
+    languageIdtextId: string;
     stato: number;
     feedback: string | null;
-    comment: string | null;
-    link: string | null;
 }
 
 enum state {

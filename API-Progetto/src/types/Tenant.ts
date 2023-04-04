@@ -5,7 +5,13 @@ interface Tenant {
     users:Array<string>;
     creationDate:number;
     languages:Array<string>;
-    defaultLanguage:string;
-  }
-  
-  export { Tenant };
+    defaultLanguage: string;
+    categories: Array<Category>;
+}
+
+interface Category {
+    id: string;
+    name: string;
+}
+
+  export { Tenant, Category };
