@@ -7,4 +7,8 @@ interface Translation {
     feedback: string | null;
 }
 
-export { Translation };
+function isTranslation(object: any): object is Translation {
+    return object;
+}
+
+export { Translation, isTranslation };

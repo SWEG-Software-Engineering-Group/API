@@ -5,4 +5,9 @@ interface OriginalText {
     comment: string | null;
     link: string | null;
 }
-export { OriginalText };
+
+function isOriginalText(object: any): object is OriginalText {
+    return object;
+}
+
+export { OriginalText, isOriginalText};
