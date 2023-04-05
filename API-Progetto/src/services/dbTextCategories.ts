@@ -1,4 +1,4 @@
-import { GetCommand, GetCommandInput, ScanCommand, ScanCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput, GetCommandInput} from "@aws-sdk/lib-dynamodb";
+import { GetCommand, GetCommandInput, ScanCommand, ScanCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput} from "@aws-sdk/lib-dynamodb";
 import { environment } from "src/environement/environement";
 import { Text, state } from "src/types/Text";
 import { TextInfo } from "src/types/TextInfo";
@@ -7,13 +7,18 @@ import { isTranslation, Translation } from "src/types/Translation";
 import { Tenant, Category } from "src/types/Tenant";
 import { ddbDocClient } from "./dbConnection";
 
-
+//---------------------
+//INTERFACE to read more easly the output of utilgetTenantLangCat
+//---------------------
 interface LangCat{
     language: string;
     categories: Array<Category>;
 }
 
-
+//---------------------
+//UTIL functions that will be used across all db functions 
+//to make the code more simple and compact
+//---------------------
 const utilMergeMeta = (text: Text, info: TextInfo[], language: string, categories: Category[]) => {
     //custum util function to help merge the text with it's metadata and compile OriginalText or Translation
     //input: Text, TextInfo[], originallanguage, Category[]
@@ -62,6 +67,9 @@ const utilgetTenantLangCat = async (tenant: string) => {
     } as GetCommandInput))).Item as LangCat;
 }
 
+//---------------------
+//DB functions that will be called by the LAMBDA API calls
+//---------------------
 const dbgetAllTexts = async (tenant: string) => {
     //SCAN and return all Texts from one Tenant
     //input: tenant
