@@ -1,10 +1,10 @@
 import type { AWS } from '@serverless/typescript';
 import { environment } from 'src/environment/environment';
-import { hello, putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant } from '@functions/index';
+import { hello, putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant, signUpUser, getUsers, getUser, adminGetUser } from '@functions/index';
 
 
 const serverlessConfiguration: AWS = {
-  service: 'api-progetto',
+  service: 'api-progetto-marco',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild', 'serverless-offline',/*for dynamodblocal*/'serverless-dynamodb-local'],
   provider: {
@@ -143,7 +143,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: {hello, putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant },
+  functions: {hello, putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant, signUpUser, getUsers, getUser, adminGetUser },
   package: { individually: true },
   custom: {
     esbuild: {

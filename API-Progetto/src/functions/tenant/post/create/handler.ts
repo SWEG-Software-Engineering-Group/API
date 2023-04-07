@@ -4,10 +4,11 @@ import { middyfy } from '@libs/lambda';
 import { dbputTenant } from 'src/services/dbTenant';
 
 import schema from './schema';
+var crypto = require('crypto');
 
 const putTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   await dbputTenant({
-    id: Math.floor(Math.random() * 15).toString(),
+    id: crypto.randomUUID(),
     tenantName: event.body.tenantName,
     admins: event.body.admins,
     users: event.body.users,

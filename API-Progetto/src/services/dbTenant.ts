@@ -25,7 +25,7 @@ const dbgetTenants = async () => {
         const tenant = await ddbDocClient.send(new ScanCommand(tenantparams));
         console.log("Success - item added or updated", tenant);
         return  {
-            tenants: tenant.Items.sort((a: Tenant, b: Tenant) => a.tenantName.localeCompare(b.tenantName))
+            tenants: tenant.Items//.sort((a: Tenant, b: Tenant) => a.tenantName.localeCompare(b.tenantName))
         }
     } catch (err) {
         console.log("Error", err.stack);
@@ -63,7 +63,7 @@ const dbgetDefaultLanguage = async (tenant: string) => {
         const tenant = await ddbDocClient.send(new GetCommand(params));
         
         console.log("Success - GET", tenant);
-        return tenant.Item.defaultLanguage as Tenant;
+        return tenant.Item.defaultLanguage;
     } catch (err) {
         console.log("Error", err.stack);
         throw { err };

@@ -6,3 +6,7 @@ export { default as getDefaultLanguage } from './tenant/get/DefaultLanguage';
 export { default as getSecondaryLanguage } from './tenant/get/SecondaryLanguage';
 export { default as deleteTenants } from './tenant/delete/Tenant';
 export { default as resetTenant } from './tenant/put/Tenant';
+export { default as signUpUser } from './user/post/create';
+export { default as getUsers } from './user/get/getUsers';
+export { default as getUser } from './user/get/getUser';
+export { default as adminGetUser } from './user/get/adminGetUser';
