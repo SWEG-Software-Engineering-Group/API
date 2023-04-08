@@ -3,7 +3,7 @@ export default {
   properties: {
     tenantName: { type: 'string' },
     defaultLanguage: { type: 'string' },
-    creationDate: { type: 'int' },
+    creationDate: { type: 'number' },
     languages: { type: Array<"string"> },
     admins: { type: Array<"string"> },
     users: { type: Array<"string"> }

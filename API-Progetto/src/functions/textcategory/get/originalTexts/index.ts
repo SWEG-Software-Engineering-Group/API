@@ -1,5 +1,6 @@
 import schema from './schema';
 import { handlerPath } from '@libs/handler-resolver';
+import { environment } from 'src/environement/environement';
 
 export default {
   handler: `${handlerPath(__dirname)}/handler.main`,
@@ -12,6 +13,9 @@ export default {
           schemas: {
             'application/json': schema,
           },
+        },
+        authorizer: {
+          arn: environment.cognito.userPoolArn,
         },
       },
     },

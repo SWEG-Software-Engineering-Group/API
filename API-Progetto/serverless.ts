@@ -1,7 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 import { environment } from 'src/environement/environement';
 import hello from '@functions/hello';
-import { putTenant, originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText } from '@functions/index';
+import {/* putTenant, originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText*/ } from '@functions/index';
 
 const serverlessConfiguration: AWS = {
   service: 'api-progetto',
@@ -19,7 +19,34 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: 'Allow',
+            Action: [
+              'dynamodb:BatchGetItem',
+              'dynamodb:GetItem',
+              'dynamodb:DeleteItem',
+              'dynamodb:Query',
+              'dynamodb:Scan',
+              'dynamodb:BatchWriteItem',
+              'dynamodb:PutItem',
+              'dynamodb:UpdateItem',
+              'dynamodb:Scan',
+            ],
+            Resource: [
+              environment.dynamo.TenantTable.arn,
+              environment.dynamo.UserTable.arn,
+              environment.dynamo.TokenTable.arn,
+              environment.dynamo.TextCategoryTable.arn,
+            ],
+          },
+        ],
+      },
+    },
   },
+
   resources: {
     Resources: {
       userTable: {
@@ -119,15 +146,15 @@ const serverlessConfiguration: AWS = {
   // import the function via paths
   functions: {
     hello,
-    putTenant,
-    originalTexts,
-    allCategories,
-    rejectedText,
-    untranslatedTexts,
-    pendingTranslations,
-    textbyid,
-    approveText,
-    rejectText
+    /*putTenant,
+originalTexts,
+allCategories,
+rejectedText,
+untranslatedTexts,
+pendingTranslations,
+textbyid,
+approveText,
+rejectText*/
   },
   package: { individually: true },
   custom: {
