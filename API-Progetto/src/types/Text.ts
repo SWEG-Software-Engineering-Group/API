@@ -1,6 +1,7 @@
 interface Text {
     idTenant: string;
     languageIdtextId: string;
+    text:string,
     stato: number;
     feedback: string | null;
 }

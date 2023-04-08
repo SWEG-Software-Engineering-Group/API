@@ -1,4 +1,4 @@
-import { GetCommand, GetCommandInput, ScanCommand, ScanCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput} from "@aws-sdk/lib-dynamodb";
+import { ScanCommand, ScanCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput} from "@aws-sdk/lib-dynamodb";
 import { environment } from "src/environement/environement";
 import { Text, state } from "src/types/Text";
 import { TextInfo } from "src/types/TextInfo";
@@ -6,14 +6,8 @@ import { isOriginalText, OriginalText } from "src/types/OriginalText";
 import { isTranslation, Translation } from "src/types/Translation";
 import { Tenant, Category } from "src/types/Tenant";
 import { ddbDocClient } from "./dbConnection";
+import { dbgetTenant } from "./dbTenant";
 
-//---------------------
-//INTERFACE to read more easly the output of utilgetTenantLangCat
-//---------------------
-interface LangCat{
-    language: string;
-    categories: Array<Category>;
-}
 
 //---------------------
 //UTIL functions that will be used across all db functions 
@@ -56,27 +50,18 @@ const utilMergeMeta = (text: Text, info: TextInfo[], language: string, categorie
     }
 }
 
-const utilgetTenantLangCat = async (tenant: string) => {
-    //util function to retrieve orignal language and all categories inside a Tenant
-    //input: tenant
-    //output: LangCat / Error
-    return await(await ddbDocClient.send(new GetCommand({
-        TableName: environment.dynamo.TextInfoTable.tableName,
-        Key: { id: tenant },
-        ProjectionExpression: "defaultLanguage, categories",
-    } as GetCommandInput))).Item as LangCat;
-}
-
 //---------------------
 //DB functions that will be called by the LAMBDA API calls
 //---------------------
+
+//__________GET__________
 const dbgetAllTexts = async (tenant: string) => {
     //SCAN and return all Texts from one Tenant
     //input: tenant
     //output: { a:{OriginalText[]}, b:{Translation[]}}  } / Error
     try {
         //get language and categories of the tenant
-        const TenantInfo: LangCat = await(utilgetTenantLangCat(tenant));
+        const TenantInfo: Tenant = await(dbgetTenant(tenant));
         if (TenantInfo == null)
             throw {"error":"error"};
 
@@ -106,7 +91,7 @@ const dbgetAllTexts = async (tenant: string) => {
 
         txt.forEach(function (text) {
             //iterate over every row of Text table
-            let data = utilMergeMeta(text, info, TenantInfo.language, TenantInfo.categories);
+            let data = utilMergeMeta(text, info, TenantInfo.defaultLanguage, TenantInfo.categories);
             if (data == null)
                 throw { "error": "error mergind metadata" };
             if (isOriginalText(data))
@@ -129,7 +114,7 @@ const dbgetByCategory = async (tenant: string, category: string) => {
     //output: { a:{OriginalText[]}, b:{Translation[]}}  } / Error
     try {
         //get language and categories of the tenant
-        let TenantInfo = await(utilgetTenantLangCat(tenant));
+        let TenantInfo: Tenant = await (dbgetTenant(tenant));
         if (TenantInfo == null)
             throw { "error": "error" };
 
@@ -164,7 +149,7 @@ const dbgetByCategory = async (tenant: string, category: string) => {
             //if this text id is not the info table then skip
             if (!info.find(element => element.categoryIdtextId.split("#")[1] === "#" + text.languageIdtextId.split("#"[1])))
                 return;
-            let data = utilMergeMeta(text, info, TenantInfo.language, TenantInfo.categories);
+            let data = utilMergeMeta(text, info, TenantInfo.defaultLanguage, TenantInfo.categories);
             if (data == null)
                 throw { "error": "error mergind metadata" };
             if (isOriginalText(data))
@@ -187,7 +172,7 @@ const dbgetByLanguage = async (tenant: string, language: string, state: state) =
     //output: { a:{OriginalText[]}, b:{Translation[]}}  } / Error
     try {
         //get language and categories of the tenant
-        let TenantInfo = await (utilgetTenantLangCat(tenant));
+        let TenantInfo: Tenant = await (dbgetTenant(tenant));
         if (TenantInfo == null)
             throw { "error": "error" };
 
@@ -225,7 +210,7 @@ const dbgetByLanguage = async (tenant: string, language: string, state: state) =
             //if this text id is not the info table then skip
             if (!info.find(element => element.categoryIdtextId.split("#")[1] === "#" + text.languageIdtextId.split("#"[1])))
                 return;
-            let data = utilMergeMeta(text, info, TenantInfo.language, TenantInfo.categories);
+            let data = utilMergeMeta(text, info, TenantInfo.defaultLanguage, TenantInfo.categories);
             if (data == null)
                 throw { "error": "error mergind metadata" };
             if (isOriginalText(data))
@@ -249,7 +234,7 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
     //output: OriginalText / Translation / Error
     //get language and categories of the tenant
     try {
-        let TenantInfo = await (utilgetTenantLangCat(tenant));
+        let TenantInfo: Tenant = await (dbgetTenant(tenant));
         if (TenantInfo == null)
             throw { "error": "error" };
 
@@ -287,7 +272,7 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
             //if this text id is not the info table then skip
             if (!info.find(element => element.categoryIdtextId.split("#")[1] === "#" + text.languageIdtextId.split("#"[1])))
                 return;
-            let data = utilMergeMeta(text, info, TenantInfo.language, TenantInfo.categories);
+            let data = utilMergeMeta(text, info, TenantInfo.defaultLanguage, TenantInfo.categories);
             if (data == null)
                 throw { "error": "error mergind metadata" };
             if (isOriginalText(data))
@@ -305,76 +290,79 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
     }
 };
 
+
+//__________DELETE__________
 const dbdeleteText = async (tenant: string, text: string) => {
     //DELETE a specific TextId. This will cause the deletion of the text in every language.
     //input: tenant, text
     //output: true / Error
-    const params: DeleteCommandInput = {
-        TableName: environment.dynamo.TextCategoryTable.tableName,
+
+    //for the chance of errors first it performs the delete of all texts, then it deletes all the metadata.
+    //it is acceptable but nnot ideal that there is some metadata leftover without an actual text in any language.
+    //it is not acceptable to have any texts leftover without its metadata counterpart.
+    const param1: DeleteCommandInput = {
+        TableName: environment.dynamo.TextTable.tableName,
         Key: {
             idTenant: tenant,
         },
-        ConditionExpression: "contains(languageidCategorytextId, :c)",
+        ConditionExpression: "contains(languageIdtextId, :t)",
         ExpressionAttributeValues: {
-            ":c": "#"+text,
+            ":t": "#"+text,
+        },
+    };
+    const param2: DeleteCommandInput = {
+        TableName: environment.dynamo.TextInfoTable.tableName,
+        Key: {
+            idTenant: tenant,
+        },
+        ConditionExpression: "contains(categoryIdtextId, :t)",
+        ExpressionAttributeValues: {
+            ":t": "#" + text,
         },
     };
     try {
-        return await ddbDocClient.send(new DeleteCommand(params));
+        await ddbDocClient.send(new DeleteCommand(param1));
+        return await ddbDocClient.send(new DeleteCommand(param2));
     } catch (err) {
         throw { err };
     }
 };
 
-const dbpostOriginalText = async (tenant: string, languagecategoryid: string, text: string, comment: string, link: string) => {
-    //PUT new item into TextCategory as text in native language inside a Tenant
-    //input: tenant, languageidCategorytextId, text, comment, link
+//__________PUT__________
+const dbpostOriginalText = async (tenant: string, ID: string, category: string, text: string, comment: string, link: string) => {
+    //PUT new Text in original language with its metadata inside a Tenant
+    //input: tenant, category, text, comment, link
     //output: true / Error
 
-    //STEPS:
-    //1        PUT text in native language
-    //2        GET all languages from tenant
-    //3        PUT try iterate to write all transaltions
-    //3.1 FAIL ??? DELETE of all translations just added ???
+    //generate first the metadata and then the text.
+    let TenantInfo: Tenant = await (dbgetTenant(tenant));
+    if (TenantInfo == null)
+        throw { "error": "error" };
 
-    // --1--
-    //write te text in native language
-    const params: PutCommandInput = {
-        TableName: environment.dynamo.TextCategoryTable.tableName,
+    const paramsInfo: PutCommandInput = {
+        TableName: environment.dynamo.TextInfoTable.tableName,
         Item: {
             idTenant: tenant,
-            languageidCategorytextId: languagecategoryid,
-            isDefault: true,
-            Text: {
-                text: text,
-                state: 'testoOriginale',
-                comment: comment,
-                link: link,
-            },
+            categoryIdtextId: category+"#"+ID,
+            comment: comment,
+            link: link,
+        },
+    };
+    const paramsText: PutCommandInput = {
+        TableName: environment.dynamo.TextTable.tableName,
+        Item: {
+            idTenant: tenant,
+            languageIdtextId: TenantInfo.defaultLanguage + "#" + ID,
+            text: text,
+            stato: 'testoOriginale',
+            feedback: null,
         },
     };
     try {
-        let tmp = await ddbDocClient.send(new PutCommand(params));
-
-        // --2--
-        //if success get all languages to translate to from Tenant
+        //this depends on what the PutCommand returns.
+        let tmp = await ddbDocClient.send(new PutCommand(paramsInfo));
         if (tmp) {
-            let param: GetCommandInput = {
-                TableName: environment.dynamo.TenantTable.tableName,
-                Key: {
-                    id: tenant,
-                },
-                ProjectionExpression: "languages",
-            }
-            let languages = ddbDocClient.send(new GetCommand(param));
-            if (languages == null)
-                throw ({ "error": "error" });
-
-            // --3--
-            //write all empty translations iterating on languages
-            (await languages).Item.forEach(function (lang: string) {
-                dbpostTranslation(tenant, lang + "#" + languagecategoryid.split("#")[1] + "#" + languagecategoryid.split("#")[2], "");
-            });
+            return await ddbDocClient.send(new PutCommand(paramsText));
         }
         else
             throw ({ "error": "error" });
@@ -383,178 +371,130 @@ const dbpostOriginalText = async (tenant: string, languagecategoryid: string, te
     }
 };
 
-const dbpostTranslation = async (tenant: string, languagecategoryid: string, newtext: string) => {
-    //PUT new item into TextCategory as translation of one language inside a Tenant
-    //input: tenant, languageidCategorytextId, text
+const dbpostTranslation = async (tenant: string, language: string, ID: string, text: string) => {
+    //PUT new Translation of one language inside a Tenant
+    //input: tenant, language, ID, text
     //output: true / Eror
-    const params: PutCommandInput = {
-        TableName: environment.dynamo.TextCategoryTable.tableName,
-        Item: {
-            idTenant: tenant,
-            languageidCategorytextId: languagecategoryid,
-            isDefault: false,
-            Text: {
-                text: newtext,
-                state: 'daTradurre',
-            },
-        },
-    };
+
     try {
+        const params: PutCommandInput = {
+            TableName: environment.dynamo.TextTable.tableName,
+            Item: {
+                idTenant: tenant,
+                languageIdtextId: language + "#" + ID,
+                text: text,
+                state: 'daTradurre',
+                feedback: null,
+            },
+        };
         return await ddbDocClient.send(new PutCommand(params));
     } catch (err) {
         throw { err };
     }
 };
 
+//__________UPDATE__________
 const dbputCategory = async (tenant: string, category: string, name: string) => {
     //UPDATE the name of a category inside a Tenant
     //input: tenant, category, name
     //output: true / Errror
 
-    //STEPS:
-    //1        SCAN GET all items of one category
-    //2        update all items with new name category
-    //3        PUT try iterate all updated items in db
-    //3.1 FAIL DELETE of all new items just added
-    //4        DELETE all old items with old name
+    try {
+        let TenantInfo: Tenant = await (dbgetTenant(tenant));
+        if (TenantInfo == null)
+            throw { "error": "error" };
 
-    //BATCH non è usabile perchè richiede di definire i nomi delle tabelle e delle chiavi per intero scritti e non passati con filtri.
-    //TRANSACTIONS non è usabile perchè è piu lento di batch e ogni operazione costa il doppio di una non transazione $$$$$
+        let index = TenantInfo.categories.findIndex(element => element.id === category);
+        if (index==-1)
+            throw { "error": "error" };
+        TenantInfo.categories[index].name = name;
 
-
-    // --1--
-    //Scan all texts inside the caategory seacrhed
-    let data  = await dbgetByCategory(tenant, category);
-    if (data == null)
-        return { "error": "something something" };
-
-    // --2--
-    //Manually modify the name of the category of all results 
-    data.forEach(function (Category) {
-        let tmp= Category.languageidCategorytextId.split("#");
-        Category.languageidCategorytextId = tmp[0] + "#" + name + "#" + tmp[2];
-    });
-
-    // --3--
-    //Try to write back all the new texts inside the new category
-    data.forEach(function (item) {
-        let param: PutCommandInput = {
-            TableName: environment.dynamo.TextCategoryTable.tableName,
-            Item: {
-                idTenant: item.idTenant,
-                languageidCategorytextId: item.languageidCategorytextId,
-                isDefault: item.isDefault,
-                Text: item.txt,
-            },
-        };
-        // --3.1--  FAIL
-        //If any of the put fails then stop the whole process, 
-        //delete any data already written and then return error
-        let res = ddbDocClient.send(new PutCommand(param));
-        if (res)
-            {
-            let param: DeleteCommandInput = {
-                TableName: environment.dynamo.TextCategoryTable.tableName,
-                Key: {
-                    idTenant: tenant,
-                },
-                ConditionExpression: "contains(languageidCategorytextId, :c)",
-                ExpressionAttributeValues: {
-                    ":c": "#" + name + "#",
-                },
-            };
-            ddbDocClient.send(new DeleteCommand(param));
-            throw ({"error":"failed to update all texts"});
-        }
-
-        // --4--
-        //Delete all texts with old category name
-        let params: DeleteCommandInput = {
-            TableName: environment.dynamo.TextCategoryTable.tableName,
+        const params: UpdateCommandInput = {
+            TableName: environment.dynamo.TenantTable.tableName,
             Key: {
                 idTenant: tenant,
             },
-            ConditionExpression: "contains(languageidCategorytextId, :c)",
+            UpdateExpression: "set categories = {:c}",
             ExpressionAttributeValues: {
-                ":c": "#" + category + "#",
+                ":c": TenantInfo.categories,
             },
         };
-        return ddbDocClient.send(new DeleteCommand(params));
-    });
-};
-
-const dbputTranslationStateCategoryTextBased = async (tenant: string, categorytextid: string, state: state) => {
-    //SUPPORT FUNCTION FOR dbputOriginalText
-    //UPDATE the state of all translations to daTradurre after a text in native language has been changed
-    //input: tenant, CategorytextId, state
-    //output: true / Error
-    const params: UpdateCommandInput = {
-        TableName: environment.dynamo.TextCategoryTable.tableName,
-        Key: {
-            idTenant: tenant,
-            isDefault: true,
-        },
-        ConditionExpression: "contains(languageidCategorytextId, :c)",
-        UpdateExpression: "set Text.state = {:s}",
-        ExpressionAttributeValues: {
-            ":s": state,
-            ":c": categorytextid,
-        },
-    };
-    try {
-        return await ddbDocClient.send(new UpdateCommand(params));
+        return await (ddbDocClient.send(new UpdateCommand(params)));
     } catch (err) {
         throw { err };
     }
+
 };
 
-const dbputOriginalText = async (tenant: string, languagecategoryid: string, text: Text, change) => {
+const dbputOriginalText = async (tenant: string, ID: string, category: string, text: string, comment: string, link: string) => {
+    //do I have to consider the change of the category?
+
     //UPDATE the informations (text, comment and link) of a text  in native language inside a Tenant
     //change => if(true) UPDATE of the state of all its translations to 'daTradurre'
-    //input: tenant, languageidategorytextId, Text (text, state testoOriginale, feedback null, comment, link), change
+    //input: tenant, ID, text, comment, link, change
     //output: true / Error
-
-    const params: UpdateCommandInput = {
-        TableName: environment.dynamo.TextCategoryTable.tableName,
-        Key: {
-            idTenant: tenant,
-            languageidCategorytextId: languagecategoryid,
-            isDefault: true,
-        },
-        UpdateExpression: "set Text = {:t}",
-        ExpressionAttributeValues: {
-            ":t": text,
-        },
-    };
     try {
-        await ddbDocClient.send(new UpdateCommand(params));
-        if (change) {
-            let categorytextid = "#" + languagecategoryid.split("#")[1] + "#" + languagecategoryid.split("#")[2];
-            return await dbputTranslationStateCategoryTextBased(tenant, categorytextid, text.stato);
-        }
-        return true;
+        let TenantInfo: Tenant = await (dbgetTenant(tenant));
+        if (TenantInfo == null)
+            throw { "error": "error" };
+
+        const paramstext: UpdateCommandInput = {
+            TableName: environment.dynamo.TextTable.tableName,
+            Key: {
+                idTenant: tenant,
+                langugeIdtextId: TenantInfo.defaultLanguage + "#" + ID,
+            },
+            UpdateExpression: "set text = {:t}",
+            ExpressionAttributeValues: {
+                ":t": text,
+            },
+        };
+        if (await ddbDocClient.send(new UpdateCommand(paramstext)))
+            throw {"error":"error"};
+
+        //let category = await (dbgetCategoryById(tenant, ID));
+        //if (!category)
+        //    throw { "error": "error" };
+
+        const paramsinfo: UpdateCommandInput = {
+            TableName: environment.dynamo.TextInfoTable.tableName,
+            Key: {
+                idTenant: tenant,
+                categoryIdtextId: category + "#" + ID,
+            },
+            UpdateExpression: "set comment = {:c} and set link = {:l}",
+            ExpressionAttributeValues: {
+                ":c": comment,
+                ":l": link,
+            },
+        };
+        return await ddbDocClient.send(new UpdateCommand(paramsinfo));
+
     } catch (err) {
         throw { err };
     }
 };
 
-const dbputTranslation = async (tenant: string, languagecategoryid: string, text: Text) => {
-    //UPDATE the data (text, state, comment, link, feedback) of a translation inside a Tenant
-    //input: tenant, languageidCategorytextId, Text (text, state, feedback null, comment, link)
+const dbputTranslation = async (tenant: string, language: string, id: string, text: Text, stato:state, feedback: string) => {
+    //UPDATE the data (text, state, feedback) of a translation inside a Tenant
+    //input: tenant, language, textId, Text, text, state, feedback.
     //output: true / Error
-    const params: UpdateCommandInput = {
-        TableName: environment.dynamo.TextCategoryTable.tableName,
-        Key: {
-            idTenant: tenant,
-            languageidCategorytextId: languagecategoryid,
-            isDefault: false,
-        },
-        UpdateExpression: "set Text = {:t}",
-        ExpressionAttributeValues: {
-            ":t": text,
-        },
-    };
+
     try {
+        const params: UpdateCommandInput = {
+            TableName: environment.dynamo.TextTable.tableName,
+            Key: {
+                idTenant: tenant,
+                languageidCategorytextId: language + "#" + id,
+                isDefault: false,
+            },
+            UpdateExpression: "set text = {:t} and set state = {:s} and set feedback = {:f}",
+            ExpressionAttributeValues: {
+                ":t": text,
+                ":s": stato,
+                ":f": feedback,
+            },
+        };
         return await ddbDocClient.send(new UpdateCommand(params));
     } catch (err) {
         throw { err };
