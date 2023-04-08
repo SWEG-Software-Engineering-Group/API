@@ -1,21 +1,12 @@
 export default {
   type: "object",
   properties: {
-    tenantName: { "type": 'string' },
-    defaultLanguage: { "type": 'string' },
-    creationDate: { "type": 'number' },
-    languages: {
-      "type": "array",
-      "items": { "type": "string" }
-    },
-    admins: {
-      "type": "array",
-      "items": { "type": "string" }
-    },
-    users: {
-      "type": "array",
-      "items": { "type": "string" }
-    },
+    tenantName: { type: 'string' },
+    defaultLanguage: { type: 'string' },
+    creationDate: { type: 'number' },
+    languages: { type: Array<"string"> },
+    admins: { type: Array<"string"> },
+    users: { type: Array<"string"> }
   },
   required: ['tenantName', 'defaultLanguage', "creationDate", "languages", "admins", "users"]
 } as const;

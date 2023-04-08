@@ -56,6 +56,8 @@ interface Environment {
     };
     cognito: {
         userPoolArn: string;
+        userPoolId: string;
+        idclient: string;
     };
 }
 
@@ -63,20 +65,20 @@ const environment: Environment = {
     awsRegion: "eu-west-2",
     dynamo: {
         UserTable: {
-            tableName: "userTable",
-            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/userData",
+            tableName: "userTable-Marco",
+            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/userData",
         },
         TokenTable: {
-            tableName: "TokenTable",
-            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TokenTable",
+            tableName: "TokenTable-Marco",
+            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TokenTable",
         },
         TenantTable: {
-            tableName: "TenantTable",
-            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TenantTable",
+            tableName: "TenantTable-Marco",
+            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TenantTable",
         },
         TextCategoryTable: {
-            tableName: "TextCategoryTable",
-            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TextCategoryTable",
+            tableName: "TextCategoryTable-Marco",
+            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TextCategoryTable",
         },
 
     },
@@ -90,7 +92,11 @@ const environment: Environment = {
     },
     cognito: {
         userPoolArn:
-            "arn:aws:cognito-idp:eu-west-2:574522373582:userpool/eu-west-2_9aZw6rRCn",
+            "arn:aws:cognito-idp:eu-west-2:574522373582:userpool/eu-west-2_tleAXoqbb",
+        userPoolId:
+            "eu-west-2_tleAXoqbb",
+        idclient:
+            "4aftvoo24j5sudsk0mjqcqcpeh",
     },
 };
 

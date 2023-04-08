@@ -2,7 +2,7 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
     DynamoDBDocumentClient,
 } from "@aws-sdk/lib-dynamodb";
-
+import { environment } from "src/environment/environment";
 //per eseguire in offline
 //let options = { region: environment.awsRegion }
 let options;
@@ -22,7 +22,7 @@ if (process.env.IS_OFFLINE) {
     }
 }
 // Create an Amazon DynamoDB service client object.
-export const ddbClient = new DynamoDBClient(options);
+export const ddbClient = new DynamoDBClient({region: environment.awsRegion});
 
 const marshallOptions = {
     // Whether to automatically convert empty strings, blobs, and sets to `null`.

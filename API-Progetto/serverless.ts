@@ -1,10 +1,10 @@
 import type { AWS } from '@serverless/typescript';
-import { environment } from 'src/environement/environement';
-import hello from '@functions/hello';
-import {/* putTenant, originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText*/ } from '@functions/index';
+import { environment } from 'src/environment/environment';
+import { hello, putTenant, originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant, signUpUser, getUsers, getUser, adminGetUser } from '@functions/index';
+
 
 const serverlessConfiguration: AWS = {
-  service: 'api-progetto',
+  service: 'api-progetto-marco',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild', 'serverless-offline',/*for dynamodblocal*/'serverless-dynamodb-local'],
   provider: {
@@ -23,21 +23,21 @@ const serverlessConfiguration: AWS = {
       role: {
         statements: [
           {
-            Effect: 'Allow',
+            Effect: "Allow",
             Action: [
-              'dynamodb:BatchGetItem',
-              'dynamodb:GetItem',
-              'dynamodb:DeleteItem',
-              'dynamodb:Query',
-              'dynamodb:Scan',
-              'dynamodb:BatchWriteItem',
-              'dynamodb:PutItem',
-              'dynamodb:UpdateItem',
-              'dynamodb:Scan',
+              "dynamodb:BatchGetItem",
+              "dynamodb:GetItem",
+              "dynamodb:DeleteItem",
+              "dynamodb:Query",
+              "dynamodb:Scan",
+              "dynamodb:BatchWriteItem",
+              "dynamodb:PutItem",
+              "dynamodb:UpdateItem",
+              "dynamodb:Scan",
             ],
             Resource: [
-              environment.dynamo.TenantTable.arn,
               environment.dynamo.UserTable.arn,
+              environment.dynamo.TenantTable.arn,
               environment.dynamo.TokenTable.arn,
               environment.dynamo.TextCategoryTable.arn,
             ],
@@ -146,15 +146,15 @@ const serverlessConfiguration: AWS = {
   // import the function via paths
   functions: {
     hello,
-    /*putTenant,
-originalTexts,
-allCategories,
-rejectedText,
-untranslatedTexts,
-pendingTranslations,
-textbyid,
-approveText,
-rejectText*/
+    putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant, signUpUser, getUsers, getUser, adminGetUser,
+    originalTexts,
+    allCategories,
+    rejectedText,
+    untranslatedTexts,
+    pendingTranslations,
+    textbyid,
+    approveText,
+    rejectText
   },
   package: { individually: true },
   custom: {

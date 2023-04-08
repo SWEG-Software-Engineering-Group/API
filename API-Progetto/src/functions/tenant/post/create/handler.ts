@@ -4,28 +4,22 @@ import { middyfy } from '@libs/lambda';
 import { dbputTenant } from 'src/services/dbTenant';
 
 import schema from './schema';
+var crypto = require('crypto');
 
 const putTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  /**/
-  try {
-    /*await dbputTenant({
-      id: "1",
-      tenantName: event.body.tenantName,
-      admins: event.body.admins,
-      users: event.body.users,
-      creationDate: event.body.creationDate,
-      languages: event.body.languages,
-      defaultLanguage: event.body.defaultLanguage
-    });*/
-    return formatJSONResponse({
-      message: 'oki'
-    });
-  } catch (error) {
-    return formatJSONResponse({
-      message: error,
-      event,
-    });
-  }
+  await dbputTenant({
+    id: crypto.randomUUID(),
+    tenantName: event.body.tenantName,
+    admins: event.body.admins,
+    users: event.body.users,
+    creationDate: event.body.creationDate,
+    languages: event.body.languages,
+    defaultLanguage: event.body.defaultLanguage
+  });
+  return formatJSONResponse({
+    message: `Created tenant ${event.body.tenantName}, welcome to the exciting SWEG world!`,
+    event,
+  });
 };
 
 export const main = middyfy(putTenant);
