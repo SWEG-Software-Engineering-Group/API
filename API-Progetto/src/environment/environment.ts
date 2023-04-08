@@ -65,19 +65,19 @@ const environment: Environment = {
     awsRegion: "eu-west-2",
     dynamo: {
         UserTable: {
-            tableName: "userTable-Marco",
+            tableName: "userTable",
             arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/userData",
         },
         TokenTable: {
-            tableName: "TokenTable-Marco",
+            tableName: "TokenTable",
             arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TokenTable",
         },
         TenantTable: {
-            tableName: "TenantTable-Marco",
+            tableName: "TenantTable",
             arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TenantTable",
         },
         TextCategoryTable: {
-            tableName: "TextCategoryTable-Marco",
+            tableName: "TextCategoryTable",
             arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TextCategoryTable",
         },
 

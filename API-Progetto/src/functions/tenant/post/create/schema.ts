@@ -4,9 +4,10 @@ export default {
     tenantName: { type: 'string' },
     defaultLanguage: { type: 'string' },
     creationDate: { type: 'number' },
-    languages: { type: Array<"string"> },
-    admins: { type: Array<"string"> },
-    users: { type: Array<"string"> }
+    languages: { type: "array", items: { type: "string" } },
+    admins: { type: "array", items: { type: "string" } },
+    users: { type: "array", items: { type: "string" } },
+    categories: { type: "array", items: { type: "string" } }
   },
-  required: ['tenantName', 'defaultLanguage', "creationDate", "languages", "admins", "users"]
+  required: ['tenantName', 'defaultLanguage', "creationDate", "languages", "admins", "users", "categories"]
 } as const;

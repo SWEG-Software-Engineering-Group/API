@@ -1,5 +1,5 @@
 import { PutCommand, ScanCommand, ScanCommandInput, UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
-import { environment } from "src/environement/environement";
+import { environment } from 'src/environment/environment';
 import { state } from "src/types/Text";
 import { TextCategory } from "src/types/TextCategory";
 import { ddbDocClient } from "./dbConnection";

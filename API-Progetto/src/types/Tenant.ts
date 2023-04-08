@@ -6,6 +6,11 @@ interface Tenant {
   creationDate: number;
   languages: Array<string>;
   defaultLanguage: string;
+  categories: Array<Category>;
+}
+interface Category {
+  id: string;
+  name: string;
 }
 
-export { Tenant };
+export { Tenant, Category };

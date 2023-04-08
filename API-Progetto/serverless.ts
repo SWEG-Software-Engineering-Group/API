@@ -1,10 +1,13 @@
 import type { AWS } from '@serverless/typescript';
 import { environment } from 'src/environment/environment';
-import { hello, putTenant, originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant, signUpUser, getUsers, getUser, adminGetUser } from '@functions/index';
+//plama
+//import { originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText, } from '@functions/index';
+//marco
+import { hello, putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant, signUpUser, getUsers, getUser, adminGetUser } from '@functions/index';
 
 
 const serverlessConfiguration: AWS = {
-  service: 'api-progetto-marco',
+  service: 'api-progetto',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild', 'serverless-offline',/*for dynamodblocal*/'serverless-dynamodb-local'],
   provider: {
@@ -146,7 +149,12 @@ const serverlessConfiguration: AWS = {
   // import the function via paths
   functions: {
     hello,
+    //marco
+
     putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant, signUpUser, getUsers, getUser, adminGetUser,
+
+    //plama
+    /*
     originalTexts,
     allCategories,
     rejectedText,
@@ -155,6 +163,7 @@ const serverlessConfiguration: AWS = {
     textbyid,
     approveText,
     rejectText
+    */
   },
   package: { individually: true },
   custom: {

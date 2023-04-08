@@ -4,6 +4,7 @@ import { middyfy } from '@libs/lambda';
 import { dbputTenant } from 'src/services/dbTenant';
 
 import schema from './schema';
+import { Category } from 'src/types/Tenant';
 var crypto = require('crypto');
 
 const putTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -14,7 +15,8 @@ const putTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (even
     users: event.body.users,
     creationDate: event.body.creationDate,
     languages: event.body.languages,
-    defaultLanguage: event.body.defaultLanguage
+    defaultLanguage: event.body.defaultLanguage,
+    categories: []//TODO//event.body.categories.map((val) => { return { id: crypto.randomUUID(), name: val } })//TODO map with created id//
   });
   return formatJSONResponse({
     message: `Created tenant ${event.body.tenantName}, welcome to the exciting SWEG world!`,
