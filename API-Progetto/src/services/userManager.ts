@@ -33,7 +33,7 @@ const createUser = async (User: User) => {
         }).promise();
     } catch (err) {
         console.log(err);
-        throw err;
+        return err;
     }
 }
 const getUserFromToken   = async (token: string) => {
@@ -95,4 +95,17 @@ const getAllUserCognito = async (params) => {
         );
     }
 };
-export { createUser, getListUserCognito, getUserFromToken, AdminGetUser};
+
+const deleteUser = async (username: string) => {
+    try {
+        const params = {
+            UserPoolId: environment.cognito.userPoolId,
+            Username: username
+        };
+        await CognitoISP.adminDeleteUser(params).promise();
+    } catch (error) {
+        throw {"delete error": error};
+    }
+}
+
+export { createUser, getListUserCognito, getUserFromToken, AdminGetUser, deleteUser};

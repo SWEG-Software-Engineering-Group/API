@@ -103,7 +103,7 @@ const dbdeleteTenant = async (tenant: string) => {
         await ddbDocClient.send(new DeleteCommand(params));
         return "Tenant deleted";
     } catch (err) {
-        return { "error": err };
+        throw { "error": err };
     }
 };
 
