@@ -8,8 +8,8 @@ import schema from './schema';
 
 const deleteTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     try {
-      await dbdeleteTenant(event.pathParameters.tenantId);
-      return formatJSONResponse({});
+      let tenants = await dbdeleteTenant(event.pathParameters.tenantId);
+      return formatJSONResponse({tenants});
     } catch (error) {
       return formatJSONResponse(
         {

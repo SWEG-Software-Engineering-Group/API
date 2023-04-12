@@ -21,11 +21,11 @@ const createUser = async (User: User) => {
     };
     try {
         await CognitoISP.signUp(params).promise();
-        // WAIT PERMISSION FROM ZERO12
-        //await CognitoISP.adminConfirmSignUp({
-        //    UserPoolId: environment.cognito.userPoolId,
-        //    Username: params.Username
-        //}).promise();
+        
+        await CognitoISP.adminConfirmSignUp({
+            UserPoolId: environment.cognito.userPoolId,
+            Username: params.Username
+        }).promise();
         await CognitoISP.adminAddUserToGroup({
             GroupName: User.role.toString(),
             UserPoolId: environment.cognito.userPoolId,
@@ -50,7 +50,7 @@ const AdminGetUser = async (username: string) => {
 const getListUserCognito = async () => {
     try {
         const params = {
-            UserPoolId: "eu-west-2_9aZw6rRCn"
+            UserPoolId: environment.cognito.userPoolId
         };
 
         console.log('params', JSON.stringify(params));

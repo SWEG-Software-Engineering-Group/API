@@ -10,7 +10,7 @@ const signUpUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
     username: event.body.email,
     password: event.body.password,
     email: event.body.email,
-    role: 1,
+    role: "admin",
     name: event.body.name,
     surname: event.body.surname
   });

@@ -37,7 +37,7 @@ const dbgetTenantinfo = async (tenant: string) => {
     // Set the parameters.
     const params: GetCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
-        Key: { id: tenant },
+        Key: { tenant },
     };
     try {
         const tenant = await ddbDocClient.send(new GetCommand(params));
@@ -100,11 +100,10 @@ const dbdeleteTenant = async (tenant: string) => {
         Key: { id: tenant },
     };
     try {
-        const data = await ddbDocClient.send(new DeleteCommand(params));
-        console.log("Success - GET", data);
+        await ddbDocClient.send(new DeleteCommand(params));
+        return "Tenant deleted";
     } catch (err) {
-        console.log("Error", err.stack);
-        throw { err, tenant };
+        return { "error": err };
     }
 };
 

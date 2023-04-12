@@ -37,12 +37,17 @@ const serverlessConfiguration: AWS = {
               "dynamodb:PutItem",
               "dynamodb:UpdateItem",
               "dynamodb:Scan",
+              "cognito-idp:ListUsers",
+              "cognito-idp:AdminConfirmSignUp",
+              "cognito-idp:AdminAddUserToGroup",
+              "cognito-idp:AdminGetUser" 
             ],
             Resource: [
               environment.dynamo.UserTable.arn,
               environment.dynamo.TenantTable.arn,
               environment.dynamo.TokenTable.arn,
               environment.dynamo.TextCategoryTable.arn,
+              environment.cognito.userPoolArn,
             ],
           },
         ],
