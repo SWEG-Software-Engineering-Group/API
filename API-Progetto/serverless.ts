@@ -3,7 +3,21 @@ import { environment } from 'src/environment/environment';
 //plama
 //import { originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText, } from '@functions/index';
 //marco
-import { hello, putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant, signUpUser, getUsers, getUser, adminGetUser } from '@functions/index';
+import { 
+  hello, 
+  putTenant, 
+  getTenants, 
+  getTenant, 
+  getDefaultLanguage, 
+  getSecondaryLanguage, 
+  deleteTenants, 
+  resetTenant, 
+  signUpUser, 
+  getUsers, 
+  getUser, 
+  adminGetUser,
+  delUser
+} from '@functions/index';
 
 
 const serverlessConfiguration: AWS = {
@@ -37,12 +51,18 @@ const serverlessConfiguration: AWS = {
               "dynamodb:PutItem",
               "dynamodb:UpdateItem",
               "dynamodb:Scan",
+              "cognito-idp:ListUsers",
+              "cognito-idp:AdminConfirmSignUp",
+              "cognito-idp:AdminAddUserToGroup",
+              "cognito-idp:AdminGetUser",
+              "cognito-idp:AdminDeleteUser",
             ],
             Resource: [
               environment.dynamo.UserTable.arn,
               environment.dynamo.TenantTable.arn,
               environment.dynamo.TokenTable.arn,
               environment.dynamo.TextCategoryTable.arn,
+              environment.cognito.userPoolArn,
             ],
           },
         ],
@@ -178,7 +198,18 @@ const serverlessConfiguration: AWS = {
     hello,
     //marco
 
-    putTenant, getTenants, getTenant, getDefaultLanguage, getSecondaryLanguage, deleteTenants, resetTenant, signUpUser, getUsers, getUser, adminGetUser,
+    putTenant, 
+    getTenants, 
+    getTenant, 
+    getDefaultLanguage, 
+    getSecondaryLanguage, 
+    deleteTenants, 
+    resetTenant, 
+    signUpUser, 
+    getUsers, 
+    getUser, 
+    adminGetUser,
+    delUser
 
     //plama
     /*

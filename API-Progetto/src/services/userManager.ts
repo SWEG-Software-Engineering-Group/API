@@ -21,11 +21,11 @@ const createUser = async (User: User) => {
     };
     try {
         await CognitoISP.signUp(params).promise();
-        // WAIT PERMISSION FROM ZERO12
-        //await CognitoISP.adminConfirmSignUp({
-        //    UserPoolId: environment.cognito.userPoolId,
-        //    Username: params.Username
-        //}).promise();
+        
+        await CognitoISP.adminConfirmSignUp({
+            UserPoolId: environment.cognito.userPoolId,
+            Username: params.Username
+        }).promise();
         await CognitoISP.adminAddUserToGroup({
             GroupName: User.role.toString(),
             UserPoolId: environment.cognito.userPoolId,
@@ -33,7 +33,7 @@ const createUser = async (User: User) => {
         }).promise();
     } catch (err) {
         console.log(err);
-        throw err;
+        return err;
     }
 }
 const getUserFromToken   = async (token: string) => {
@@ -50,7 +50,7 @@ const AdminGetUser = async (username: string) => {
 const getListUserCognito = async () => {
     try {
         const params = {
-            UserPoolId: "eu-west-2_9aZw6rRCn"
+            UserPoolId: environment.cognito.userPoolId
         };
 
         console.log('params', JSON.stringify(params));
@@ -95,4 +95,17 @@ const getAllUserCognito = async (params) => {
         );
     }
 };
-export { createUser, getListUserCognito, getUserFromToken, AdminGetUser};
+
+const deleteUser = async (username: string) => {
+    try {
+        const params = {
+            UserPoolId: environment.cognito.userPoolId,
+            Username: username
+        };
+        await CognitoISP.adminDeleteUser(params).promise();
+    } catch (error) {
+        throw {"delete error": error};
+    }
+}
+
+export { createUser, getListUserCognito, getUserFromToken, AdminGetUser, deleteUser};

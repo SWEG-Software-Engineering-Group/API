@@ -11,4 +11,4 @@ const getTenants: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async () =
   return formatJSONResponse(tenants);
 };
 
-export const main = middyfy(authorizer(getTenants, ["admin"]));
+export const main = middyfy(getTenants);

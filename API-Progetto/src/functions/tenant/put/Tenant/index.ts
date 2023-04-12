@@ -1,4 +1,5 @@
 import { handlerPath } from '@libs/handler-resolver';
+import { environment } from "src/environment/environment";
 
 export default {
   handler: `${handlerPath(__dirname)}/handler.main`,
@@ -7,6 +8,9 @@ export default {
       http: {
         method: "PUT",
         path: 'tenant/{tenantId}/reset',
+        authorizer: {
+          arn: environment.cognito.userPoolArn,
+        },
       },
     },
   ],
