@@ -367,6 +367,37 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "deleteUser",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/user/{userId}/delete",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"user",
+								"{userId}",
+								"delete"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
