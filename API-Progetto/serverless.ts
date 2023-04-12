@@ -120,6 +120,33 @@ const serverlessConfiguration: AWS = {
       TextCategoryTable: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
+          TableName: environment.dynamo.TextCategoryinfo.tableName,
+          BillingMode: 'PAY_PER_REQUEST',
+          AttributeDefinitions: [
+            {
+              AttributeName: 'idTenant',
+              AttributeType: 'S',
+            },
+            {
+              AttributeName: 'languageidCategorytextId',
+              AttributeType: 'S',
+            },
+          ],
+          KeySchema: [
+            {
+              AttributeName: 'idTenant',
+              KeyType: 'HASH',
+            },
+            {
+              AttributeName: 'languageidCategorytextId',
+              KeyType: 'RANGE',
+            },
+          ],
+        },
+      },
+      TextCategoryinfo: {
+        Type: 'AWS::DynamoDB::Table',
+        Properties: {
           TableName: environment.dynamo.TextCategoryTable.tableName,
           BillingMode: 'PAY_PER_REQUEST',
           AttributeDefinitions: [

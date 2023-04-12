@@ -1,6 +1,6 @@
 import { User } from "src/types/User";
 import { CognitoISP } from "./cognito";
-import { environment } from "src/environment/environment";
+import { environment } from 'src/environment/environment';
 
 const createUser = async (User: User) => {
     var params = {

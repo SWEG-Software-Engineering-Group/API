@@ -49,6 +49,10 @@ interface Environment {
             tableName: string;
             arn: string;
         },
+        TextCategoryinfo: {
+            tableName: string;
+            arn: string;
+        },
     };
     lambda: {
         subnets: string[];
@@ -80,6 +84,11 @@ const environment: Environment = {
             tableName: "TextCategoryTable",
             arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TextCategoryTable",
         },
+        TextCategoryinfo: {
+            tableName: "TextCategoryinfo",
+            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TextCategoryinfo",
+        },
+
 
     },
     lambda: {

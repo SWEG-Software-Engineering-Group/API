@@ -1,10 +1,10 @@
-import { Text } from "./Text";
-
 interface TextCategory {
   idTenant: string;
   languageidCategorytextId: string;
-  isDefault: boolean;
-  txt: Text;
+  txt: string;
+  stato: number;
 }
-
-export { TextCategory };
+enum state {
+  testoOriginale, daTradurre, daVerificare, verificato, rifiutato
+}
+export { TextCategory, state };
