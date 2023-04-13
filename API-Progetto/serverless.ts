@@ -3,8 +3,7 @@ import { environment } from 'src/environment/environment';
 //plama
 //import { originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText, } from '@functions/index';
 //marco
-import { 
-  hello, 
+import {
   putTenant, 
   getTenants, 
   getTenant, 
@@ -16,7 +15,11 @@ import {
   getUsers, 
   getUser, 
   adminGetUser,
-  delUser
+  delUser,
+  getUserGroups,
+  addRole,
+  removeRole,
+  setRole
 } from '@functions/index';
 
 
@@ -54,11 +57,12 @@ const serverlessConfiguration: AWS = {
               "cognito-idp:ListUsers",
               "cognito-idp:AdminConfirmSignUp",
               "cognito-idp:AdminAddUserToGroup",
+              "cognito-idp:AdminRemoveUserFromGroup",
               "cognito-idp:AdminGetUser",
               "cognito-idp:AdminDeleteUser",
+              "cognito-idp:AdminListGroupsForUser"
             ],
             Resource: [
-              environment.dynamo.UserTable.arn,
               environment.dynamo.TenantTable.arn,
               environment.dynamo.TokenTable.arn,
               environment.dynamo.TextCategoryTable.arn,
@@ -72,25 +76,6 @@ const serverlessConfiguration: AWS = {
 
   resources: {
     Resources: {
-      userTable: {
-        Type: 'AWS::DynamoDB::Table',
-        Properties: {
-          TableName: environment.dynamo.UserTable.tableName,
-          BillingMode: 'PAY_PER_REQUEST',
-          AttributeDefinitions: [
-            {
-              AttributeName: 'username',
-              AttributeType: 'S',
-            },
-          ],
-          KeySchema: [
-            {
-              AttributeName: 'username',
-              KeyType: 'HASH',
-            },
-          ],
-        },
-      },
       TokenTable: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
@@ -140,7 +125,7 @@ const serverlessConfiguration: AWS = {
       TextCategoryTable: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
-          TableName: environment.dynamo.TextCategoryinfo.tableName,
+          TableName: environment.dynamo.TextCategoryTable.tableName,
           BillingMode: 'PAY_PER_REQUEST',
           AttributeDefinitions: [
             {
@@ -167,7 +152,7 @@ const serverlessConfiguration: AWS = {
       TextCategoryinfo: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
-          TableName: environment.dynamo.TextCategoryTable.tableName,
+          TableName: environment.dynamo.TextCategoryinfo.tableName,
           BillingMode: 'PAY_PER_REQUEST',
           AttributeDefinitions: [
             {
@@ -195,7 +180,6 @@ const serverlessConfiguration: AWS = {
   },
   // import the function via paths
   functions: {
-    hello,
     //marco
 
     putTenant, 
@@ -209,8 +193,11 @@ const serverlessConfiguration: AWS = {
     getUsers, 
     getUser, 
     adminGetUser,
-    delUser
-
+    delUser,
+    getUserGroups,
+    addRole,
+    removeRole,
+    setRole
     //plama
     /*
     originalTexts,

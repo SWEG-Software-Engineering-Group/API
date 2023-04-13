@@ -2,6 +2,7 @@ import { PutCommand, ScanCommand, ScanCommandInput, GetCommand, GetCommandInput,
 import { environment } from "src/environment/environment";
 import { Tenant } from "src/types/Tenant";
 import { ddbDocClient } from "./dbConnection";
+import { stringify } from "querystring";
 
 const dbputTenant = async (tenant: Tenant) => {
     const tenantparams = {
@@ -37,7 +38,7 @@ const dbgetTenantinfo = async (tenant: string) => {
     // Set the parameters.
     const params: GetCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
-        Key: { tenant },
+        Key: { id : tenant.toString() },
     };
     try {
         const tenant = await ddbDocClient.send(new GetCommand(params));
@@ -66,7 +67,7 @@ const dbgetDefaultLanguage = async (tenant: string) => {
         return tenant.Item.defaultLanguage;
     } catch (err) {
         console.log("Error", err.stack);
-        throw { err };
+        throw { "Error:" : err };
     }
 };
 

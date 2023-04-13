@@ -9,52 +9,13 @@
 			"name": "Tenant",
 			"item": [
 				{
-					"name": "createTenant",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "eyJraWQiOiIwcHhwOUNDeXYyXC9cL1Z1XC9Rb2V2dStSWGRReVIzSWgremQxb24zREIzbW9VPSIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiY05lTElPQkpUZThnZlhMYUpiU1o5ZyIsInN1YiI6ImIxYjk1ODMxLTUyMmMtNGNlYy04NTk0LWRkZDg4M2I0ZTFjMyIsImNvZ25pdG86Z3JvdXBzIjpbImFkbWluIl0sImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuZXUtd2VzdC0yLmFtYXpvbmF3cy5jb21cL2V1LXdlc3QtMl90bGVBWG9xYmIiLCJjb2duaXRvOnVzZXJuYW1lIjoiYjFiOTU4MzEtNTIyYy00Y2VjLTg1OTQtZGRkODgzYjRlMWMzIiwiY3VzdG9tOnN1cm5hbWUiOiJhZG1pbnN1ciIsImF1ZCI6IjRhZnR2b28yNGo1c3Vkc2swbWpxY3FjcGVoIiwiZXZlbnRfaWQiOiI3OTk1ZDA2MS02NjQyLTRkM2UtYjgxMy0yNTk2ODkwMDUxNzMiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY4MTI0MTk1MSwibmFtZSI6ImFkbWlubmFtZSIsImV4cCI6MTY4MTI0NTU1MSwiaWF0IjoxNjgxMjQxOTUxLCJqdGkiOiIwOTM1OWFkNy02N2UyLTQ5ZWEtYTkxZS0zMzllNmFhZDAxMDYiLCJlbWFpbCI6ImFkbWluQHN3ZWcuaXQifQ.yi_dgB6xvuJiRgsCmkNN9yWJIxnWEQaqf9GxuVsfvKeQl8grLUjXnfnU_LdVN8OlBAUai7GGIdSO9aD6pwQ_ro2503pOzDX3M9T5gSEzBpgIcYdYzmU54qqz_BoBHypE77R4fwfkITUnEihXadn_VfLMKM1MhV2ZLpuxA6izikcyGsDpqGoFRPM5hVijKVvcltChqnlGse-vO7pAMOfDZi0APMNl9UVFgppzV3gEa_cg4hRSG3t1fRRSzAL1qwNnB8YBPnPY15oN75rG2BDAwlbS5IycP56KATzzKrrI-MZaVCfcE_ssR44m4ouS4LbZ9JohYXlj658c7a2cY4WuAA",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"tenantName\":\"Test\",\r\n    \"defaultLanguage\":\"Italiano\",\r\n    \"creationDate\":100000,\r\n    \"languages\":[],\r\n    \"admins\":[],\r\n    \"users\":[],\r\n    \"categories\":[]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/tenant/create",
-							"protocol": "https",
-							"host": [
-								"w65kmpnocc",
-								"execute-api",
-								"eu-west-2",
-								"amazonaws",
-								"com"
-							],
-							"path": [
-								"dev",
-								"tenant",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "allTenants",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "eyJraWQiOiIwcHhwOUNDeXYyXC9cL1Z1XC9Rb2V2dStSWGRReVIzSWgremQxb24zREIzbW9VPSIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiY05lTElPQkpUZThnZlhMYUpiU1o5ZyIsInN1YiI6ImIxYjk1ODMxLTUyMmMtNGNlYy04NTk0LWRkZDg4M2I0ZTFjMyIsImNvZ25pdG86Z3JvdXBzIjpbImFkbWluIl0sImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuZXUtd2VzdC0yLmFtYXpvbmF3cy5jb21cL2V1LXdlc3QtMl90bGVBWG9xYmIiLCJjb2duaXRvOnVzZXJuYW1lIjoiYjFiOTU4MzEtNTIyYy00Y2VjLTg1OTQtZGRkODgzYjRlMWMzIiwiY3VzdG9tOnN1cm5hbWUiOiJhZG1pbnN1ciIsImF1ZCI6IjRhZnR2b28yNGo1c3Vkc2swbWpxY3FjcGVoIiwiZXZlbnRfaWQiOiI3OTk1ZDA2MS02NjQyLTRkM2UtYjgxMy0yNTk2ODkwMDUxNzMiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY4MTI0MTk1MSwibmFtZSI6ImFkbWlubmFtZSIsImV4cCI6MTY4MTI0NTU1MSwiaWF0IjoxNjgxMjQxOTUxLCJqdGkiOiIwOTM1OWFkNy02N2UyLTQ5ZWEtYTkxZS0zMzllNmFhZDAxMDYiLCJlbWFpbCI6ImFkbWluQHN3ZWcuaXQifQ.yi_dgB6xvuJiRgsCmkNN9yWJIxnWEQaqf9GxuVsfvKeQl8grLUjXnfnU_LdVN8OlBAUai7GGIdSO9aD6pwQ_ro2503pOzDX3M9T5gSEzBpgIcYdYzmU54qqz_BoBHypE77R4fwfkITUnEihXadn_VfLMKM1MhV2ZLpuxA6izikcyGsDpqGoFRPM5hVijKVvcltChqnlGse-vO7pAMOfDZi0APMNl9UVFgppzV3gEa_cg4hRSG3t1fRRSzAL1qwNnB8YBPnPY15oN75rG2BDAwlbS5IycP56KATzzKrrI-MZaVCfcE_ssR44m4ouS4LbZ9JohYXlj658c7a2cY4WuAA",
+								"value": "eyJraWQiOiIwcHhwOUNDeXYyXC9cL1Z1XC9Rb2V2dStSWGRReVIzSWgremQxb24zREIzbW9VPSIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoid0RLenlVZEk5elItNUc1YXc1cllyUSIsInN1YiI6Ijk2YTJhZjYzLWExNzQtNGQ0My04YjZkLThiMjFlYmU3NmUzMyIsImNvZ25pdG86Z3JvdXBzIjpbInVzZXIiXSwiZW1haWxfdmVyaWZpZWQiOnRydWUsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5ldS13ZXN0LTIuYW1hem9uYXdzLmNvbVwvZXUtd2VzdC0yX3RsZUFYb3FiYiIsImNvZ25pdG86dXNlcm5hbWUiOiI5NmEyYWY2My1hMTc0LTRkNDMtOGI2ZC04YjIxZWJlNzZlMzMiLCJjdXN0b206c3VybmFtZSI6InVzZXJzdXJuIiwiYXVkIjoiNGFmdHZvbzI0ajVzdWRzazBtanFjcWNwZWgiLCJldmVudF9pZCI6ImNkODkyOTU3LTBiZTEtNGY1ZS1iZWU0LTBjN2I1MzIzNDNiOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjgxMzAwMzMzLCJuYW1lIjoidXNlcm5hbWVlZWUiLCJleHAiOjE2ODEzMDM5MzMsImlhdCI6MTY4MTMwMDMzMywianRpIjoiMjBkYWYwMzMtMjJkMC00MWM3LTgzMzUtMzlhNzM3Njc4Nzk4IiwiZW1haWwiOiJ1c2VyQHN3ZWcuaXQifQ.yN6rV7tqKiMfXZAnpPOnUJr0ByJhPKmwIEfnYeMo0hBn-sERIn-VUbPZIRKDohrUH-KCM3IlNI8ep8ep0EaeqoTVLtwCvHEEQDyAjyQ8vOpmeIWZeu2XhPgROcWmcHAqNKBXohP7HD-7rn5X0hamalW9YtKHH_1TwmtZppGLu_XqI1MQe_q7wxzhCrUECmuYH_7RrBtIX4icDRIqjws4KxgOrqFebMhxAR3jfTOtdGyLFYKZoLAictUjhKqK89gv7xuR8RPwbxILnuLhPM8ewEY3dSYFH7o4tTS21Y7I4Luo1Jbg5eA1kZmEr-TcTnWBwDp2YK_TPD8eHL9O_LYAsQ",
 								"type": "default"
 							}
 						],
@@ -171,6 +132,45 @@
 					"response": []
 				},
 				{
+					"name": "createTenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJraWQiOiIwcHhwOUNDeXYyXC9cL1Z1XC9Rb2V2dStSWGRReVIzSWgremQxb24zREIzbW9VPSIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiY05lTElPQkpUZThnZlhMYUpiU1o5ZyIsInN1YiI6ImIxYjk1ODMxLTUyMmMtNGNlYy04NTk0LWRkZDg4M2I0ZTFjMyIsImNvZ25pdG86Z3JvdXBzIjpbImFkbWluIl0sImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuZXUtd2VzdC0yLmFtYXpvbmF3cy5jb21cL2V1LXdlc3QtMl90bGVBWG9xYmIiLCJjb2duaXRvOnVzZXJuYW1lIjoiYjFiOTU4MzEtNTIyYy00Y2VjLTg1OTQtZGRkODgzYjRlMWMzIiwiY3VzdG9tOnN1cm5hbWUiOiJhZG1pbnN1ciIsImF1ZCI6IjRhZnR2b28yNGo1c3Vkc2swbWpxY3FjcGVoIiwiZXZlbnRfaWQiOiI3OTk1ZDA2MS02NjQyLTRkM2UtYjgxMy0yNTk2ODkwMDUxNzMiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY4MTI0MTk1MSwibmFtZSI6ImFkbWlubmFtZSIsImV4cCI6MTY4MTI0NTU1MSwiaWF0IjoxNjgxMjQxOTUxLCJqdGkiOiIwOTM1OWFkNy02N2UyLTQ5ZWEtYTkxZS0zMzllNmFhZDAxMDYiLCJlbWFpbCI6ImFkbWluQHN3ZWcuaXQifQ.yi_dgB6xvuJiRgsCmkNN9yWJIxnWEQaqf9GxuVsfvKeQl8grLUjXnfnU_LdVN8OlBAUai7GGIdSO9aD6pwQ_ro2503pOzDX3M9T5gSEzBpgIcYdYzmU54qqz_BoBHypE77R4fwfkITUnEihXadn_VfLMKM1MhV2ZLpuxA6izikcyGsDpqGoFRPM5hVijKVvcltChqnlGse-vO7pAMOfDZi0APMNl9UVFgppzV3gEa_cg4hRSG3t1fRRSzAL1qwNnB8YBPnPY15oN75rG2BDAwlbS5IycP56KATzzKrrI-MZaVCfcE_ssR44m4ouS4LbZ9JohYXlj658c7a2cY4WuAA",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tenantName\":\"Test\",\r\n    \"defaultLanguage\":\"Italiano\",\r\n    \"creationDate\":100000,\r\n    \"languages\":[],\r\n    \"admins\":[],\r\n    \"users\":[],\r\n    \"categories\":[]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/tenant/create",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"tenant",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "resetTenant",
 					"request": {
 						"method": "PUT",
@@ -208,7 +208,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "eyJraWQiOiIwcHhwOUNDeXYyXC9cL1Z1XC9Rb2V2dStSWGRReVIzSWgremQxb24zREIzbW9VPSIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiY05lTElPQkpUZThnZlhMYUpiU1o5ZyIsInN1YiI6ImIxYjk1ODMxLTUyMmMtNGNlYy04NTk0LWRkZDg4M2I0ZTFjMyIsImNvZ25pdG86Z3JvdXBzIjpbImFkbWluIl0sImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuZXUtd2VzdC0yLmFtYXpvbmF3cy5jb21cL2V1LXdlc3QtMl90bGVBWG9xYmIiLCJjb2duaXRvOnVzZXJuYW1lIjoiYjFiOTU4MzEtNTIyYy00Y2VjLTg1OTQtZGRkODgzYjRlMWMzIiwiY3VzdG9tOnN1cm5hbWUiOiJhZG1pbnN1ciIsImF1ZCI6IjRhZnR2b28yNGo1c3Vkc2swbWpxY3FjcGVoIiwiZXZlbnRfaWQiOiI3OTk1ZDA2MS02NjQyLTRkM2UtYjgxMy0yNTk2ODkwMDUxNzMiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY4MTI0MTk1MSwibmFtZSI6ImFkbWlubmFtZSIsImV4cCI6MTY4MTI0NTU1MSwiaWF0IjoxNjgxMjQxOTUxLCJqdGkiOiIwOTM1OWFkNy02N2UyLTQ5ZWEtYTkxZS0zMzllNmFhZDAxMDYiLCJlbWFpbCI6ImFkbWluQHN3ZWcuaXQifQ.yi_dgB6xvuJiRgsCmkNN9yWJIxnWEQaqf9GxuVsfvKeQl8grLUjXnfnU_LdVN8OlBAUai7GGIdSO9aD6pwQ_ro2503pOzDX3M9T5gSEzBpgIcYdYzmU54qqz_BoBHypE77R4fwfkITUnEihXadn_VfLMKM1MhV2ZLpuxA6izikcyGsDpqGoFRPM5hVijKVvcltChqnlGse-vO7pAMOfDZi0APMNl9UVFgppzV3gEa_cg4hRSG3t1fRRSzAL1qwNnB8YBPnPY15oN75rG2BDAwlbS5IycP56KATzzKrrI-MZaVCfcE_ssR44m4ouS4LbZ9JohYXlj658c7a2cY4WuAA",
+								"value": "eyJraWQiOiIwcHhwOUNDeXYyXC9cL1Z1XC9Rb2V2dStSWGRReVIzSWgremQxb24zREIzbW9VPSIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoid0RLenlVZEk5elItNUc1YXc1cllyUSIsInN1YiI6Ijk2YTJhZjYzLWExNzQtNGQ0My04YjZkLThiMjFlYmU3NmUzMyIsImNvZ25pdG86Z3JvdXBzIjpbInVzZXIiXSwiZW1haWxfdmVyaWZpZWQiOnRydWUsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5ldS13ZXN0LTIuYW1hem9uYXdzLmNvbVwvZXUtd2VzdC0yX3RsZUFYb3FiYiIsImNvZ25pdG86dXNlcm5hbWUiOiI5NmEyYWY2My1hMTc0LTRkNDMtOGI2ZC04YjIxZWJlNzZlMzMiLCJjdXN0b206c3VybmFtZSI6InVzZXJzdXJuIiwiYXVkIjoiNGFmdHZvbzI0ajVzdWRzazBtanFjcWNwZWgiLCJldmVudF9pZCI6ImNkODkyOTU3LTBiZTEtNGY1ZS1iZWU0LTBjN2I1MzIzNDNiOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjgxMzAwMzMzLCJuYW1lIjoidXNlcm5hbWVlZWUiLCJleHAiOjE2ODEzMDM5MzMsImlhdCI6MTY4MTMwMDMzMywianRpIjoiMjBkYWYwMzMtMjJkMC00MWM3LTgzMzUtMzlhNzM3Njc4Nzk4IiwiZW1haWwiOiJ1c2VyQHN3ZWcuaXQifQ.yN6rV7tqKiMfXZAnpPOnUJr0ByJhPKmwIEfnYeMo0hBn-sERIn-VUbPZIRKDohrUH-KCM3IlNI8ep8ep0EaeqoTVLtwCvHEEQDyAjyQ8vOpmeIWZeu2XhPgROcWmcHAqNKBXohP7HD-7rn5X0hamalW9YtKHH_1TwmtZppGLu_XqI1MQe_q7wxzhCrUECmuYH_7RrBtIX4icDRIqjws4KxgOrqFebMhxAR3jfTOtdGyLFYKZoLAictUjhKqK89gv7xuR8RPwbxILnuLhPM8ewEY3dSYFH7o4tTS21Y7I4Luo1Jbg5eA1kZmEr-TcTnWBwDp2YK_TPD8eHL9O_LYAsQ",
 								"type": "default"
 							}
 						],
@@ -244,7 +244,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "eyJraWQiOiIwcHhwOUNDeXYyXC9cL1Z1XC9Rb2V2dStSWGRReVIzSWgremQxb24zREIzbW9VPSIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiY05lTElPQkpUZThnZlhMYUpiU1o5ZyIsInN1YiI6ImIxYjk1ODMxLTUyMmMtNGNlYy04NTk0LWRkZDg4M2I0ZTFjMyIsImNvZ25pdG86Z3JvdXBzIjpbImFkbWluIl0sImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuZXUtd2VzdC0yLmFtYXpvbmF3cy5jb21cL2V1LXdlc3QtMl90bGVBWG9xYmIiLCJjb2duaXRvOnVzZXJuYW1lIjoiYjFiOTU4MzEtNTIyYy00Y2VjLTg1OTQtZGRkODgzYjRlMWMzIiwiY3VzdG9tOnN1cm5hbWUiOiJhZG1pbnN1ciIsImF1ZCI6IjRhZnR2b28yNGo1c3Vkc2swbWpxY3FjcGVoIiwiZXZlbnRfaWQiOiI3OTk1ZDA2MS02NjQyLTRkM2UtYjgxMy0yNTk2ODkwMDUxNzMiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY4MTI0MTk1MSwibmFtZSI6ImFkbWlubmFtZSIsImV4cCI6MTY4MTI0NTU1MSwiaWF0IjoxNjgxMjQxOTUxLCJqdGkiOiIwOTM1OWFkNy02N2UyLTQ5ZWEtYTkxZS0zMzllNmFhZDAxMDYiLCJlbWFpbCI6ImFkbWluQHN3ZWcuaXQifQ.yi_dgB6xvuJiRgsCmkNN9yWJIxnWEQaqf9GxuVsfvKeQl8grLUjXnfnU_LdVN8OlBAUai7GGIdSO9aD6pwQ_ro2503pOzDX3M9T5gSEzBpgIcYdYzmU54qqz_BoBHypE77R4fwfkITUnEihXadn_VfLMKM1MhV2ZLpuxA6izikcyGsDpqGoFRPM5hVijKVvcltChqnlGse-vO7pAMOfDZi0APMNl9UVFgppzV3gEa_cg4hRSG3t1fRRSzAL1qwNnB8YBPnPY15oN75rG2BDAwlbS5IycP56KATzzKrrI-MZaVCfcE_ssR44m4ouS4LbZ9JohYXlj658c7a2cY4WuAA",
+								"value": "{{AWSToken}}",
 								"type": "default"
 							}
 						],
@@ -275,7 +275,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "eyJraWQiOiIwcHhwOUNDeXYyXC9cL1Z1XC9Rb2V2dStSWGRReVIzSWgremQxb24zREIzbW9VPSIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiY05lTElPQkpUZThnZlhMYUpiU1o5ZyIsInN1YiI6ImIxYjk1ODMxLTUyMmMtNGNlYy04NTk0LWRkZDg4M2I0ZTFjMyIsImNvZ25pdG86Z3JvdXBzIjpbImFkbWluIl0sImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuZXUtd2VzdC0yLmFtYXpvbmF3cy5jb21cL2V1LXdlc3QtMl90bGVBWG9xYmIiLCJjb2duaXRvOnVzZXJuYW1lIjoiYjFiOTU4MzEtNTIyYy00Y2VjLTg1OTQtZGRkODgzYjRlMWMzIiwiY3VzdG9tOnN1cm5hbWUiOiJhZG1pbnN1ciIsImF1ZCI6IjRhZnR2b28yNGo1c3Vkc2swbWpxY3FjcGVoIiwiZXZlbnRfaWQiOiI3OTk1ZDA2MS02NjQyLTRkM2UtYjgxMy0yNTk2ODkwMDUxNzMiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY4MTI0MTk1MSwibmFtZSI6ImFkbWlubmFtZSIsImV4cCI6MTY4MTI0NTU1MSwiaWF0IjoxNjgxMjQxOTUxLCJqdGkiOiIwOTM1OWFkNy02N2UyLTQ5ZWEtYTkxZS0zMzllNmFhZDAxMDYiLCJlbWFpbCI6ImFkbWluQHN3ZWcuaXQifQ.yi_dgB6xvuJiRgsCmkNN9yWJIxnWEQaqf9GxuVsfvKeQl8grLUjXnfnU_LdVN8OlBAUai7GGIdSO9aD6pwQ_ro2503pOzDX3M9T5gSEzBpgIcYdYzmU54qqz_BoBHypE77R4fwfkITUnEihXadn_VfLMKM1MhV2ZLpuxA6izikcyGsDpqGoFRPM5hVijKVvcltChqnlGse-vO7pAMOfDZi0APMNl9UVFgppzV3gEa_cg4hRSG3t1fRRSzAL1qwNnB8YBPnPY15oN75rG2BDAwlbS5IycP56KATzzKrrI-MZaVCfcE_ssR44m4ouS4LbZ9JohYXlj658c7a2cY4WuAA",
+								"value": "{{AWSToken}}",
 								"type": "default"
 							}
 						],
@@ -305,7 +305,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "eyJraWQiOiIwcHhwOUNDeXYyXC9cL1Z1XC9Rb2V2dStSWGRReVIzSWgremQxb24zREIzbW9VPSIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiY05lTElPQkpUZThnZlhMYUpiU1o5ZyIsInN1YiI6ImIxYjk1ODMxLTUyMmMtNGNlYy04NTk0LWRkZDg4M2I0ZTFjMyIsImNvZ25pdG86Z3JvdXBzIjpbImFkbWluIl0sImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuZXUtd2VzdC0yLmFtYXpvbmF3cy5jb21cL2V1LXdlc3QtMl90bGVBWG9xYmIiLCJjb2duaXRvOnVzZXJuYW1lIjoiYjFiOTU4MzEtNTIyYy00Y2VjLTg1OTQtZGRkODgzYjRlMWMzIiwiY3VzdG9tOnN1cm5hbWUiOiJhZG1pbnN1ciIsImF1ZCI6IjRhZnR2b28yNGo1c3Vkc2swbWpxY3FjcGVoIiwiZXZlbnRfaWQiOiI3OTk1ZDA2MS02NjQyLTRkM2UtYjgxMy0yNTk2ODkwMDUxNzMiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY4MTI0MTk1MSwibmFtZSI6ImFkbWlubmFtZSIsImV4cCI6MTY4MTI0NTU1MSwiaWF0IjoxNjgxMjQxOTUxLCJqdGkiOiIwOTM1OWFkNy02N2UyLTQ5ZWEtYTkxZS0zMzllNmFhZDAxMDYiLCJlbWFpbCI6ImFkbWluQHN3ZWcuaXQifQ.yi_dgB6xvuJiRgsCmkNN9yWJIxnWEQaqf9GxuVsfvKeQl8grLUjXnfnU_LdVN8OlBAUai7GGIdSO9aD6pwQ_ro2503pOzDX3M9T5gSEzBpgIcYdYzmU54qqz_BoBHypE77R4fwfkITUnEihXadn_VfLMKM1MhV2ZLpuxA6izikcyGsDpqGoFRPM5hVijKVvcltChqnlGse-vO7pAMOfDZi0APMNl9UVFgppzV3gEa_cg4hRSG3t1fRRSzAL1qwNnB8YBPnPY15oN75rG2BDAwlbS5IycP56KATzzKrrI-MZaVCfcE_ssR44m4ouS4LbZ9JohYXlj658c7a2cY4WuAA",
+								"value": "{{AWSToken}}",
 								"type": "default"
 							}
 						],
@@ -330,13 +330,44 @@
 					"response": []
 				},
 				{
+					"name": "getUserGroups",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/user/2c6810ca-c8b7-402c-92a6-2a0f5d74556e/groups",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"user",
+								"2c6810ca-c8b7-402c-92a6-2a0f5d74556e",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "createUser",
 					"request": {
 						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "eyJraWQiOiIwcHhwOUNDeXYyXC9cL1Z1XC9Rb2V2dStSWGRReVIzSWgremQxb24zREIzbW9VPSIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiY05lTElPQkpUZThnZlhMYUpiU1o5ZyIsInN1YiI6ImIxYjk1ODMxLTUyMmMtNGNlYy04NTk0LWRkZDg4M2I0ZTFjMyIsImNvZ25pdG86Z3JvdXBzIjpbImFkbWluIl0sImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuZXUtd2VzdC0yLmFtYXpvbmF3cy5jb21cL2V1LXdlc3QtMl90bGVBWG9xYmIiLCJjb2duaXRvOnVzZXJuYW1lIjoiYjFiOTU4MzEtNTIyYy00Y2VjLTg1OTQtZGRkODgzYjRlMWMzIiwiY3VzdG9tOnN1cm5hbWUiOiJhZG1pbnN1ciIsImF1ZCI6IjRhZnR2b28yNGo1c3Vkc2swbWpxY3FjcGVoIiwiZXZlbnRfaWQiOiI3OTk1ZDA2MS02NjQyLTRkM2UtYjgxMy0yNTk2ODkwMDUxNzMiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY4MTI0MTk1MSwibmFtZSI6ImFkbWlubmFtZSIsImV4cCI6MTY4MTI0NTU1MSwiaWF0IjoxNjgxMjQxOTUxLCJqdGkiOiIwOTM1OWFkNy02N2UyLTQ5ZWEtYTkxZS0zMzllNmFhZDAxMDYiLCJlbWFpbCI6ImFkbWluQHN3ZWcuaXQifQ.yi_dgB6xvuJiRgsCmkNN9yWJIxnWEQaqf9GxuVsfvKeQl8grLUjXnfnU_LdVN8OlBAUai7GGIdSO9aD6pwQ_ro2503pOzDX3M9T5gSEzBpgIcYdYzmU54qqz_BoBHypE77R4fwfkITUnEihXadn_VfLMKM1MhV2ZLpuxA6izikcyGsDpqGoFRPM5hVijKVvcltChqnlGse-vO7pAMOfDZi0APMNl9UVFgppzV3gEa_cg4hRSG3t1fRRSzAL1qwNnB8YBPnPY15oN75rG2BDAwlbS5IycP56KATzzKrrI-MZaVCfcE_ssR44m4ouS4LbZ9JohYXlj658c7a2cY4WuAA",
+								"value": "{{AWSToken}}",
 								"type": "default"
 							}
 						],
@@ -369,18 +400,27 @@
 					"response": []
 				},
 				{
-					"name": "deleteUser",
+					"name": "addRole",
 					"request": {
-						"method": "DELETE",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "",
+								"value": "{{AWSToken}}",
 								"type": "default"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"group\":\"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/user/{userId}/delete",
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/user/7bdb66bc-1ee5-4ec7-a637-73b2ab662a78/addRole",
 							"protocol": "https",
 							"host": [
 								"w65kmpnocc",
@@ -392,7 +432,118 @@
 							"path": [
 								"dev",
 								"user",
-								"{userId}",
+								"7bdb66bc-1ee5-4ec7-a637-73b2ab662a78",
+								"addRole"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveRole",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"group\":\"superadmin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/user/7bdb66bc-1ee5-4ec7-a637-73b2ab662a78/removeRole",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"user",
+								"7bdb66bc-1ee5-4ec7-a637-73b2ab662a78",
+								"removeRole"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateRole",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"group\":\"superadmin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/user/7bdb66bc-1ee5-4ec7-a637-73b2ab662a78/role",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"user",
+								"7bdb66bc-1ee5-4ec7-a637-73b2ab662a78",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUser",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/user/2b17bfb2-92c6-4690-be3d-e56ee1582339/delete",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"user",
+								"2b17bfb2-92c6-4690-be3d-e56ee1582339",
 								"delete"
 							]
 						}

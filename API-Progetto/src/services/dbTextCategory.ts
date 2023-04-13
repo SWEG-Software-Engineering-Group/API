@@ -1,6 +1,6 @@
 import { PutCommand, ScanCommand, ScanCommandInput, UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { environment } from 'src/environment/environment';
-import { state } from "src/types/Text";
+import { state } from "src/types/TextCategory";
 import { TextCategory } from "src/types/TextCategory";
 import { ddbDocClient } from "./dbConnection";
 
@@ -126,7 +126,7 @@ const updateText = async (tenantID: string, language: string, category: string, 
     }
     var toupdate: TextCategory = text[0];
 
-    toupdate.txt.stato = state;
+    toupdate.stato = state;
     var params: UpdateCommandInput = {
         TableName: environment.dynamo.TextCategoryTable.tableName,
         Key: {

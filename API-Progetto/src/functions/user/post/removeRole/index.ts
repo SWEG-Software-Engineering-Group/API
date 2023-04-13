@@ -1,4 +1,5 @@
 import { handlerPath } from '@libs/handler-resolver';
+import schema from './schema';
 import { environment } from "src/environment/environment";
 
 export default {
@@ -6,11 +7,16 @@ export default {
   events: [
     {
       http: {
-        method: "delete",
-        path: 'user/{username}/delete',
+        method: 'post',
+        path: 'user/{username}/removeRole',
+        request: {
+          schemas: {
+            'application/json': schema,
+          },
+        },
         authorizer: {
           arn: environment.cognito.userPoolArn,
-        },
+        }
       },
     },
   ],

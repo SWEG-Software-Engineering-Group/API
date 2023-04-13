@@ -14,6 +14,10 @@ export { default as signUpUser } from './user/post/create';
 export { default as getUsers } from './user/get/getUsers';
 export { default as getUser } from './user/get/getUser';
 export { default as adminGetUser } from './user/get/adminGetUser';
+export { default as getUserGroups } from './user/get/getUserGroups';
+export { default as addRole } from './user/post/addRole';
+export { default as removeRole } from './user/post/removeRole';
+export { default as setRole } from './user/put/updateRole';
 
 //plama
 export { default as originalTexts } from './textcategory/get/originalTexts';

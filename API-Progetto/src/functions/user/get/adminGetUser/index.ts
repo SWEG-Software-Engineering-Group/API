@@ -12,7 +12,6 @@ export default {
           arn: environment.cognito.userPoolArn,
         },
       },
-
     },
   ],
 };

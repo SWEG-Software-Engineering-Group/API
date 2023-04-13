@@ -26,15 +26,36 @@ const createUser = async (User: User) => {
             UserPoolId: environment.cognito.userPoolId,
             Username: params.Username
         }).promise();
-        await CognitoISP.adminAddUserToGroup({
-            GroupName: User.role.toString(),
-            UserPoolId: environment.cognito.userPoolId,
-            Username: params.Username
-        }).promise();
+        addUserRole(params.Username, User.role);
     } catch (err) {
         console.log(err);
-        return err;
+        throw {"Create User:": err};
     }
+}
+const addUserRole = async (username: string, role: string) => {
+    try {
+        await CognitoISP.adminAddUserToGroup({
+            GroupName: role.toString(),
+            UserPoolId: environment.cognito.userPoolId,
+            Username: username
+        }).promise();
+    } catch (error) {
+        console.log(error);
+        throw{"Add User:": error};
+    }
+}
+const removeUserRole = async (username: string, role: string) => {
+    try {
+        await CognitoISP.adminRemoveUserFromGroup({
+            GroupName: role.toString(),
+            UserPoolId: environment.cognito.userPoolId,
+            Username: username
+        }).promise();
+    } catch (error) {
+        console.log(error);
+        throw{"Remove User:": error};
+    }
+
 }
 const getUserFromToken   = async (token: string) => {
     return await CognitoISP.getUser({
@@ -96,6 +117,56 @@ const getAllUserCognito = async (params) => {
     }
 };
 
+const getListUserGroups = async (username : string) => {
+    try {
+        const params = {
+            UserPoolId: environment.cognito.userPoolId,
+            Username: username
+        };
+
+        console.log('params', JSON.stringify(params));
+
+        const listGroupsResp = await getAllUserGroups(params);
+
+        console.log('listGroupsResp', JSON.stringify(listGroupsResp));
+
+        return listGroupsResp.Groups;
+    } catch (error) {
+        throw{"List User groups:": error};
+    }
+};
+
+const getAllUserGroups = async (params) => {
+    try {
+        // string must not be empty
+        let paginationToken = 'notEmpty';
+        let itemsAll = {
+            Groups: []
+        };
+        while (paginationToken) {
+            const data = await CognitoISP
+                .adminListGroupsForUser(params)
+                .promise();
+
+            const { Groups } = data;
+            itemsAll = {
+                ...data,
+                ...{ Groups: [...itemsAll.Groups, ...(Groups ? [...Groups] : [])] }
+            };
+            paginationToken = data.NextToken;
+            if (paginationToken) {
+                params.PaginationToken = paginationToken;
+            }
+        }
+        return itemsAll;
+    } catch (err) {
+        console.error(
+            'Unable to scan the cognito pool users. Error JSON:',
+            JSON.stringify(err, null, 2)
+        );
+    }
+};        
+
 const deleteUser = async (username: string) => {
     try {
         const params = {
@@ -104,8 +175,8 @@ const deleteUser = async (username: string) => {
         };
         await CognitoISP.adminDeleteUser(params).promise();
     } catch (error) {
-        throw {"delete error": error};
+        throw {"Delete user": error};
     }
 }
 
-export { createUser, getListUserCognito, getUserFromToken, AdminGetUser, deleteUser};
+export { createUser, getListUserCognito, getUserFromToken, AdminGetUser, deleteUser, addUserRole, removeUserRole, getListUserGroups};
