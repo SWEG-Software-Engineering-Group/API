@@ -19,7 +19,8 @@ import {
   getUserGroups,
   addRole,
   removeRole,
-  setRole
+  setRole,
+  getUserTenant
 } from '@functions/index';
 
 
@@ -197,7 +198,8 @@ const serverlessConfiguration: AWS = {
     getUserGroups,
     addRole,
     removeRole,
-    setRole
+    setRole,
+    getUserTenant
     //plama
     /*
     originalTexts,

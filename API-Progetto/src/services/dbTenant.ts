@@ -38,7 +38,7 @@ const dbgetTenantinfo = async (tenant: string) => {
     // Set the parameters.
     const params: GetCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
-        Key: { id : tenant.toString() },
+        Key: { id : tenant },
     };
     try {
         const tenant = await ddbDocClient.send(new GetCommand(params));
@@ -47,27 +47,48 @@ const dbgetTenantinfo = async (tenant: string) => {
         return tenant.Item as Tenant;
     } catch (err) {
         console.log("Error", err.stack);
-        throw { err };
+        throw { "Error:" : err.stack };
     }
 };
 
-const dbgetDefaultLanguage = async (tenant: string) => {
+const dbgetUserTenant = async (username: string) => {
     // Set the parameters.
+    const params: ScanCommandInput = {
+        TableName: environment.dynamo.TenantTable.tableName,
+        FilterExpression: "contains(#users, :username)",
+        ExpressionAttributeNames: {
+            "#users": "users",
+        },
+        ExpressionAttributeValues: {
+            ":username": username,
+        },
+    };
+    try {
+        const tenant = await ddbDocClient.send(new ScanCommand(params));
+
+        console.log("Success - GET", tenant);
+        return tenant.Items as Tenant[];
+    } catch (err) {
+        console.log("Error", err.stack);
+        throw { "Error:" : err.stack };
+    }
+};
+const dbgetDefaultLanguage = async (tenant: string) => {
+    // Get Tenant default language
     if (!await dbgetTenantinfo(tenant)) {
-        return { err: "Tenant not found" };
+        throw { err: "Tenant not found"};
     }
     const params: GetCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
-        Key: { id: tenant },
-    };
+        Key: { id: tenant }
+    }
     try {
         const tenant = await ddbDocClient.send(new GetCommand(params));
-
         console.log("Success - GET", tenant);
         return tenant.Item.defaultLanguage;
     } catch (err) {
         console.log("Error", err.stack);
-        throw { "Error:" : err };
+        throw {"Error" : err.stack};
     }
 };
 
@@ -143,4 +164,4 @@ const dbresetTenant = async (tenant: string) => {
         return { "error": error };
     }
 };
-export { dbputTenant, dbgetTenants, dbgetTenantinfo, dbgetDefaultLanguage, dbgetSecondaryLanguage, dbdeleteTenant, dbresetTenant };
+export { dbputTenant, dbgetTenants, dbgetTenantinfo, dbgetDefaultLanguage, dbgetSecondaryLanguage, dbdeleteTenant, dbresetTenant, dbgetUserTenant };

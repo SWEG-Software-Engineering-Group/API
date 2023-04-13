@@ -18,6 +18,8 @@ export { default as getUserGroups } from './user/get/getUserGroups';
 export { default as addRole } from './user/post/addRole';
 export { default as removeRole } from './user/post/removeRole';
 export { default as setRole } from './user/put/updateRole';
+export { default as getUserTenant } from './user/get/getTenant';
+
 
 //plama
 export { default as originalTexts } from './textcategory/get/originalTexts';

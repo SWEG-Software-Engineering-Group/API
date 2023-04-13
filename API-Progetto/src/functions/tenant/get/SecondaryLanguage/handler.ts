@@ -5,8 +5,18 @@ import { dbgetSecondaryLanguage } from 'src/services/dbTenant';
 import schema from './schema';
 
 const getTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  let languages=await dbgetSecondaryLanguage(event.pathParameters.tenantid);
-  return formatJSONResponse({languages});
+  try{
+    let languages=await dbgetSecondaryLanguage(event.pathParameters.tenantId.toString());
+    return formatJSONResponse({languages}, 200);
+  } catch(error){
+    console.log(error);
+    return formatJSONResponse(
+      {
+        "Error": error,
+      },
+      400
+    );
+  }
 };
 
 export const main = middyfy(getTenant);
