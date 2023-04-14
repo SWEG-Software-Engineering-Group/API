@@ -4,7 +4,6 @@ import { middyfy } from '@libs/lambda';
 import { dbputTenant } from 'src/services/dbTenant';
 
 import schema from './schema';
-import { Category } from 'src/types/Tenant';
 var crypto = require('crypto');
 
 const putTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {

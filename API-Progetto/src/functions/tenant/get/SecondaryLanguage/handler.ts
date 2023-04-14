@@ -6,6 +6,14 @@ import schema from './schema';
 
 const getTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try{
+    if (event.pathParameters.tenantId == null) {
+      return formatJSONResponse(
+        {
+          "Error": "Missing tenantId",
+        },
+        400
+      );
+    }
     let languages=await dbgetSecondaryLanguage(event.pathParameters.tenantId.toString());
     return formatJSONResponse({languages}, 200);
   } catch(error){

@@ -6,8 +6,25 @@ import { AdminGetUser } from 'src/services/userManager';
 import schema from './schema';
 
 const admGetUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  let users = await AdminGetUser(event.pathParameters.username);
-  return formatJSONResponse({users});
+  try {
+    if (event.pathParameters.username == null) {
+      return formatJSONResponse(
+        {
+          "error": "Missing username",
+        },
+        400
+      );
+    }
+    let users = await AdminGetUser(event.pathParameters.username);
+    return formatJSONResponse({users}, 200);
+  } catch (error) {
+    return formatJSONResponse(
+      {
+        error,
+      },
+      400
+    );
+  }
 };
 
 export const main = middyfy(admGetUser);

@@ -6,9 +6,19 @@ import { getListUserCognito } from 'src/services/userManager';
 import schema from './schema';
 
 const getUsers: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async () => {
-  let users = await getListUserCognito();
-  return formatJSONResponse({users});
-  
+  try
+  {
+    let users = await getListUserCognito();
+    return formatJSONResponse({users});
+  }
+  catch (error) {
+    return formatJSONResponse(
+      {
+        error,
+      },
+      400
+    );
+  }
 };
 
 export const main = middyfy(getUsers);

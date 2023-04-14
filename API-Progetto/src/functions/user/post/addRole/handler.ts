@@ -7,6 +7,14 @@ import schema from './schema';
 
 const addRole: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
+    if (event.pathParameters.username == null) {
+      return formatJSONResponse(
+        {
+          "error": "Missing username",
+        },
+        400
+      );
+    }
     let role = await addUserRole(event.pathParameters.username, event.body.group.toString());
     return formatJSONResponse({role}, 200);
   } catch (error) {

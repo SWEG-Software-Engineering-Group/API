@@ -8,6 +8,10 @@ export { default as getDefaultLanguage } from './tenant/get/DefaultLanguage';
 export { default as getSecondaryLanguage } from './tenant/get/SecondaryLanguage';
 export { default as deleteTenants } from './tenant/delete/Tenant';
 export { default as resetTenant } from './tenant/put/Tenant';
+export { default as addTenantUser } from './tenant/post/addUser';
+export { default as addTenantAdmin } from './tenant/post/addAdmin';
+export { default as removeTenantAdmin } from './tenant/post/removeAdmin';
+export { default as removeTenantUser } from './tenant/post/removeUser';
 
 export { default as delUser } from './user/delete';
 export { default as signUpUser } from './user/post/create';

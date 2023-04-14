@@ -10,7 +10,11 @@ import {
   getDefaultLanguage, 
   getSecondaryLanguage, 
   deleteTenants, 
-  resetTenant, 
+  resetTenant,
+  addTenantAdmin,
+  addTenantUser,
+  removeTenantAdmin,
+  removeTenantUser, 
   signUpUser, 
   getUsers, 
   getUser, 
@@ -189,7 +193,11 @@ const serverlessConfiguration: AWS = {
     getDefaultLanguage, 
     getSecondaryLanguage, 
     deleteTenants, 
-    resetTenant, 
+    resetTenant,
+    addTenantAdmin,
+    addTenantUser,
+    removeTenantAdmin,
+    removeTenantUser, 
     signUpUser, 
     getUsers, 
     getUser, 
@@ -200,6 +208,7 @@ const serverlessConfiguration: AWS = {
     removeRole,
     setRole,
     getUserTenant
+
     //plama
     /*
     originalTexts,

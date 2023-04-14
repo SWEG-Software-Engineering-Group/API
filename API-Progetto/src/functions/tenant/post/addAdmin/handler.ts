@@ -1,22 +1,22 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { removeUserRole } from 'src/services/userManager';
+import { dbAddAdminToTenant } from 'src/services/dbTenant';
 
 import schema from './schema';
 
-const removeRole: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const addTenantAdmin: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    if (event.pathParameters.username == null) {
+    if (event.pathParameters.tenantId == null) {
       return formatJSONResponse(
         {
-          "error": "Missing username",
+          "error": "Missing tenantId",
         },
         400
       );
     }
-    let role = await removeUserRole(event.pathParameters.username, event.body.group.toString());
-    return formatJSONResponse({role}, 200);
+    let tenant = await dbAddAdminToTenant(event.pathParameters.tenantId, event.body.Admin.toString());
+    return formatJSONResponse({tenant}, 200);
   } catch (error) {
     console.log(error);
     return formatJSONResponse(
@@ -28,4 +28,4 @@ const removeRole: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
   }
 };
 
-export const main = middyfy(removeRole);
+export const main = middyfy(addTenantAdmin);
