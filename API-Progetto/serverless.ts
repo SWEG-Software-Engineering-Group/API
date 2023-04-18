@@ -1,23 +1,23 @@
 import type { AWS } from '@serverless/typescript';
 import { environment } from 'src/environment/environment';
 //plama
-//import { originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText, } from '@functions/index';
+import { originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText, } from '@functions/index';
 //marco
 import {
-  putTenant, 
-  getTenants, 
-  getTenant, 
-  getDefaultLanguage, 
-  getSecondaryLanguage, 
-  deleteTenants, 
+  putTenant,
+  getTenants,
+  getTenant,
+  getDefaultLanguage,
+  getSecondaryLanguage,
+  deleteTenants,
   resetTenant,
   addTenantAdmin,
   addTenantUser,
   removeTenantAdmin,
-  removeTenantUser, 
-  signUpUser, 
-  getUsers, 
-  getUser, 
+  removeTenantUser,
+  signUpUser,
+  getUsers,
+  getUser,
   adminGetUser,
   delUser,
   getUserGroups,
@@ -144,7 +144,7 @@ const serverlessConfiguration: AWS = {
           ],
           KeySchema: [
             {
-              AttributeName: 'idTenant',
+              AttributeName: 'id',
               KeyType: 'HASH',
             },
             {
@@ -187,20 +187,20 @@ const serverlessConfiguration: AWS = {
   functions: {
     //marco
 
-    putTenant, 
-    getTenants, 
-    getTenant, 
-    getDefaultLanguage, 
-    getSecondaryLanguage, 
-    deleteTenants, 
+    putTenant,
+    getTenants,
+    getTenant,
+    getDefaultLanguage,
+    getSecondaryLanguage,
+    deleteTenants,
     resetTenant,
     addTenantAdmin,
     addTenantUser,
     removeTenantAdmin,
-    removeTenantUser, 
-    signUpUser, 
-    getUsers, 
-    getUser, 
+    removeTenantUser,
+    signUpUser,
+    getUsers,
+    getUser,
     adminGetUser,
     delUser,
     getUserGroups,
@@ -210,7 +210,6 @@ const serverlessConfiguration: AWS = {
     getUserTenant
 
     //plama
-    /*
     originalTexts,
     allCategories,
     rejectedText,
@@ -219,7 +218,7 @@ const serverlessConfiguration: AWS = {
     textbyid,
     approveText,
     rejectText
-    */
+
   },
   package: { individually: true },
   custom: {

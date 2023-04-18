@@ -1,11 +1,11 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbGetTexts, updateText } from 'src/services/dbTextCategory';
-import { state } from 'src/types/Text';
-import { TextCategory } from 'src/types/TextCategory';
+import { updateText } from 'src/services/dbTextCategory';
+
 
 import schema from './schema';
+import { state } from 'src/types/TextCategory';
 
 const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
