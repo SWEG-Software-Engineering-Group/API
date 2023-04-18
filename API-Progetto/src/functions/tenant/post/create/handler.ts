@@ -15,7 +15,7 @@ const putTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (even
     creationDate: event.body.creationDate,
     languages: event.body.languages,
     defaultLanguage: event.body.defaultLanguage,
-    categories: []//TODO//event.body.categories.map((val) => { return { id: crypto.randomUUID(), name: val } })//TODO map with created id//
+    //categories: []//TODO//event.body.categories.map((val) => { return { id: crypto.randomUUID(), name: val } })//TODO map with created id//
   });
   return formatJSONResponse({
     message: `Created tenant ${event.body.tenantName}, welcome to the exciting SWEG world!`,
