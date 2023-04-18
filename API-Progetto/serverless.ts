@@ -207,7 +207,7 @@ const serverlessConfiguration: AWS = {
     addRole,
     removeRole,
     setRole,
-    getUserTenant
+    getUserTenant,
 
     //plama
     originalTexts,
