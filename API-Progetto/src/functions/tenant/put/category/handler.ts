@@ -1,22 +1,19 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetUser } from 'src/services/dbUser';
-import { dbcheckAdminInTenant } from 'src/services/dbTenant';
-import { User } from 'src/types/User';
+import { dbcheckAdminInTenant, dbputCategory } from 'src/services/dbTenant';
 import schema from './schema';
 
-const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const putCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
-     * INPUT:   Tenant (String), User (String)
-     * OUTPUT:  {response: OK} / Error
+     * INPUT:   Tenant (String), Category(String), {body: Name(String)}
+     * OUTPUT:  {result: OK} / Error
      * 
-     * DESCRIPTION: returns all the informations of an user inside a Tenant, else return error.
-     *      password must be removed from the fields.
+     * DESCRIPTION: update the name of the category, else return error.
      * 
      * SAFETY:  
-     *  -   check authorization of the user for this function with Cognito (user, admin);
-     *  -   check input, sanitize, validate;
+     *  -   check authorization of the user for this function with Cognito (admin);
+     *  -   check input is valid, not null and sanitize it;
      *  -   check user is authorized inside the requested tenant;
      *  
      *  EXCEPTIONS:
@@ -25,7 +22,6 @@ const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
      *  -   input is empty;
      *  -   input is invalid;
      *  -   request to db failed;
-     *  -   tenant list of users is empty; 
      */
 
 
@@ -33,14 +29,17 @@ const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     //TO DO
 
     //sanitize input and check if is empty
-    if (event.pathParameters.TenantId == null || event.pathParameters.UserId == null)
+    if (event.pathParameters.TenantId == null || event.pathParameters.Category == null)
         return formatJSONResponse({ "error": "no valid input" });
+    if (event.body.Name == null )
+        return formatJSONResponse({ "error": "body request missing parameters" });
 
     var sanitizer = require('sanitize-html')();
 
-    let tenant = sanitizer.value(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
-    let userName = sanitizer.value(event.pathParameters.UserId, { allowedTags: [], allowedAttributes: {} })
-    if (userName === '' || tenant === '')
+    let tenant = sanitizer(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
+    let name = sanitizer(event.body.Name, { allowedTags: [], allowedAttributes: {} });
+    let category = sanitizer(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} });
+    if (tenant === '' || name === '' || category === '')
         return formatJSONResponse({ "error": "input is empty" });
 
     //check user is admin inside this tenant
@@ -51,7 +50,7 @@ const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
 
     try {
         //collect the data from db
-        var user: User = await dbgetUser(userName);
+        await dbputCategory(tenant, category, name);
         
     }
     catch (error) {
@@ -60,8 +59,7 @@ const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     }
 
     //return result
-    delete user.password;
-    return formatJSONResponse({ "user": user });
+    return formatJSONResponse({ "result": 'OK' });
 };
 
-export const main = middyfy(getUserInfo);
+export const main = middyfy(putCategory);

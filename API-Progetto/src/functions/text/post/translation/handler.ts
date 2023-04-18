@@ -7,24 +7,22 @@ import schema from './schema';
 
 const postTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
-     * INPUT:   Tenant (String)
-     * OUTPUT:  Tenant => ContentUser
-     * 
-     * DESCRIPTION: returns the ContentUsers requested inside a Tenant with all its informations, else return error.
+     * INPUT:   Tenant (String), {body: Title(String), Language(String), Category(String), Text(String)}
+     * OUTPUT:  {result: OK} / Error
+     *
+     * DESCRIPTION: add a new translation, else return error.
      * 
      * SAFETY:  
-     *  -   check authorization of the user for this function with Cognito (user, admin, superadmin);
-     *  -   check input is valid, not null and sanitize it;
+     *  -   check authorization of the user for this function with Cognito (admin);
+     *  -   check input, sanitize, validate;
      *  -   check user is authorized inside the requested tenant;
      *  
      *  EXCEPTIONS:
      *  -   user is not authorized for this function;
-     *  -   input is empty;
-     *  -   connection to db failed;
-     *  -   tenant requested does not exist;
-     *  -   user requested does not exist;
      *  -   user is not authorized inside this tenant;
-     *  -   tenant list of users is empty; 
+     *  -   input is empty;
+     *  -   input is invalid;
+     *  -   request to db failed;
      */
 
 
@@ -34,15 +32,17 @@ const postTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null)
         return formatJSONResponse({ "error": "no valid input" });
-    if (event.body.Text == null || event.body.categoryId == null, event.body.language == null)
+    if (event.body.Title == null ||event.body.Text == null || event.body.Category == null, event.body.Language == null)
         return formatJSONResponse({ "error": "body request missing parameters" });
-    var sanitizer = require('sanitize')();
 
-    let tenant = sanitizer.value(event.pathParameters.TenantId, /^[A-Za-z0-9]+$/)
-    let text = sanitizer.value(event.body.Text, /^[A-Za-z0-9]+$/)
-    let category = sanitizer.value(event.body.categoryId, /^[A-Za-z0-9]+$/)
-    let language = sanitizer.value(event.body.language, /^[A-Za-z0-9]+$/)
-    if (tenant === '' || text === '' || category === '' || language === '')
+    var sanitizer = require('sanitize-html')();
+
+    let tenant = sanitizer(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
+    let title = sanitizer(event.body.Title, { allowedTags: [], allowedAttributes: {} });
+    let text = sanitizer(event.body.Text); //allow default tags and attributes for html formatting of text
+    let category = sanitizer(event.body.Category, { allowedTags: [], allowedAttributes: {} });
+    let language = sanitizer(event.body.Language, { allowedTags: [], allowedAttributes: {} })
+    if (tenant === '' || title === '' || text === '' || category === '' || language === '')
         return formatJSONResponse({ "error": "input is empty" });
 
     //check user is admin inside this tenant
@@ -52,20 +52,18 @@ const postTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     //TO DO
 
     try {
-        //check requested tenant exist
-        //TO DO
 
         //collect the data from db
-        await dbpostTranslation(tenant, text, category, language);
-        //if connection fails do stuff
-        //TO DO
+        await dbpostTranslation(tenant, title, category, language, text);
+        
     }
-    catch(error){
+    catch (error) {
+        //if connection fails do stuff
         return formatJSONResponse({ "error": "db connection failed OR tenant does not exist OR other" });
     }
 
     //return result
-    return formatJSONResponse({ "OK": 'OK' });
+    return formatJSONResponse({ "result": 'OK' });
 };
 
 export const main = middyfy(postTranslation);

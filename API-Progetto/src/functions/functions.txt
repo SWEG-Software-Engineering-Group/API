@@ -1,0 +1,30 @@
+﻿tenant:
+├───┬ delete:
+│	└─── language										test
+└───┬ get:
+	├─── admin											test
+	└─── user											test
+
+text:
+├───┬ delete:
+│	└─── text											test
+├───┬ get:
+│	├─── allText										test
+│	├─── textFromCategory								test
+│	├─── textFromLanguage								test
+│	└─── texts											test
+├───┬ post:
+│	├─── originalText									test
+│	└─── translation									test
+└───┬ put:
+	├─── category										test
+	├─── textCategory									test
+	├─── originalText									db func - test 
+	└─── translation									db func - test
+
+da aggiungere: funzione per la ricerca di tutte le lingue di traduzione di un testo
+controllare: non ci possono essere due categorie con lo stesso nome!!!!
+
+user:
+└───┬ get:
+	└─── user											lambda incomplete - db func - test

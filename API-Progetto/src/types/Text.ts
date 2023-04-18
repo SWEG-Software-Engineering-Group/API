@@ -1,12 +1,14 @@
-interface Text {
+import { Category } from "./Tenant";
+import { state } from "./TextCategory";
+interface Text{
     idTenant: string;
-    languageIdtextId: string;
-    text:string,
-    stato: number;
+    language: string;
+    category: Category;
+    title: string;
+    text: string;
+    stato: state;
+    comment: string | null;
+    link: string | null;
     feedback: string | null;
 }
-
-enum state {
-    testoOriginale, daTradurre, daVerificare, verificato, rifiutato
-}
-export { Text, state };
+export { Text };

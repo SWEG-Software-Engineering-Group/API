@@ -1,3 +1,4 @@
+import schema from './schema';
 import { handlerPath } from '@libs/handler-resolver';
 
 export default {
@@ -6,7 +7,12 @@ export default {
     {
       http: {
         method: 'put',
-        path: '{TenantId}/translation',
+            path: '{TenantId}/translation',
+            request: {
+                schemas: {
+                    'application/json': schema,
+                },
+            },
       },
     },
   ],

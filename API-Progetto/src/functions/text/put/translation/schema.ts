@@ -1,12 +1,11 @@
 export default {
-  type: "object",
-  properties: {
-    tenantName: { type: 'string' },
-    defaultLanguage: { type: 'string' },
-    creationDate: { type: 'int' },
-    languages: { type: Array<"string"> },
-    admins: { type: Array<"string"> },
-    users: { type: Array<"string"> }
-  },
-  required: ['tenantName', 'defaultLanguage', "creationDate", "languages", "admins", "users"]
+    type: "object",
+    properties: {
+        Title: { type: 'string' },
+        Language: { type: 'string' },
+        Category: { type: 'string' },
+        Text: { type: 'string' },
+        Feedback: { type: 'string' },
+    },
+    required: ["Title", "Language", "Category", "Text"]
 } as const;

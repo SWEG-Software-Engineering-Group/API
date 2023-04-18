@@ -3,30 +3,29 @@ import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbgetLanguage } from 'src/services/dbText';
 import { dbcheckUserInTenant } from 'src/services/dbTenant';
-import { TextCategory } from 'src/types/TextCategory';
+import { Text } from 'src/types/Text';
 import { state } from 'src/types/Text';
 import schema from './schema';
 
 const getTextLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
-     * INPUT:   Tenant (String)
-     * OUTPUT:  Tenant => ContentUser
+     * INPUT:   Tenant (String), Language (String)
+     * OUTPUT:  {response: Text[]} / Error
      * 
-     * DESCRIPTION: returns the ContentUsers requested inside a Tenant with all its informations, else return error.
+     * DESCRIPTION: returns all texts from a language inside a Tenant, else return error.
      * 
      * SAFETY:  
-     *  -   check authorization of the user for this function with Cognito (user, admin, superadmin);
-     *  -   check input is valid, not null and sanitize it;
+     *  -   check authorization of the user for this function with Cognito (user, admin);
+     *  -   check input, sanitize, validate;
      *  -   check user is authorized inside the requested tenant;
      *  
      *  EXCEPTIONS:
      *  -   user is not authorized for this function;
-     *  -   input is empty;
-     *  -   connection to db failed;
-     *  -   tenant requested does not exist;
-     *  -   user requested does not exist;
      *  -   user is not authorized inside this tenant;
-     *  -   tenant list of users is empty; 
+     *  -   input is empty;
+     *  -   iput is invalid;
+     *  -   request to db failed;
+     *  -   list of texts is empty; 
      */
 
 
@@ -34,14 +33,14 @@ const getTextLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     //TO DO
 
     //sanitize input and check if is empty
-    if (event.pathParameters.TenantId == null || event.pathParameters.language == null)
+    if (event.pathParameters.TenantId == null || event.pathParameters.Language == null)
         return formatJSONResponse({ "error": "no valid input" });
 
-    var sanitizer = require('sanitize')();
+    var sanitizer = require('sanitize-html')();
 
-    let tenant = sanitizer.value(event.pathParameters.TenantId, /^[A-Za-z0-9]+$/)
-    let name = sanitizer.value(event.pathParameters.language, /^[A-Za-z0-9]+$/)
-    if (name === '' || tenant === '')
+    let tenant = sanitizer(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
+    let language = sanitizer(event.pathParameters.Language, { allowedTags: [], allowedAttributes: {} })
+    if (language === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 
     //check user is admin inside this tenant
@@ -51,20 +50,18 @@ const getTextLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     //TO DO
 
     try {
-        //check requested tenant exist
-        //TO DO
-
         //collect the data from db
-        var category: TextCategory[] = await dbgetLanguage(tenant, name, state.verificato);
-        //if connection fails do stuff
-        //TO DO
+        var texts: Text[] = await dbgetLanguage(tenant, language, state.verificato);
+        if (!texts || texts.length == 0)
+            return formatJSONResponse({ "error": "no texts found" });        
     }
-    catch(error){
-        return formatJSONResponse({ "error": "db connection failed OR tenant does not exist OR other" });
+    catch (error) {
+        //if connection fails do stuff
+        return formatJSONResponse({ "error": error });
     }
 
     //return result
-    return formatJSONResponse({ "categories": category });
+    return formatJSONResponse({ "response": texts });
 };
 
 export const main = middyfy(getTextLanguage);

@@ -7,24 +7,25 @@ import schema from './schema';
 
 const deleteLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
-     * INPUT:   Tenant (String), language (String)
-     * OUTPUT:  Tenant => Remove(TextCategory[], language)
+     * INPUT:   Tenant (String), Language (String)
+     * OUTPUT:  {result: OK} / Error
      * 
-     * DESCRIPTION: remove all categories from a language (thus delete all translations), else return error.
-     *      cannot remove the the original language.
+     * DESCRIPTION: remove all texts (translations) from a language and then delete the language from the tenant, else return error.
+     *      cannot remove the original language.
      * 
      * SAFETY:  
-     *  -   check authorization of the user for this function with Cognito (user, admin, superadmin);
-     *  -   check input is valid, not null and sanitize it;
-     *  -   check user is authorized inside the requested tenant;
+     *  -   check authorization of the user for this function with Cognito (admin);
+     *  -   check input, sanitize and validate;
+     *  -   check user belongs to the requested tenant;
      *  
      *  EXCEPTIONS:
+     *  -   user is not authorized inside this tenant;
      *  -   user is not authorized for this function;
      *  -   input is empty;
-     *  -   connection to db failed;
-     *  -   language requested does not exist;
-     *  -   language requested is original language;
-     *  -   user is not authorized inside this tenant;
+     *  -   input is invalid;
+     *  -   request to db failed;
+     *  -   language requested is the original language;
+     * 
      */
 
 
@@ -32,14 +33,14 @@ const deleteLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     //TO DO
 
     //sanitize input and check if is empty
-    if (event.pathParameters.TenantId == null || event.pathParameters.language == null)
+    if (event.pathParameters.TenantId == null || event.pathParameters.Language == null)
         return formatJSONResponse({ "error": "no valid input" });
 
-    var sanitizer = require('sanitize')();
+    const sanitizeHTML = require('sanitize-html');
 
-    let tenant = sanitizer.value(event.pathParameters.TenantId, /^[A-Za-z0-9]+$/)
-    let language = sanitizer.value(event.pathParameters.language, /^[A-Za-z0-9]+$/)
-    if (language     === '' || tenant === '')
+    let tenant = sanitizeHTML(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
+    let language = sanitizeHTML(event.pathParameters.Language, { allowedTags: [], allowedAttributes: {} });
+    if (language === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 
     //check user is admin inside this tenant
@@ -49,11 +50,8 @@ const deleteLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     //TO DO
 
     try {
-        //check requested tenant exist
-        //TO DO
-
         //check language is not default
-        var result: string = await dbgetDefaultLanguage (tenant);
+        var result = await dbgetDefaultLanguage (tenant);
         if (result === "")
             return formatJSONResponse({ "error": "an error happened somwhere in the db" });
         if (result === language)
@@ -62,10 +60,9 @@ const deleteLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
         //execute the delete
         await dbdeleteLanguage(tenant, language);
 
-        //if connection fails do stuff
-        //TO DO
     }
-    catch(error){
+    catch (error) {
+        //if request to fails do stuff
         return formatJSONResponse({ "error": error });
     }
 

@@ -7,38 +7,37 @@ import schema from './schema';
 
 const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
-     * INPUT:   Tenant (String), TextId (String)
-     * OUTPUT:  Tenant => Remove(TextId)
+     * INPUT:   Tenant (String), Title (String)
+     * OUTPUT:  {result: OK} / Error
      * 
-     * DESCRIPTION: remove a text orignial or translation, else return error.
-     *          if text is original then remove also all translations.
+     * DESCRIPTION: delete all texts original and translation corresponding to a specific ID from a Tenant, else return error.
      * 
      * SAFETY:  
-     *  -   check authorization of the user for this function with Cognito (user, admin, superadmin);
-     *  -   check input is valid, not null and sanitize it;
+     *  -   check authorization of the user for this function with Cognito (admin);
+     *  -   check input, sanitize and validate;
      *  -   check user is authorized inside the requested tenant;
      *  
      *  EXCEPTIONS:
      *  -   user is not authorized for this function;
-     *  -   input is empty;
-     *  -   connection to db failed;
-     *  -   text requested does not exist;
      *  -   user is not authorized inside this tenant;
+     *  -   input is empty;
+     *  -   input is invalid;
+     *  -   request to db failed;
      */
 
 
-    //check user is allowed to use this function
+    //check user is allowed to use this function COGNITO
     //TO DO
 
     //sanitize input and check if is empty
-    if (event.pathParameters.TenantId == null || event.pathParameters.TextId == null)
+    if (event.pathParameters.TenantId == null || event.pathParameters.Title == null)
         return formatJSONResponse({ "error": "no valid input" });
 
-    var sanitizer = require('sanitize')();
+    var sanitizer = require('sanitize-html')();
 
-    let tenant = sanitizer.value(event.pathParameters.TenantId, /^[A-Za-z0-9]+$/)
-    let text = sanitizer.value(event.pathParameters.TextId, /^[A-Za-z0-9]+$/)
-    if (text     === '' || tenant === '')
+    let tenant = sanitizer(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
+    let title = sanitizer(event.pathParameters.Title, { allowedTags: [], allowedAttributes: {} })
+    if (title === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 
     //check user is admin inside this tenant
@@ -48,19 +47,11 @@ const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
     //TO DO
 
     try {
-        //check requested tenant exist
-        //TO DO
-
-        //cosa devo fare se il testo è in lingua originale? devo cancellare anche le traduzioni? come faccio?
-
-
         //execute the delete
-        await dbdeleteText(tenant, text);
-
-        //if connection fails do stuff
-        //TO DO
+        await dbdeleteText(tenant, title);
     }
-    catch(error){
+    catch (error) {
+        //request to db failed
         return formatJSONResponse({ "error": error });
     }
 

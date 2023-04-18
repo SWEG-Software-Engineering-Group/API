@@ -33,10 +33,6 @@ interface Environment {
     | "me-south-1"
     | "sa-east-1";
     dynamo: {
-        UserTable: {
-            tableName: string;
-            arn: string;
-        },
         TokenTable: {
             tableName: string;
             arn: string;
@@ -45,11 +41,11 @@ interface Environment {
             tableName: string;
             arn: string;
         },
-        TextInfoTable: {
+        TextCategoryTable: {
             tableName: string;
             arn: string;
         },
-        TextTable: {
+        TextCategoryInfoTable: {
             tableName: string;
             arn: string;
         },
@@ -60,32 +56,31 @@ interface Environment {
     };
     cognito: {
         userPoolArn: string;
+        userPoolId: string;
+        idclient: string;
     };
 }
 
 const environment: Environment = {
     awsRegion: "eu-west-2",
     dynamo: {
-        UserTable: {
-            tableName: "userTable",
-            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/userData",
-        },
         TokenTable: {
             tableName: "TokenTable",
-            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TokenTable",
+            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TokenTable",
         },
         TenantTable: {
             tableName: "TenantTable",
-            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TenantTable",
+            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TenantTable",
         },
-        TextInfoTable: {
-            tableName: "TextInfoTable",
-            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TextInfoTable",
+        TextCategoryTable: {
+            tableName: "TextCategoryTable",
+            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TextCategoryTable",
         },
-        TextTable: {
-            tableName: "TextTable",
-            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/TextTable",
+        TextCategoryInfoTable: {
+            tableName: "TextCategoryInfoTable",
+            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TextCategoryInfoTable",
         },
+
 
     },
     lambda: {
@@ -98,7 +93,11 @@ const environment: Environment = {
     },
     cognito: {
         userPoolArn:
-            "arn:aws:cognito-idp:eu-west-2:xxxxxxxxx:userpool/eu-west-2_wyPnveAIG",
+            "arn:aws:cognito-idp:eu-west-2:574522373582:userpool/eu-west-2_tleAXoqbb",
+        userPoolId:
+            "eu-west-2_tleAXoqbb",
+        idclient:
+            "4aftvoo24j5sudsk0mjqcqcpeh",
     },
 };
 

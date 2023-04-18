@@ -14,4 +14,4 @@ interface Category {
     name: string;
 }
 
-  export { Tenant, Category };
+export { Tenant, Category };
