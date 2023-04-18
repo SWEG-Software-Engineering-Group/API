@@ -1,20 +1,21 @@
 import type { AWS } from '@serverless/typescript';
 import { environment } from 'src/environment/environment';
 //plama
-//import { originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText, } from '@functions/index';
+import { originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText, } from '@functions/index';
 //marco
-import { 
-  hello, 
-  putTenant, 
-  getTenants, 
-  getTenant, 
-  getDefaultLanguage, 
-  getSecondaryLanguage, 
-  deleteTenants, 
-  resetTenant, 
-  signUpUser, 
-  getUsers, 
-  getUser, 
+
+import {
+  hello,
+  putTenant,
+  getTenants,
+  getTenant,
+  getDefaultLanguage,
+  getSecondaryLanguage,
+  deleteTenants,
+  resetTenant,
+  signUpUser,
+  getUsers,
+  getUser,
   adminGetUser,
   delUser
 } from '@functions/index';
@@ -154,7 +155,7 @@ const serverlessConfiguration: AWS = {
           ],
           KeySchema: [
             {
-              AttributeName: 'idTenant',
+              AttributeName: 'id',
               KeyType: 'HASH',
             },
             {
@@ -195,24 +196,23 @@ const serverlessConfiguration: AWS = {
   },
   // import the function via paths
   functions: {
-    hello,
+    //hello,
     //marco
 
-    putTenant, 
-    getTenants, 
-    getTenant, 
-    getDefaultLanguage, 
-    getSecondaryLanguage, 
-    deleteTenants, 
-    resetTenant, 
-    signUpUser, 
-    getUsers, 
-    getUser, 
+    putTenant,
+    getTenants,
+    getTenant,
+    getDefaultLanguage,
+    getSecondaryLanguage,
+    deleteTenants,
+    resetTenant,
+    signUpUser,
+    getUsers,
+    getUser,
     adminGetUser,
-    delUser
+    delUser,
 
     //plama
-    /*
     originalTexts,
     allCategories,
     rejectedText,
@@ -221,7 +221,7 @@ const serverlessConfiguration: AWS = {
     textbyid,
     approveText,
     rejectText
-    */
+
   },
   package: { individually: true },
   custom: {
