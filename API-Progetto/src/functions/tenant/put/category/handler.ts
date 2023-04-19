@@ -2,6 +2,7 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbcheckAdminInTenant, dbputCategory } from 'src/services/dbTenant';
+import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
 const putCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -34,11 +35,9 @@ const putCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     if (event.body.Name == null )
         return formatJSONResponse({ "error": "body request missing parameters" });
 
-    var sanitizer = require('sanitize-html')();
-
-    let tenant = sanitizer(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
-    let name = sanitizer(event.body.Name, { allowedTags: [], allowedAttributes: {} });
-    let category = sanitizer(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} });
+    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
+    let name = sanitizeHtml(event.body.Name, { allowedTags: [], allowedAttributes: {} });
+    let category = sanitizeHtml(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} });
     if (tenant === '' || name === '' || category === '')
         return formatJSONResponse({ "error": "input is empty" });
 

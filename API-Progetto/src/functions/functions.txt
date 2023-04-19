@@ -12,7 +12,8 @@ text:
 │	├─── allText										test
 │	├─── textFromCategory								test
 │	├─── textFromLanguage								test
-│	└─── texts											test
+│	├─── texts											test
+│	└─── translationsLanguages							test
 ├───┬ post:
 │	├─── originalText									test
 │	└─── translation									test
@@ -21,9 +22,6 @@ text:
 	├─── textCategory									test
 	├─── originalText									db func - test 
 	└─── translation									db func - test
-
-da aggiungere: funzione per la ricerca di tutte le lingue di traduzione di un testo
-controllare: non ci possono essere due categorie con lo stesso nome!!!!
 
 user:
 └───┬ get:

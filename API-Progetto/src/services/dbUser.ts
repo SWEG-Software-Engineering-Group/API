@@ -1,5 +1,5 @@
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
-import { environment } from "src/environement/environement";
+import { environment } from "src/environment/environment";
 import { User } from "src/types/User";
 import { ddbDocClient } from "./dbConnection";
 

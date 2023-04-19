@@ -3,6 +3,7 @@ import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbgetDefaultLanguage, dbdeleteLanguage } from 'src/services/dbTenant';
 import { dbcheckAdminInTenant } from 'src/services/dbTenant';
+import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
 const deleteLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -36,10 +37,8 @@ const deleteLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     if (event.pathParameters.TenantId == null || event.pathParameters.Language == null)
         return formatJSONResponse({ "error": "no valid input" });
 
-    const sanitizeHTML = require('sanitize-html');
-
-    let tenant = sanitizeHTML(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
-    let language = sanitizeHTML(event.pathParameters.Language, { allowedTags: [], allowedAttributes: {} });
+    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
+    let language = sanitizeHtml(event.pathParameters.Language, { allowedTags: [], allowedAttributes: {} });
     if (language === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 

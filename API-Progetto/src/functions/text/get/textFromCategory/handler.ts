@@ -4,6 +4,7 @@ import { middyfy } from '@libs/lambda';
 import { dbgetByCategory } from 'src/services/dbText';
 import { dbcheckUserInTenant } from 'src/services/dbTenant';
 import { Text } from 'src/types/Text';
+import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
 const getTextCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -35,10 +36,8 @@ const getTextCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     if (event.pathParameters.TenantId == null || event.pathParameters.Category == null)
         return formatJSONResponse({ "error": "no valid input" });
 
-    var sanitizer = require('sanitize-html')();
-
-    let tenant = sanitizer(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
-    let category = sanitizer(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} })
+    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
+    let category = sanitizeHtml(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} })
     if (category === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 

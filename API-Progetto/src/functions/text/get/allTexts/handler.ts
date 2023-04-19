@@ -4,6 +4,7 @@ import { middyfy } from '@libs/lambda';
 import { dbgetAllTexts } from 'src/services/dbText';
 import { dbcheckUserInTenant } from 'src/services/dbTenant';
 import { Text } from 'src/types/Text';
+import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
 const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -35,9 +36,9 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     if (event.pathParameters.TenantId == null)
         return formatJSONResponse({ "error": "no valid input" });
 
-    var sanitizer = require('sanitize-html')();
+    //var sanitizer = require('sanitize-html')();
 
-    let tenant = sanitizer(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
+    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
     if (tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 
@@ -57,7 +58,7 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     }
     catch (error) {
         //if connection fails do stuff
-        return formatJSONResponse({ "error": error });
+        return formatJSONResponse({ "amtra": error });
     }
 
     //return result

@@ -1,17 +1,17 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbputTranslation } from 'src/services/dbText';
+import { dbgetTranslationsLanguages } from 'src/services/dbText';
 import { dbcheckUserInTenant } from 'src/services/dbTenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
-const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const getTranslationsLanguages: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
-     * INPUT:   Tenant (String) {body: Title(String), Language(String), Category(String), Text(String), Feedback(String)}
-     * OUTPUT:  {result: OK} / Error
+     * INPUT:   Tenant (String), Category(String), Title(String)
+     * OUTPUT:  {response: String[]} / Error
      * 
-     * DESCRIPTION: update the data of a specific translation, else return error.
+     * DESCRIPTION: returns all languages witch an original text from a Tenant is translated to, else return error.
      * 
      * SAFETY:  
      *  -   check authorization of the user for this function with Cognito (user, admin);
@@ -26,23 +26,18 @@ const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
      *  -   request to db failed;
      */
 
-
     //check user is allowed to use this function
     //TO DO
 
     //sanitize input and check if is empty
-    if (event.pathParameters.TenantId == null || event.pathParameters.Title == null)
+    if (event.pathParameters.TenantId == null || event.pathParameters.Category == null || event.pathParameters.Title == null)
         return formatJSONResponse({ "error": "no valid input" });
-    if (event.body.Title == null || event.body.Text == null || event.body.Category == null || event.body.Language == null)
-        return formatJSONResponse({ "error": "body request missing parameters" });
 
     let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
-    let title = sanitizeHtml(event.pathParameters.Title, { allowedTags: [], allowedAttributes: {} });
-    let text = sanitizeHtml(event.body.Text);
-    let category = sanitizeHtml(event.body.Category, { allowedTags: [], allowedAttributes: {} });
-    let language = sanitizeHtml(event.body.Language, { allowedTags: [], allowedAttributes: {} })
-    let feedback = sanitizeHtml(event.body.Feedback, { allowedTags: [], allowedAttributes: {} })
-    if (tenant === '' || title === '' || text === '' || category === '' || language === '')
+    let category = sanitizeHtml(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} })
+    let title = sanitizeHtml(event.pathParameters.Title, { allowedTags: [], allowedAttributes: {} })
+
+    if (tenant === '' || category === '' || title === '')
         return formatJSONResponse({ "error": "input is empty" });
 
     //check user is admin inside this tenant
@@ -53,7 +48,9 @@ const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
 
     try {
         //collect the data from db
-        await dbputTranslation(tenant, title, category, language, text, feedback);
+        var languages = await dbgetTranslationsLanguages(tenant, category, title);
+        if (!languages || languages.length == 0)
+            return formatJSONResponse({ "error": "no texts found" });
     }
     catch (error) {
         //if connection fails do stuff
@@ -61,7 +58,7 @@ const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     }
 
     //return result
-    return formatJSONResponse({ "result": 'OK' });
+    return formatJSONResponse({ "response": languages });
 };
 
-export const main = middyfy(putTranslation);
+export const main = middyfy(getTranslationsLanguages);

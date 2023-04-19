@@ -3,6 +3,7 @@ import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbcheckAdminInTenant } from 'src/services/dbTenant';
 import { dbdeleteText } from 'src/services/dbText';
+import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
 const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -33,10 +34,8 @@ const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
     if (event.pathParameters.TenantId == null || event.pathParameters.Title == null)
         return formatJSONResponse({ "error": "no valid input" });
 
-    var sanitizer = require('sanitize-html')();
-
-    let tenant = sanitizer(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
-    let title = sanitizer(event.pathParameters.Title, { allowedTags: [], allowedAttributes: {} })
+    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
+    let title = sanitizeHtml(event.pathParameters.Title, { allowedTags: [], allowedAttributes: {} })
     if (title === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 

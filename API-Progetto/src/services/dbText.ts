@@ -1,11 +1,11 @@
 import { BatchWriteCommand, BatchWriteCommandInput, ScanCommand, ScanCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput} from "@aws-sdk/lib-dynamodb";
-import { environment } from "src/environement/environement";
+import { environment } from "src/environment/environment";
 import { Text } from "src/types/Text";
 import { TextCategoryInfo } from "src/types/TextCategoryInfo";
 import { TextCategory, state } from "src/types/TextCategory";
 import { Tenant, Category } from "src/types/Tenant";
 import { ddbDocClient } from "./dbConnection";
-import { dbgetTenantinfo, dbgetCategories, dbgetDefaultLanguage, dbgetSecondaryLanguage } from "./dbTenant";
+import { dbgetTenantinfo, dbgetCategories, dbgetDefaultLanguage } from "./dbTenant";
 
 
 //---------------------
@@ -293,6 +293,56 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
     }
 };
 
+const dbgetTranslationsLanguages = async (tenant: string, category: string, title: string) =>{
+    //GET all the languages an original text is translated to.
+    //input: tenant(String), category:(String), title(String)
+    //output: String[] / Error
+
+    try {
+        //get categories of the tenant
+        const deflang = await (dbgetDefaultLanguage(tenant));
+        if (deflang == null)
+            throw { "error": "error" };
+
+        //request all the data from the Text and metadata tables
+        const param: ScanCommandInput = {
+            TableName: environment.dynamo.TextCategoryTable.tableName,
+            FilterExpression: "idTenant= :t and begins_with(language_category_title,:lc)",
+            ExpressionAttributeValues: {
+                ":t": tenant,
+                ":ct": "#" + category + "#" + title + "#",
+            },
+        };
+        //------------------NOTE!!!!
+        //this function gets all texts from a tenant. in case all the data goes over 1MB in size
+        //the call could fail, throttle or take quite a lot of time.
+        //this is a case that migth brake this function!
+        const txt = await (await ddbDocClient.send(new ScanCommand(param))).Items as TextCategory[];
+        if (txt == null)
+            throw { "error": "error reading texts from db" };
+
+        //merge the data together between texts and infos
+        var result = [];
+
+        txt.forEach(function (text) {
+            //iterate over every row of Text table
+            let language = text.language_category_title.split("#")[0];
+            if (language !== deflang)
+                result.push(language);
+        });
+        //return all the data
+        return result;
+    } catch (err) {
+        throw { err };
+    }
+
+}
+
+//TODO MIRCEA
+const dbgetTextByFullKey = async (tenant: string, language: string, category: string, title: string) => {
+    return {} as TextCategory;
+
+}
 
 //__________DELETE__________
 const dbdeleteText = async (tenant: string, title: string) => {
@@ -338,17 +388,23 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
     //output: true / Error
 
     //get categories of the tenant
-    const tenantinfo: Tenant = await (dbgetTenantinfo(tenant));
+    const tenantinfo = await (dbgetTenantinfo(tenant)) as Tenant;
     if (tenantinfo == null)
         throw { "error": "error" };
 
-    //need to check if category is inside the tenant or else add it
+    //check if this text already exists
+    if (await (dbgetTextByFullKey(tenant, tenantinfo.defaultLanguage, category, title)) as TextCategory)
+        throw { "error": "text already present" };
+
+    //check language is inside the tenant and check if category exists
+    if (tenantinfo.defaultLanguage === tenantinfo.defaultLanguage || tenantinfo.languages.indexOf(tenantinfo.defaultLanguage) === -1 || tenantinfo.categories.findIndex(item => item.id === category) === -1)
+        throw { "error": "error" };
 
     const paramsInfo: PutCommandInput = {
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: tenantinfo.defaultLanguage+"#"+category+"#"+title+"#",
+            language_category_title: tenantinfo.defaultLanguage +"#"+category+"#"+title+"#",
             comment: comment,
             link: link,
             feedback: null,
@@ -375,8 +431,17 @@ const dbpostTranslation = async (tenant: string, title: string, category: string
     //PUT new Translation of one language inside a Tenant
     //input: tenant(String), title(String), category(String), language(String), comment(String), link(String)
     //output: true / Eror
+
+    //check if this text already exists
+    if (await (dbgetTextByFullKey(tenant, language, category, title)) as TextCategory)
+        throw { "error": "text already present" };
+
     const tenantinfo: Tenant = await (dbgetTenantinfo(tenant));
     if (tenantinfo == null)
+        throw { "error": "error" };
+
+    //check language is inside the tenant and check if category exists
+    if (tenantinfo.defaultLanguage === language || tenantinfo.languages.indexOf(language) === -1 || tenantinfo.categories.findIndex(item => item.id === category)===-1)
         throw { "error": "error" };
 
     //need to check if language is inside the tenant
@@ -518,4 +583,4 @@ const dbputTranslation = async (tenant: string, language: string, id: string, te
     }
 };
 
-export {dbgetAllTexts, dbgetByCategory, dbgetByLanguage, dbgetTexts, dbdeleteText, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation };
+export {dbgetAllTexts, dbgetByCategory, dbgetByLanguage, dbgetTexts, dbgetTranslationsLanguages, dbdeleteText, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation };

@@ -1,5 +1,4 @@
-export { default as hello } from './hello';
-export { default as putTenant } from './tenant/post/create';
+export { default as putCategory } from './tenant/put/category';
 export { default as getTenantAdmins } from './tenant/get/admin';
 export { default as getTenantUsers } from './tenant/get/user';
 export { default as getUserInfo } from './user/get/user';
@@ -11,6 +10,6 @@ export { default as deleteText } from './text/delete/text';
 export { default as deleteLanguage } from './tenant/delete/language';
 export { default as postOriginalText } from './text/post/originalText';
 export { default as postTranslation } from './text/post/translation';
-export { default as putCategory } from './text/put/category';
+export { default as putTextCategory } from './text/put/textCategory';
 export { default as putOriginalText } from './text/put/originalText';
 export { default as putTranslation } from './text/put/translation';

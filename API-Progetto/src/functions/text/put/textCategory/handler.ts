@@ -1,13 +1,14 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbputtextCategory } from 'src/services/dbText';
+import { dbputTextCategory } from 'src/services/dbText';
 import { dbcheckAdminInTenant } from 'src/services/dbTenant';
+import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
 const putTextCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
-     * INPUT:   Tenant (String), Category(String), {body: Category(String)}
+     * INPUT:   Tenant (String), Category(String), Title(String), {body: Category(String)}
      * OUTPUT:  {result: OK} / Error
      * 
      * DESCRIPTION: change the category of a text, else return error.
@@ -30,17 +31,16 @@ const putTextCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     //TO DO
 
     //sanitize input and check if is empty
-    if (event.pathParameters.TenantId == null || event.pathParameters.Ccategory == null)
+    if (event.pathParameters.TenantId == null || event.pathParameters.Category == null || event.pathParameters.Title == null)
         return formatJSONResponse({ "error": "no valid input" });
-    if (event.body.Category == null )
+    if (event.body.Category == null)
         return formatJSONResponse({ "error": "body request missing parameters" });
 
-    var sanitizer = require('sanitize-html')();
-
-    let tenant = sanitizer(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
-    let name = sanitizer(event.body.Category, { allowedTags: [], allowedAttributes: {} });
-    let category = sanitizer(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} });
-    if (tenant === '' || name === '' || category === '')
+    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
+    let name = sanitizeHtml(event.body.Category, { allowedTags: [], allowedAttributes: {} });
+    let category = sanitizeHtml(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} });
+    let title = sanitizeHtml(event.pathParameters.Title, { allowedTags: [], allowedAttributes: {} });
+    if (tenant === '' || title === '' || category === '' || name === '')
         return formatJSONResponse({ "error": "input is empty" });
 
     //check user is admin inside this tenant
@@ -52,7 +52,7 @@ const putTextCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     try {
 
         //collect the data from db
-        await dbputtextCategory(tenant, category, name);
+        await dbputTextCategory(tenant, category, title, name);
         
     }
     catch (error) {

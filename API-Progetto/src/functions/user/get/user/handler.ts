@@ -4,6 +4,7 @@ import { middyfy } from '@libs/lambda';
 import { dbgetUser } from 'src/services/dbUser';
 import { dbcheckAdminInTenant } from 'src/services/dbTenant';
 import { User } from 'src/types/User';
+import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
 const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -36,10 +37,8 @@ const getUserInfo: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     if (event.pathParameters.TenantId == null || event.pathParameters.UserId == null)
         return formatJSONResponse({ "error": "no valid input" });
 
-    var sanitizer = require('sanitize-html')();
-
-    let tenant = sanitizer.value(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
-    let userName = sanitizer.value(event.pathParameters.UserId, { allowedTags: [], allowedAttributes: {} })
+    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
+    let userName = sanitizeHtml(event.pathParameters.UserId, { allowedTags: [], allowedAttributes: {} })
     if (userName === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 

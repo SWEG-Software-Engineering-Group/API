@@ -1,172 +1,240 @@
 import type { AWS } from '@serverless/typescript';
-import { environment } from 'src/environement/environement';
-import hello from '@functions/hello';
-import { putTenant, getTenantAdmins, getTenantUsers, getUserInfo, getAllTexts, getText, getTextFromCategory, getTextFromLanguage } from '@functions/index';
+import { environment } from 'src/environment/environment';
+import {
+    //MILO
+    putCategory,
+    getTenantAdmins,
+    getTenantUsers,
+    getUserInfo,
+    getAllTexts,
+    getText,
+    getTextFromCategory,
+    getTextFromLanguage,
+    deleteText,
+    deleteLanguage,
+    postOriginalText,
+    postTranslation,
+    putOriginalText,
+    putTextCategory,
+    putTranslation
+} from '@functions/index';
+
 
 const serverlessConfiguration: AWS = {
-  service: 'api-progetto',
-  frameworkVersion: '3',
-  plugins: ['serverless-esbuild', 'serverless-offline',/*for dynamodblocal*/'serverless-dynamodb-local'],
-  provider: {
-    region: environment.awsRegion,
-    name: 'aws',
-    runtime: 'nodejs14.x',
-    apiGateway: {
-      minimumCompressionSize: 1024,
-      shouldStartNameWithService: true,
-    },
-    environment: {
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-      NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
-    },
-  },
-  resources: {
-    Resources: {
-      userTable: {
-        Type: 'AWS::DynamoDB::Table',
-        Properties: {
-          TableName: environment.dynamo.UserTable.tableName,
-          BillingMode: 'PAY_PER_REQUEST',
-          AttributeDefinitions: [
-            {
-              AttributeName: 'username',
-              AttributeType: 'S',
-            },
-          ],
-          KeySchema: [
-            {
-              AttributeName: 'username',
-              KeyType: 'HASH',
-            },
-          ],
+    service: 'api-progetto',
+    frameworkVersion: '3',
+    plugins: ['serverless-esbuild', 'serverless-offline',/*for dynamodblocal*/'serverless-dynamodb-local'],
+    provider: {
+        region: environment.awsRegion,
+        name: 'aws',
+        runtime: 'nodejs14.x',
+        apiGateway: {
+            minimumCompressionSize: 1024,
+            shouldStartNameWithService: true,
         },
-      },
-      TokenTable: {
-        Type: 'AWS::DynamoDB::Table',
-        Properties: {
-          TableName: environment.dynamo.TokenTable.tableName,
-          BillingMode: 'PAY_PER_REQUEST',
-          AttributeDefinitions: [
-            {
-              AttributeName: "idTenant",
-              AttributeType: 'S',
-            },
-            {
-              AttributeName: "name",
-              AttributeType: 'S',
-            },
-          ],
-          KeySchema: [
-            {
-              AttributeName: 'idTenant',
-              KeyType: 'HASH',
-            },
-            {
-              AttributeName: 'name',
-              KeyType: 'RANGE',
-            },
-          ],
+        environment: {
+            AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+            NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
         },
-      },
-      TenantTable: {
-        Type: 'AWS::DynamoDB::Table',
-        Properties: {
-          TableName: environment.dynamo.TenantTable.tableName,
-          BillingMode: 'PAY_PER_REQUEST',
-          AttributeDefinitions: [
-            {
-              AttributeName: 'id',
-              AttributeType: 'S',
+        iam: {
+            role: {
+                statements: [
+                    {
+                        Effect: "Allow",
+                        Action: [
+                            "dynamodb:BatchGetItem",
+                            "dynamodb:GetItem",
+                            "dynamodb:DeleteItem",
+                            "dynamodb:Query",
+                            "dynamodb:Scan",
+                            "dynamodb:BatchWriteItem",
+                            "dynamodb:PutItem",
+                            "dynamodb:UpdateItem",
+                            "dynamodb:Scan",
+                            "cognito-idp:ListUsers",
+                            "cognito-idp:AdminConfirmSignUp",
+                            "cognito-idp:AdminAddUserToGroup",
+                            "cognito-idp:AdminRemoveUserFromGroup",
+                            "cognito-idp:AdminGetUser",
+                            "cognito-idp:AdminDeleteUser",
+                            "cognito-idp:AdminListGroupsForUser"
+                        ],
+                        Resource: [
+                            environment.dynamo.TenantTable.arn,
+                            environment.dynamo.TokenTable.arn,
+                            environment.dynamo.TextCategoryTable.arn,
+                            environment.dynamo.UserTable.arn,
+                        ],
+                    },
+                ],
             },
-          ],
-          KeySchema: [
-            {
-              AttributeName: 'id',
-              KeyType: 'HASH',
-            },
-          ],
         },
-      },
-      TextInfoTable: {
-        Type: 'AWS::DynamoDB::Table',
-        Properties: {
-          TableName: environment.dynamo.TextInfoTable.tableName,
-          BillingMode: 'PAY_PER_REQUEST',
-          AttributeDefinitions: [
-            {
-              AttributeName: 'idTenant',
-              AttributeType: 'S',
-            },
-            {
-              AttributeName: 'categoryIdtextId',
-              AttributeType: 'S',
-            },
-          ],
-          KeySchema: [
-            {
-              AttributeName: 'idTenant',
-              KeyType: 'HASH',
-            },
-            {
-              AttributeName: 'categoryIdtextId',
-              KeyType: 'RANGE',
-            },
-          ],
-        },
-          },
-      TextTable: {
-          Type: 'AWS::DynamoDB::Table',
-          Properties: {
-              TableName: environment.dynamo.TextTable.tableName,
-              BillingMode: 'PAY_PER_REQUEST',
-              AttributeDefinitions: [
-                  {
-                      AttributeName: 'idTenant',
-                      AttributeType: 'S',
-                  },
-                  {
-                      AttributeName: 'languagetextId',
-                      AttributeType: 'S',
-                  },
-              ],
-              KeySchema: [
-                  {
-                      AttributeName: 'idTenant',
-                      KeyType: 'HASH',
-                  },
-                  {
-                      AttributeName: 'languagetextId',
-                      KeyType: 'RANGE',
-                  },
-              ],
-          },
-      },
     },
-  },
-  // import the function via paths
-  functions: { hello, putTenant, getTenantAdmins, getTenantUsers, getUserInfo, getAllTexts, getTextFromCategory, getTextFromLanguage, getText },
-  package: { individually: true },
-  custom: {
-    esbuild: {
-      bundle: true,
-      minify: false,
-      sourcemap: true,
-      exclude: ['aws-sdk'],
-      target: 'node14',
-      define: { 'require.resolve': undefined },
-      platform: 'node',
-      concurrency: 10,
+
+    resources: {
+        Resources: {
+            userTable: {
+                Type: 'AWS::DynamoDB::Table',
+                Properties: {
+                    TableName: environment.dynamo.UserTable.tableName,
+                    BillingMode: 'PAY_PER_REQUEST',
+                    AttributeDefinitions: [
+                        {
+                            AttributeName: 'username',
+                            AttributeType: 'S',
+                        },
+                    ],
+                    KeySchema: [
+                        {
+                            AttributeName: 'username',
+                            KeyType: 'HASH',
+                        },
+                    ],
+                },
+            },
+            TokenTable: {
+                Type: 'AWS::DynamoDB::Table',
+                Properties: {
+                    TableName: environment.dynamo.TokenTable.tableName,
+                    BillingMode: 'PAY_PER_REQUEST',
+                    AttributeDefinitions: [
+                        {
+                            AttributeName: "idTenant",
+                            AttributeType: 'S',
+                        },
+                        {
+                            AttributeName: "name",
+                            AttributeType: 'S',
+                        },
+                    ],
+                    KeySchema: [
+                        {
+                            AttributeName: 'idTenant',
+                            KeyType: 'HASH',
+                        },
+                        {
+                            AttributeName: 'name',
+                            KeyType: 'RANGE',
+                        },
+                    ],
+                },
+            },
+            TenantTable: {
+                Type: 'AWS::DynamoDB::Table',
+                Properties: {
+                    TableName: environment.dynamo.TenantTable.tableName,
+                    BillingMode: 'PAY_PER_REQUEST',
+                    AttributeDefinitions: [
+                        {
+                            AttributeName: 'id',
+                            AttributeType: 'S',
+                        },
+                    ],
+                    KeySchema: [
+                        {
+                            AttributeName: 'id',
+                            KeyType: 'HASH',
+                        },
+                    ],
+                },
+            },
+            TextCategoryTable: {
+                Type: 'AWS::DynamoDB::Table',
+                Properties: {
+                    TableName: environment.dynamo.TextCategoryTable.tableName,
+                    BillingMode: 'PAY_PER_REQUEST',
+                    AttributeDefinitions: [
+                        {
+                            AttributeName: 'idTenant',
+                            AttributeType: 'S',
+                        },
+                        {
+                            AttributeName: 'languageidCategorytextId',
+                            AttributeType: 'S',
+                        },
+                    ],
+                    KeySchema: [
+                        {
+                            AttributeName: 'idTenant',
+                            KeyType: 'HASH',
+                        },
+                        {
+                            AttributeName: 'languageidCategorytextId',
+                            KeyType: 'RANGE',
+                        },
+                    ],
+                },
+            },
+            TextCategoryinfo: {
+                Type: 'AWS::DynamoDB::Table',
+                Properties: {
+                    TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+                    BillingMode: 'PAY_PER_REQUEST',
+                    AttributeDefinitions: [
+                        {
+                            AttributeName: 'idTenant',
+                            AttributeType: 'S',
+                        },
+                        {
+                            AttributeName: 'languageidCategorytextId',
+                            AttributeType: 'S',
+                        },
+                    ],
+                    KeySchema: [
+                        {
+                            AttributeName: 'idTenant',
+                            KeyType: 'HASH',
+                        },
+                        {
+                            AttributeName: 'languageidCategorytextId',
+                            KeyType: 'RANGE',
+                        },
+                    ],
+                },
+            },
+        },
     },
-    //extra per testare dynamodb in locale
-    dynamodb: {
-      stages: 'dev',
-      start: {
-        port: 8000,
-        inmemory: true,
-        migrate: true,
-      }
-    }
-  },
+    // import the function via paths
+    functions: {
+        //MILO
+        putCategory,
+        getTenantAdmins,
+        getTenantUsers,
+        getUserInfo,
+        getAllTexts,
+        getTextFromCategory,
+        getTextFromLanguage,
+        getText,
+        deleteLanguage,
+        deleteText,
+        postOriginalText,
+        postTranslation,
+        putOriginalText,
+        putTextCategory,
+        putTranslation
+    },
+    package: { individually: true },
+    custom: {
+        esbuild: {
+            bundle: true,
+            minify: false,
+            sourcemap: true,
+            exclude: ['aws-sdk'],
+            target: 'node14',
+            define: { 'require.resolve': undefined },
+            platform: 'node',
+            concurrency: 10,
+        },
+        //extra per testare dynamodb in locale
+        dynamodb: {
+            stages: 'dev',
+            start: {
+                port: 8000,
+                inmemory: true,
+                migrate: true,
+            }
+        }
+    },
 };
 
-module.exports = serverlessConfiguration; 
+module.exports = serverlessConfiguration;

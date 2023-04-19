@@ -1,7 +1,7 @@
 import { PutCommand, GetCommand, GetCommandInput, UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { environment } from "src/environement/environement";
+import { environment } from "src/environment/environment";
 import { Tenant } from "src/types/Tenant";
-import { uuid } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import { ddbDocClient } from "./dbConnection";
 
 const dbcheckUserInTenant = async (tenant: string, user: string) => {
@@ -175,7 +175,7 @@ const dbputCategory = async (tenant: string, category: string, name: string) => 
     let categories = (await dbgetTenantinfo(tenant)).categories;
     let index = categories.findIndex(element => element.id === category);
     if (index === -1)
-        categories.push({ id: uuid.v4, name: name});
+        categories.push({ id: uuidv4, name: name});
     else
         categories[index].name=name;
     const params = {
@@ -196,4 +196,4 @@ const dbputCategory = async (tenant: string, category: string, name: string) => 
     }
 };
 
-export { dbcheckUserInTenant, dbcheckAdminInTenant, dbputTenant, dbgetTenantinfo, dbgetDefaultLanguage, dbgetSecondaryLanguage, dbgetCategories, dbdeleteLanguage, dbputCategory };
+export { dbcheckUserInTenant, dbcheckAdminInTenant, dbputTenant, dbgetTenant, dbgetTenantinfo, dbgetDefaultLanguage, dbgetSecondaryLanguage, dbgetCategories, dbdeleteLanguage, dbputCategory };

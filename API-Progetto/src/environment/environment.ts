@@ -33,6 +33,10 @@ interface Environment {
     | "me-south-1"
     | "sa-east-1";
     dynamo: {
+        UserTable: {
+            tableName: string;
+            arn: string;
+        },
         TokenTable: {
             tableName: string;
             arn: string;
@@ -64,6 +68,10 @@ interface Environment {
 const environment: Environment = {
     awsRegion: "eu-west-2",
     dynamo: {
+        UserTable: {
+            tableName: "userTable",
+            arn: "arn:aws:dynamodb:eu-west-2:xxxxxxxxx:table/userData",
+        },
         TokenTable: {
             tableName: "TokenTable",
             arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TokenTable",

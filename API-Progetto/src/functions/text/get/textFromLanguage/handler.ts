@@ -1,10 +1,11 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetLanguage } from 'src/services/dbText';
+import { dbgetByLanguage } from 'src/services/dbText';
 import { dbcheckUserInTenant } from 'src/services/dbTenant';
 import { Text } from 'src/types/Text';
-import { state } from 'src/types/Text';
+import { state } from 'src/types/TextCategory';
+import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
 const getTextLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -36,10 +37,8 @@ const getTextLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     if (event.pathParameters.TenantId == null || event.pathParameters.Language == null)
         return formatJSONResponse({ "error": "no valid input" });
 
-    var sanitizer = require('sanitize-html')();
-
-    let tenant = sanitizer(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
-    let language = sanitizer(event.pathParameters.Language, { allowedTags: [], allowedAttributes: {} })
+    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
+    let language = sanitizeHtml(event.pathParameters.Language, { allowedTags: [], allowedAttributes: {} })
     if (language === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 
@@ -51,7 +50,7 @@ const getTextLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
 
     try {
         //collect the data from db
-        var texts: Text[] = await dbgetLanguage(tenant, language, state.verificato);
+        var texts: Text[] = await dbgetByLanguage(tenant, language, state.verificato);
         if (!texts || texts.length == 0)
             return formatJSONResponse({ "error": "no texts found" });        
     }

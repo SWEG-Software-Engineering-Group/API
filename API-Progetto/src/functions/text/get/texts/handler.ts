@@ -4,6 +4,7 @@ import { middyfy } from '@libs/lambda';
 import { dbgetTexts } from 'src/services/dbText';
 import { dbcheckUserInTenant } from 'src/services/dbTenant';
 import { Text } from 'src/types/Text';
+import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
 const getTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -37,8 +38,8 @@ const getTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event
 
     var sanitizer = require('sanitize-html')();
 
-    let tenant = sanitizer(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
-    let language = sanitizer(event.pathParameters.Language, { allowedTags: [], allowedAttributes: {} })
+    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
+    let language = sanitizeHtml(event.pathParameters.Language, { allowedTags: [], allowedAttributes: {} })
     let category = sanitizer(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} })
 
     if (tenant === '' || language === '' || category === '')

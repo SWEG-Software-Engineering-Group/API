@@ -3,6 +3,7 @@ import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbpostOriginalText } from 'src/services/dbText';
 import { dbcheckUserInTenant } from 'src/services/dbTenant';
+import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
 const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -37,13 +38,11 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
     if (event.body.Title == null || event.body.Text == null || event.body.Category == null)
         return formatJSONResponse({ "error": "body request missing parameters" });
 
-    var sanitizer = require('sanitize-html')();
-
-    let tenant = sanitizer(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
-    let title = sanitizer(event.body.Title, { allowedTags: [], allowedAttributes: {} });
-    let text = sanitizer(event.body.Text); //allow default tags and attributes for html formatting of text
-    let category = sanitizer(event.body.Category, { allowedTags: [], allowedAttributes: {} });
-    let comment = sanitizer(event.body.Comment, { allowedTags: [], allowedAttributes: {} });
+    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
+    let title = sanitizeHtml(event.body.Title, { allowedTags: [], allowedAttributes: {} });
+    let text = sanitizeHtml(event.body.Text); //allow default tags and attributes for html formatting of text
+    let category = sanitizeHtml(event.body.Category, { allowedTags: [], allowedAttributes: {} });
+    let comment = sanitizeHtml(event.body.Comment, { allowedTags: [], allowedAttributes: {} });
     let link = sanitizer(event.body.Link, { allowedTags: [], allowedAttributes: {} });
     if (tenant === '' || title === '' || text === '' || category === '')
         return formatJSONResponse({ "error": "input is empty" });
