@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetTenant, dbcheckAdminInTenant } from 'src/services/dbTenant';
+import { dbgetTenantinfo, dbcheckAdminInTenant } from 'src/services/dbTenant';
 import { Tenant } from 'src/types/Tenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
@@ -47,7 +47,7 @@ const getTenantUsers: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
 
     try {
         //collect the data from db
-        var tenantOBJ: Tenant = await dbgetTenant(tenant);
+        var tenantOBJ: Tenant = await dbgetTenantinfo(tenant);
         if (!tenantOBJ.users || tenantOBJ.users.length == 0)
             return formatJSONResponse({ "error": "no users found in this tenant" });
     }

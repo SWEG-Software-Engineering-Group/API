@@ -43,7 +43,7 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
     let text = sanitizeHtml(event.body.Text); //allow default tags and attributes for html formatting of text
     let category = sanitizeHtml(event.body.Category, { allowedTags: [], allowedAttributes: {} });
     let comment = sanitizeHtml(event.body.Comment, { allowedTags: [], allowedAttributes: {} });
-    let link = sanitizer(event.body.Link, { allowedTags: [], allowedAttributes: {} });
+    let link = sanitizeHtml(event.body.Link, { allowedTags: [], allowedAttributes: {} });
     if (tenant === '' || title === '' || text === '' || category === '')
         return formatJSONResponse({ "error": "input is empty" });
 
