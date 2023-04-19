@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "cognito": "^0.0.1"
+  }
+}

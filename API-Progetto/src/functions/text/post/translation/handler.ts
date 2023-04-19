@@ -41,6 +41,8 @@ const postTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     let text = sanitizeHtml(event.body.Text); //allow default tags and attributes for html formatting of text
     let category = sanitizeHtml(event.body.Category, { allowedTags: [], allowedAttributes: {} });
     let language = sanitizeHtml(event.body.Language, { allowedTags: [], allowedAttributes: {} })
+    let comment = sanitizeHtml(event.body.Comment, { allowedTags: [], allowedAttributes: {} })
+    let link = sanitizeHtml(event.body.Link, { allowedTags: [], allowedAttributes: {} })
     if (tenant === '' || title === '' || text === '' || category === '' || language === '')
         return formatJSONResponse({ "error": "input is empty" });
 
@@ -53,7 +55,7 @@ const postTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     try {
 
         //collect the data from db
-        await dbpostTranslation(tenant, title, category, language, text);
+        await dbpostTranslation(tenant, title, category, language, comment, link);
         
     }
     catch (error) {

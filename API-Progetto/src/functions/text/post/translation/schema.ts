@@ -4,7 +4,6 @@ export default {
         Title: { type: 'string' },
         Language: { type: 'string' },
         Category: { type: 'string' },
-        Text: { type: 'string' },
         Comment: { type: 'string' },
         Link: { type: 'string' },
     },

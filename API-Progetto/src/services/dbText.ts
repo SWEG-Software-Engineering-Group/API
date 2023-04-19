@@ -338,11 +338,110 @@ const dbgetTranslationsLanguages = async (tenant: string, category: string, titl
 
 }
 
-//TODO MIRCEA
-const dbgetTextByFullKey = async (tenant: string, language: string, category: string, title: string) => {
-    return {} as TextCategory;
-
+const dbGetTexts = async (tenantID: string, language: string = null, category: string = null, id: string = null) => {
+    var params: ScanCommandInput = { TableName: environment.dynamo.TextCategoryTable.tableName, };
+    //caso lingua = null ritorna la lingua di default
+    if (language == null) {
+        language = await dbgetDefaultLanguage(tenantID);
+    }
+    params["Key"] = {
+        idTenant: tenantID,
+    }
+    params["FilterExpression"] = "begins_with(#attributename, :begin)";
+    params["ExpressionAttributeNames"] =
+    {
+        "#attributename": "language_category_title",
+    };
+    params["ExpressionAttributeValues"] =
+    {
+        ':begin': language + "#" + ((category == null) ? "" : (category + "#" + (id == null) ? "" : id))
+    };
+    try {
+        const data = await ddbDocClient.send(new ScanCommand(params));
+        console.log("Success - GET", data);
+        if (!data.Items) return [];
+        return data.Items as TextCategory[];
+    } catch (err) {
+        console.log("Error", err.stack);
+        throw { err };
+    }
 }
+
+/*const dbgetCategories = async (tenantID: string) => {
+    var params: ScanCommandInput = { TableName: environment.dynamo.TextCategoryTable.tableName, };
+    params["Key"] = {
+        idTenant: tenantID,
+    }
+    params["FilterExpression"] = "#isDefault = :isDefault";
+    params["ExpressionAttributeNames"] =
+    {
+        "#isDefault": "isDefault",
+    };
+    params["ExpressionAttributeValues"] =
+    {
+        ':isDefault': true,
+    };
+
+    //ottieni solo i parametri;
+    params["AttributesToGet"] = ['language_category_title'];
+
+    try {
+        const data = await ddbDocClient.send(new ScanCommand(params));
+        console.log("Success - GET", data);
+        if (!data.Items) return [];
+
+        //filtra qui gli oggetti rimuovendo i duplicati
+        var text: TextCategory[] = data.Items as TextCategory[];
+        var values: string[] = [];
+
+        text.forEach((val) => {
+            var current = val["language_category_title"].split["#"][1];
+            if (values.includes(current)) {
+                values.push(current);
+            }
+        });
+
+        return values;
+
+    } catch (err) {
+        console.log("Error", err.stack);
+        throw { err };
+    }
+}
+*/
+
+const textsOfState = async (tenantID: string, language: string, state: state) => {
+    var params: ScanCommandInput = { TableName: environment.dynamo.TextCategoryTable.tableName, };
+    params["Key"] = {
+        idTenant: tenantID,
+    }
+    params["FilterExpression"] = "stato=:stato AND begins_with(#attributename, :begin)";
+    params["ExpressionAttributeNames"] =
+    {
+        "#attributename": "language_category_title",
+    };
+    params["ExpressionAttributeValues"] =
+    {
+        ':begin': language + "#",
+        ':stato': state
+    };
+
+    try {
+        const data = await ddbDocClient.send(new ScanCommand(params));
+        console.log("Success - GET", data);
+        if (!data.Items) return [];
+
+        //filtra qui gli oggetti rimuovendo i duplicati
+        var text: TextCategory[] = data.Items as TextCategory[];
+
+        return text;
+
+    } catch (err) {
+        console.log("Error", err.stack);
+        throw { err };
+    }
+}
+
 
 //__________DELETE__________
 const dbdeleteText = async (tenant: string, title: string) => {
@@ -393,7 +492,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
         throw { "error": "error" };
 
     //check if this text already exists
-    if (await (dbgetTextByFullKey(tenant, tenantinfo.defaultLanguage, category, title)) as TextCategory)
+    if (await (dbGetTexts(tenant, tenantinfo.defaultLanguage, category, title)) as TextCategory[])
         throw { "error": "text already present" };
 
     //check language is inside the tenant and check if category exists
@@ -433,7 +532,7 @@ const dbpostTranslation = async (tenant: string, title: string, category: string
     //output: true / Eror
 
     //check if this text already exists
-    if (await (dbgetTextByFullKey(tenant, language, category, title)) as TextCategory)
+    if (await (dbGetTexts(tenant, language, category, title)) as TextCategory[])
         throw { "error": "text already present" };
 
     const tenantinfo: Tenant = await (dbgetTenantinfo(tenant));
@@ -583,4 +682,33 @@ const dbputTranslation = async (tenant: string, language: string, id: string, te
     }
 };
 
-export {dbgetAllTexts, dbgetByCategory, dbgetByLanguage, dbgetTexts, dbgetTranslationsLanguages, dbdeleteText, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation };
+const updateText = async (tenantID: string, language: string, category: string, id: string, state: state) => {
+
+    var params: UpdateCommandInput = {
+        TableName: environment.dynamo.TextCategoryTable.tableName,
+        Key: {
+            idTenant: tenantID,
+            language_category_title: language + "#" + category + "#" + id
+        }
+    };
+    params["UpdateExpression"] = "SET #state = :newState";
+    params["ExpressionAttributeNames"] =
+    {
+        "#state": "state",
+    };
+    params["ExpressionAttributeValues"] =
+    {
+        ":newState": state,
+    };
+
+    try {
+        const data = await ddbDocClient.send(new UpdateCommand(params));
+        console.log("Success - GET", data);
+
+    } catch (err) {
+        console.log("Error", err.stack);
+        throw { err };
+    }
+}
+
+export {dbgetAllTexts, dbgetByCategory, dbgetByLanguage, dbgetTexts, dbgetTranslationsLanguages, dbGetTexts, dbgetCategories, textsOfState, dbdeleteText, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation, updateText };

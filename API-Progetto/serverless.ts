@@ -1,7 +1,41 @@
 import type { AWS } from '@serverless/typescript';
 import { environment } from 'src/environment/environment';
+//plama
 import {
-    //MILO
+    originalTexts,
+    allCategories,
+    rejectedText,
+    untranslatedTexts,
+    pendingTranslations,
+    textbyid, approveText,
+    rejectText,
+} from '@functions/index';
+//marco
+import {
+    putTenant,
+    getTenants,
+    getTenant,
+    getDefaultLanguage,
+    getSecondaryLanguage,
+    deleteTenants,
+    resetTenant,
+    addTenantAdmin,
+    addTenantUser,
+    removeTenantAdmin,
+    removeTenantUser,
+    signUpUser,
+    getUsers,
+    getUser,
+    adminGetUser,
+    delUser,
+    getUserGroups,
+    addRole,
+    removeRole,
+    setRole,
+    getUserTenant
+} from '@functions/index';
+//milo
+import {
     putCategory,
     getTenantAdmins,
     getTenantUsers,
@@ -196,6 +230,39 @@ const serverlessConfiguration: AWS = {
     },
     // import the function via paths
     functions: {
+        //marco
+        putTenant,
+        getTenants,
+        getTenant,
+        getDefaultLanguage,
+        getSecondaryLanguage,
+        deleteTenants,
+        resetTenant,
+        addTenantAdmin,
+        addTenantUser,
+        removeTenantAdmin,
+        removeTenantUser,
+        signUpUser,
+        getUsers,
+        getUser,
+        adminGetUser,
+        delUser,
+        getUserGroups,
+        addRole,
+        removeRole,
+        setRole,
+        getUserTenant,
+
+        //plama
+        originalTexts,
+        allCategories,
+        rejectedText,
+        untranslatedTexts,
+        pendingTranslations,
+        textbyid,
+        approveText,
+        rejectText,
+
         //MILO
         putCategory,
         getTenantAdmins,
@@ -211,7 +278,7 @@ const serverlessConfiguration: AWS = {
         postTranslation,
         putOriginalText,
         putTextCategory,
-        putTranslation
+        putTranslation,
     },
     package: { individually: true },
     custom: {
