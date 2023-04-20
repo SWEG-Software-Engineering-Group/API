@@ -12,6 +12,10 @@ export { default as addTenantUser } from './tenant/post/addUser';
 export { default as addTenantAdmin } from './tenant/post/addAdmin';
 export { default as removeTenantAdmin } from './tenant/post/removeAdmin';
 export { default as removeTenantUser } from './tenant/post/removeUser';
+export { default as removeSecLanguage } from './tenant/post/removeLanguage';
+export { default as addSecLanguage } from './tenant/post/addLanguage';
+export { default as addCategory } from './tenant/post/addCategory';
+export { default as removeCategory } from './tenant/post/removeCategory';
 
 export { default as delUser } from './user/delete';
 export { default as signUpUser } from './user/post/create';

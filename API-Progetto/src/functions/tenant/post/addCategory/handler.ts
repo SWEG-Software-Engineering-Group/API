@@ -1,11 +1,11 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbRemoveAdminFromTenant } from 'src/services/dbTenant';
+import { dbAddCategoryToTenant } from 'src/services/dbTenant';
 
 import schema from './schema';
 
-const removeTenantAdmin: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const addCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
     if (event.pathParameters.tenantId == null) {
       return formatJSONResponse(
@@ -15,7 +15,7 @@ const removeTenantAdmin: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asy
         400
       );
     }
-    if (event.body.Admin === undefined) {
+    if (event.body.Category === undefined) {
       return formatJSONResponse(
         {
           "error": "Invalid Body Format",
@@ -23,7 +23,7 @@ const removeTenantAdmin: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asy
         400
       );
     }
-    let tenant = await dbRemoveAdminFromTenant(event.pathParameters.tenantId, event.body.Admin.toString());
+    let tenant = await dbAddCategoryToTenant(event.pathParameters.tenantId, event.body.Category.toString());
     return formatJSONResponse({tenant}, 200);
   } catch (error) {
     console.log(error);
@@ -36,4 +36,4 @@ const removeTenantAdmin: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asy
   }
 };
 
-export const main = middyfy(removeTenantAdmin);
+export const main = middyfy(addCategory);

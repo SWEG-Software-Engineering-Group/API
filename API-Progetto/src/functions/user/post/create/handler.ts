@@ -7,6 +7,14 @@ import schema from './schema';
 
 const signUpUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
+    if (event.body.email === undefined || event.body.password === undefined || event.body.group === undefined || event.body.name === undefined || event.body.surname === undefined) {
+      return formatJSONResponse(
+        {
+          "error": "Invalid Body Format",
+        },
+        400
+      );
+    }
     await createUser({
       username: event.body.email,
       password: event.body.password,

@@ -171,6 +171,326 @@
 					"response": []
 				},
 				{
+					"name": "addUserToTenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"User\":\"Esposito\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/tenant/5eb3e432-f51b-4d5d-abd0-973b6238b9ff/addUser",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"tenant",
+								"5eb3e432-f51b-4d5d-abd0-973b6238b9ff",
+								"addUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addAdminToTenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Admin\":\"Geltrude\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/tenant/86018483-b8b5-4dc2-8ac4-57e5586d6b9a/addAdmin",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"tenant",
+								"86018483-b8b5-4dc2-8ac4-57e5586d6b9a",
+								"addAdmin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeAdminFromTenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Admin\":\"CapoDeiCapi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/tenant/86018483-b8b5-4dc2-8ac4-57e5586d6b9a/removeAdmin",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"tenant",
+								"86018483-b8b5-4dc2-8ac4-57e5586d6b9a",
+								"removeAdmin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeUserFromTenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"User\":\"Ciro\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/tenant/5eb3e432-f51b-4d5d-abd0-973b6238b9ff/removeUser",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"tenant",
+								"5eb3e432-f51b-4d5d-abd0-973b6238b9ff",
+								"removeUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeLanguages",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Language\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/tenant/86018483-b8b5-4dc2-8ac4-57e5586d6b9a/removeLanguages",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"tenant",
+								"86018483-b8b5-4dc2-8ac4-57e5586d6b9a",
+								"removeLanguages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addLanguages",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Language\":\"Afghano\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/tenant/86018483-b8b5-4dc2-8ac4-57e5586d6b9a/addLanguages",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"tenant",
+								"86018483-b8b5-4dc2-8ac4-57e5586d6b9a",
+								"addLanguages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeCategory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Category\":\"TestCat\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/tenant/86018483-b8b5-4dc2-8ac4-57e5586d6b9a/removeCategory",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"tenant",
+								"86018483-b8b5-4dc2-8ac4-57e5586d6b9a",
+								"removeCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addCategory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Category\":\"TestCat\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://w65kmpnocc.execute-api.eu-west-2.amazonaws.com/dev/tenant/86018483-b8b5-4dc2-8ac4-57e5586d6b9a/addCategory",
+							"protocol": "https",
+							"host": [
+								"w65kmpnocc",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"tenant",
+								"86018483-b8b5-4dc2-8ac4-57e5586d6b9a",
+								"addCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "resetTenant",
 					"request": {
 						"method": "PUT",
@@ -277,6 +597,12 @@
 								"key": "Authorization",
 								"value": "{{AWSToken}}",
 								"type": "default"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "default",
+								"disabled": true
 							}
 						],
 						"url": {

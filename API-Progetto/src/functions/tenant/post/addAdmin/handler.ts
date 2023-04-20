@@ -15,6 +15,14 @@ const addTenantAdmin: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
         400
       );
     }
+    if (event.body.Admin === undefined) {
+      return formatJSONResponse(
+        {
+          "error": "Invalid Body Format",
+        },
+        400
+      );
+    }
     let tenant = await dbAddAdminToTenant(event.pathParameters.tenantId, event.body.Admin.toString());
     return formatJSONResponse({tenant}, 200);
   } catch (error) {

@@ -6,7 +6,7 @@ interface Tenant {
   creationDate: number;
   languages: Array<string>;
   defaultLanguage: string;
-  //categories: Array<Category>;
+  categories: Array<string>;
 }/*
 interface Category {
   id: string;

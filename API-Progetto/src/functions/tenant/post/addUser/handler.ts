@@ -15,6 +15,14 @@ const addTenantUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
         400
       );
     }
+    if (event.body.User === undefined) {
+      return formatJSONResponse(
+        {
+          "error": "Invalid Body Format",
+        },
+        400
+      );
+    }
     let tenant = await dbAddUserToTenant(event.pathParameters.tenantId, event.body.User.toString());
     return formatJSONResponse({tenant}, 200);
   } catch (error) {

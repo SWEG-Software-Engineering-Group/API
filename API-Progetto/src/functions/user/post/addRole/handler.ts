@@ -15,6 +15,14 @@ const addRole: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
         400
       );
     }
+    if (event.body.group === undefined) {
+      return formatJSONResponse(
+        {
+          "error": "Invalid Body Format",
+        },
+        400
+      );
+    }
     let role = await addUserRole(event.pathParameters.username, event.body.group.toString());
     return formatJSONResponse({role}, 200);
   } catch (error) {
