@@ -1,6 +1,6 @@
 import { PutCommand, PutCommandInput, ScanCommand, ScanCommandInput, GetCommand, GetCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { environment } from "src/environment/environment";
-import { Tenant } from "src/types/Tenant";
+import { Tenant, Category } from "src/types/Tenant";
 import { v4 as uuidv4 } from "uuid";
 import { ddbDocClient } from "./dbConnection";
 
@@ -141,13 +141,16 @@ const dbgetCategories = async (tenant: string) => {
     //GET the categories list inside a Tenant
     //input: tenant(String)
     //output: Category[] / Error
+    if (!await dbgetTenantinfo(tenant)) {
+        throw { err: "Tenant not found" };
+    }
     const params: GetCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
         Key: { id: tenant },
     };
     try {
         let ten = (await ddbDocClient.send(new GetCommand(params))).Item as Tenant;
-        return ten.categories;
+        return ten.categories as Category[];
     } catch (err) {
         throw { err };
     }
@@ -212,34 +215,6 @@ const dbputTenant = async (tenant: Tenant) => {
         throw err;
     }
 }
-
-const dbputCategory = async (tenant: string, category: string, name: string) => {
-    //UPDATE the category name of one category inside the list in a Tenant
-    //input: tenant(String), category(string)
-    //output: true / Error
-    let categories = (await dbgetTenantinfo(tenant)).categories;
-    let index = categories.findIndex(element => element.id === category);
-    if (index === -1)
-        categories.push({ id: uuidv4, name: name });
-    else
-        categories[index].name = name;
-    const params: UpdateCommandInput = {
-        TableName: environment.dynamo.TextCategoryTable.tableName,
-        Key: {
-            idTenant: tenant,
-        },
-        UpdateExpression: "set categories = {:c}",
-        ExpressionAttributeValues: {
-            ":c": categories,
-        },
-    };
-    try {
-        await ddbDocClient.send(new UpdateCommand(params));
-        return true;
-    } catch (err) {
-        throw { err };
-    }
-};
 
 //__________UPDATE__________
 const dbresetTenant = async (tenant: string) => {
@@ -411,5 +386,72 @@ const dbRemoveAdminFromTenant = async (tenant: string, username: string) => {
     }
 };
 
+const dbputCategory = async (tenant: string, category: string, name: string) => {
+    //UPDATE the category name of one category inside the list in a Tenant. if it is not present then add it
+    //input: tenant(String), category(string)
+    //output: true / Error
+    let categories = (await dbgetTenantinfo(tenant)).categories;
+    let index = categories.findIndex(element => element.id === category);
+    if (index === -1)
+        throw {"error":"error"};
+    else
+        categories[index].name = name;
+    const params: UpdateCommandInput = {
+        TableName: environment.dynamo.TextCategoryTable.tableName,
+        Key: {
+            idTenant: tenant,
+        },
+        UpdateExpression: "set categories = {:c}",
+        ExpressionAttributeValues: {
+            ":c": categories,
+        },
+    };
+    try {
+        await ddbDocClient.send(new UpdateCommand(params));
+        return true;
+    } catch (err) {
+        throw { err };
+    }
+};
 
-export { dbcheckUserInTenant, dbcheckAdminInTenant, dbputTenant, dbgetTenants, dbdeleteTenant, dbresetTenant, dbAddUserToTenant, dbRemoveUserFromTenant, dbAddAdminToTenant, dbRemoveAdminFromTenant, dbgetUserTenant, dbgetTenantinfo, dbgetDefaultLanguage, dbgetSecondaryLanguage, dbgetCategories, dbdeleteLanguage, dbputCategory };
+const dbaddCategory = async (tenant: string, category: string) => {
+    //UPDATE the tenant by inserting a new category.
+    //input: tenant(String), category(string)
+    //output: true / Error
+    try {
+        let categories = await dbgetCategories(tenant);
+        if (categories === undefined)
+            throw { "error": "perchè undefined???????" };
+        //let tenantInfo = await dbgetTenantinfo(tenant);
+    //if (tenantInfo === undefined)
+    //    throw { "error": "perchè undefined???????" };
+    //if (tenantInfo.categories === undefined)
+    //    throw { "error": "category not found" };
+    //let categories = tenantInfo.categories;
+    //if (categories === undefined)
+    //    throw { "error": "category undefined" };
+
+        let index = categories.findIndex(element => element.id === category);
+        if (index !== -1)
+            throw { "error": "error" };
+        categories.push({ id: uuidv4, name: category });
+        const params: UpdateCommandInput = {
+            TableName: environment.dynamo.TextCategoryTable.tableName,
+            Key: {
+                idTenant: tenant,
+            },
+            UpdateExpression: "set categories = {:c}",
+            ExpressionAttributeValues: {
+                ":c": categories,
+            },
+        };
+        
+            await ddbDocClient.send(new UpdateCommand(params));
+            return true;
+    } catch (err) {
+        throw { err };
+    }
+};
+
+
+export { dbcheckUserInTenant, dbcheckAdminInTenant, dbputTenant, dbgetTenants, dbdeleteTenant, dbresetTenant, dbAddUserToTenant, dbRemoveUserFromTenant, dbAddAdminToTenant, dbRemoveAdminFromTenant, dbgetUserTenant, dbgetTenantinfo, dbgetDefaultLanguage, dbgetSecondaryLanguage, dbgetCategories, dbdeleteLanguage, dbputCategory, dbaddCategory };

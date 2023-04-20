@@ -2,7 +2,7 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbpostOriginalText } from 'src/services/dbText';
-import { dbcheckUserInTenant } from 'src/services/dbTenant';
+import { dbaddCategory, dbcheckUserInTenant } from 'src/services/dbTenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
@@ -38,10 +38,10 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
     if (event.body.Title == null || event.body.Text == null || event.body.Category == null)
         return formatJSONResponse({ "error": "body request missing parameters" });
 
-    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
+    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} }) as string;
     let title = sanitizeHtml(event.body.Title, { allowedTags: [], allowedAttributes: {} });
     let text = sanitizeHtml(event.body.Text); //allow default tags and attributes for html formatting of text
-    let category = sanitizeHtml(event.body.Category, { allowedTags: [], allowedAttributes: {} });
+    let category = sanitizeHtml(event.body.Category, { allowedTags: [], allowedAttributes: {} }) as string;
     let comment = sanitizeHtml(event.body.Comment, { allowedTags: [], allowedAttributes: {} });
     let link = sanitizeHtml(event.body.Link, { allowedTags: [], allowedAttributes: {} });
     if (tenant === '' || title === '' || text === '' || category === '')
@@ -56,6 +56,8 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
 
     try {
         //collect the data from db
+        await dbaddCategory(title, category);
+        return formatJSONResponse({ "OK": "categoria aggiunta con successo"});
         await dbpostOriginalText(tenant, title, category, text, comment, link);
         
     }

@@ -7,7 +7,7 @@ export default {
     {
       http: {
         method: 'GET',
-        path: '{TenantID}/allCategories',
+        path: 'text/{TenantID}/allCategories',
         request: {
           schemas: {
             'application/json': schema,

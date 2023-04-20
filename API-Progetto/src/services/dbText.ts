@@ -7,6 +7,12 @@ import { Tenant, Category } from "src/types/Tenant";
 import { ddbDocClient } from "./dbConnection";
 import { dbgetTenantinfo, dbgetCategories, dbgetDefaultLanguage } from "./dbTenant";
 
+//NOTE: language_category_title is formatted: " <language&category\title> "
+//using charactes <&\> that are escaped by the lambda to avoid conflict with user input
+//lang      = language_category_title.split("&")[0].split("<")[1];
+//category  = language_category_title.split("\\")[0].split("&")[1];
+//title     = language_category_title.split(">")[0].split("\\")[1];
+//split("&")[0].split("<")[1].split("\\")[0].split("&")[1]..split(">")[0].split("\\")[1];
 
 //---------------------
 //UTIL functions that will be used across all db functions 
@@ -17,9 +23,9 @@ const utilMergeMeta = (text: TextCategory, info: TextCategoryInfo[], categories:
     //input: text(TextCategory), info(TextCategoryInfo[]), categories(Category[])
     //output: Text / Error
     try {
-        let lang = text.language_category_title.split("#")[0];
-        let category = text.language_category_title.split("#")[1];
-        let title = text.language_category_title.split("#")[2];
+        let lang = text.language_category_title.split("&")[0].split("<")[1];
+        let category = text.language_category_title.split("\\")[0].split("&")[1];
+        let title = text.language_category_title.split(">")[0].split("\\")[1];
         //seach the meta by textId
         let meta = info.find(element => element.language_category_title === text.language_category_title);
         //construct the object merging records from the two tables
@@ -59,7 +65,7 @@ const utilChangeStateTranslations = async (tenant: string, defaultlanguage: stri
         //this part should make the calls in parallel and wait for the map array of promises
         //instead of waiting for the complition of every single item like in forEach loop
         await Promise.all (info.map(async (element) =>{
-            if (element.language_category_title.split("#")[0] === defaultlanguage)
+            if (element.language_category_title.split("&")[0].split("<")[1] === defaultlanguage)
                 return;
             const update: UpdateCommandInput = {
                 TableName: environment.dynamo.TextCategoryTable.tableName,
@@ -149,7 +155,7 @@ const dbgetByCategory = async (tenant: string, category: string) => {
             FilterExpression: "idTenant = :t and contains(language_category_title, :c)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":c": "#"+category+"#",
+                ":c": "&"+category+"\\",
             },
         };
         const param2: ScanCommandInput = {
@@ -157,7 +163,7 @@ const dbgetByCategory = async (tenant: string, category: string) => {
             FilterExpression: "idTenant = :t and contains(language_category_title, :c)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":c": "#" + category + "#",
+                ":c": "&" + category + "\\",
             }
         };
         const info = await (await ddbDocClient.send(new ScanCommand(param1))).Items as TextCategoryInfo[];
@@ -202,7 +208,7 @@ const dbgetByLanguage = async (tenant: string, language: string, state: state) =
             FilterExpression: "idTenant = :t and begins_with(language_category_title, :l)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":l": language + "#",
+                ":l": "<" + language + "&",
             },
         };
         const param2: ScanCommandInput = {
@@ -210,7 +216,7 @@ const dbgetByLanguage = async (tenant: string, language: string, state: state) =
             FilterExpression: "idTenant = :t and begis_with(language_category_title, :l) and state= :s",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":l": language + "#",
+                ":l": "<" + language + "&",
                 ":s": state,
             }
         };
@@ -256,7 +262,7 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
             FilterExpression: "idTenant = :t and begins_with(language_category_title,:lc)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":lc": language + "#" + category + "#",
+                ":lc": "<" + language + "&" + category + "\\",
             },
         };
         const param2: ScanCommandInput = {
@@ -264,7 +270,7 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
             FilterExpression: "idTenant= :t and begins_with(language_category_title,:lc)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":lc": language + "#" + category + "#",
+                ":lc": "<" + language + "&" + category + "\\",
             },
         };
         const info = await (await ddbDocClient.send(new ScanCommand(param1))).Items as TextCategoryInfo[];
@@ -310,7 +316,7 @@ const dbgetTranslationsLanguages = async (tenant: string, category: string, titl
             FilterExpression: "idTenant= :t and begins_with(language_category_title,:lc)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":ct": "#" + category + "#" + title + "#",
+                ":ct": "&" + category + "\\" + title + ">",
             },
         };
         //------------------NOTE!!!!
@@ -326,7 +332,7 @@ const dbgetTranslationsLanguages = async (tenant: string, category: string, titl
 
         txt.forEach(function (text) {
             //iterate over every row of Text table
-            let language = text.language_category_title.split("#")[0];
+            let language = text.language_category_title.split("&")[0].split("<")[1];
             if (language !== deflang)
                 result.push(language);
         });
@@ -354,7 +360,7 @@ const dbGetTexts = async (tenantID: string, language: string = null, category: s
     };
     params["ExpressionAttributeValues"] =
     {
-        ':begin': language + "#" + ((category == null) ? "" : (category + "#" + (id == null) ? "" : id))
+        ':begin': "<" + language + "&" + ((category == null) ? "" : (category + "\\" + (id == null) ? "" : (id + ">")))
     };
     try {
         const data = await ddbDocClient.send(new ScanCommand(params));
@@ -395,7 +401,7 @@ const dbGetTexts = async (tenantID: string, language: string = null, category: s
         var values: string[] = [];
 
         text.forEach((val) => {
-            var current = val["language_category_title"].split["#"][1];
+            var current = val["language_category_title"].split("\\")[0].split("&")[1];
             if (values.includes(current)) {
                 values.push(current);
             }
@@ -422,7 +428,7 @@ const textsOfState = async (tenantID: string, language: string, state: state) =>
     };
     params["ExpressionAttributeValues"] =
     {
-        ':begin': language + "#",
+        ':begin': "<" + language + "&",
         ':stato': state
     };
 
@@ -459,7 +465,7 @@ const dbdeleteText = async (tenant: string, title: string) => {
         },
         ConditionExpression: "contains(language_category_title, :t)",
         ExpressionAttributeValues: {
-            ":t": "#" + title + "#",
+            ":t": "\\" + title + ">",
         },
     };
     const param2: DeleteCommandInput = {
@@ -469,7 +475,40 @@ const dbdeleteText = async (tenant: string, title: string) => {
         },
         ConditionExpression: "contains(language_category_title, :t)",
         ExpressionAttributeValues: {
-            ":t": "#" + title + "#",
+            ":t": "\\" + title + ">",
+        },
+    };
+    try {
+        await ddbDocClient.send(new DeleteCommand(param1));
+        return await ddbDocClient.send(new DeleteCommand(param2));
+    } catch (err) {
+        throw { err };
+    }
+};
+
+const dbdeleteLanguageTexts = async (tenant: string, language: string) => {
+    //DELETE all texts translated into a language.
+    //input: tenant(String), language(String)
+    //output: true / Error
+
+    const param1: DeleteCommandInput = {
+        TableName: environment.dynamo.TextCategoryTable.tableName,
+        Key: {
+            idTenant: tenant,
+        },
+        ConditionExpression: "begins_with(language_category_title, :l)",
+        ExpressionAttributeValues: {
+            ":l": "<" + language + "&",
+        },
+    };
+    const param2: DeleteCommandInput = {
+        TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+        Key: {
+            idTenant: tenant,
+        },
+        ConditionExpression: "begins_with(language_category_title, :l)",
+        ExpressionAttributeValues: {
+            ":l": "<" + language + "&",
         },
     };
     try {
@@ -489,7 +528,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
     //get categories of the tenant
     const tenantinfo = await (dbgetTenantinfo(tenant)) as Tenant;
     if (tenantinfo == null)
-        throw { "error": "error" };
+        throw { "error": "tenant does not exist" };
 
     //check if this text already exists
     if (await (dbGetTexts(tenant, tenantinfo.defaultLanguage, category, title)) as TextCategory[])
@@ -497,13 +536,13 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
 
     //check language is inside the tenant and check if category exists
     if (tenantinfo.defaultLanguage === tenantinfo.defaultLanguage || tenantinfo.languages.indexOf(tenantinfo.defaultLanguage) === -1 || tenantinfo.categories.findIndex(item => item.id === category) === -1)
-        throw { "error": "error" };
+        throw { "error": "missing language or category inside tenant" };
 
     const paramsInfo: PutCommandInput = {
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: tenantinfo.defaultLanguage +"#"+category+"#"+title+"#",
+            language_category_title: "<" + tenantinfo.defaultLanguage +"&"+category+"\\"+title+">",
             comment: comment,
             link: link,
             feedback: null,
@@ -513,7 +552,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
         TableName: environment.dynamo.TextCategoryTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: tenantinfo.defaultLanguage + "#" + category + "#" + title + "#",
+            language_category_title: "<" + tenantinfo.defaultLanguage + "&" + category + "\\" + title + ">",
             text: text,
             stato: 'testoOriginale',
         },
@@ -550,7 +589,7 @@ const dbpostTranslation = async (tenant: string, title: string, category: string
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: language + "#" + category + "#" + title + "#",
+            language_category_title: "<" + language + "&" + category + "\\" + title + ">",
             comment: comment,
             link: link,
             feedback: null,
@@ -560,7 +599,7 @@ const dbpostTranslation = async (tenant: string, title: string, category: string
         TableName: environment.dynamo.TextCategoryTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: language + "#" + category + "#" + title + "#",
+            language_category_title: "<" + language + "&" + category + "\\" + title + ">",
             text: null,
             stato: 'daTradurre',
         },
@@ -585,14 +624,14 @@ const dbputTextCategory = async (tenant: string, category: string, title: string
             FilterExpression: "idTenant = :t and contains(language_category_title, :ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":ct": "#" + category + "#" + title + "#",
+                ":ct": "&" + category + "\\" + title + ">",
             }
         };
         const txt = await (await ddbDocClient.send(new ScanCommand(param))).Items as TextCategory[];
         //change all categories ID and prepare an array of PutRequest
         let array = [];
         txt.forEach(item=>{
-            item.language_category_title = item.language_category_title.split("#")[0] + "#" + name + "#" + item.language_category_title.split("#")[2] + "#";
+            item.language_category_title = item.language_category_title.split("&")[0].split("<")[1] + "#" + name + "#" + item.language_category_title.split(">")[0].split("\\")[1] + "#";
             array.push({ PutRequest: {Item: item}});
         });
         //prepare the parameters for the batch write
@@ -623,7 +662,7 @@ const dbputOriginalText = async (tenant: string, category: string, title: string
             TableName: environment.dynamo.TextCategoryTable.tableName,
             Key: {
                 idTenant: tenant,
-                language_category_title: language +"#"+ category + "#" + title + "#",
+                language_category_title: "<" + language + "&" + category + "\\" + title + ">",
             },
             UpdateExpression: "set text = {:t}",
             ExpressionAttributeValues: {
@@ -636,7 +675,7 @@ const dbputOriginalText = async (tenant: string, category: string, title: string
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
             Key: {
                 idTenant: tenant,
-                categoryIdtextId: language + "#" + category + "#" + title + "#",
+                categoryIdtextId: "<" + language + "&" + category + "\\" + title + ">",
             },
             UpdateExpression: "set comment = {:c} and set link = {:l}",
             ExpressionAttributeValues: {
@@ -711,4 +750,4 @@ const updateText = async (tenantID: string, language: string, category: string, 
     }
 }
 
-export {dbgetAllTexts, dbgetByCategory, dbgetByLanguage, dbgetTexts, dbgetTranslationsLanguages, dbGetTexts, dbgetCategories, textsOfState, dbdeleteText, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation, updateText };
+export {dbgetAllTexts, dbgetByCategory, dbgetByLanguage, dbgetTexts, dbgetTranslationsLanguages, dbGetTexts, textsOfState, dbdeleteText, dbdeleteLanguageTexts, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation, updateText };

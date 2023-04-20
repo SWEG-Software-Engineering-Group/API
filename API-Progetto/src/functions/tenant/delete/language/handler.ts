@@ -1,8 +1,8 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetDefaultLanguage, dbdeleteLanguage } from 'src/services/dbTenant';
-import { dbcheckAdminInTenant } from 'src/services/dbTenant';
+import { dbcheckAdminInTenant, dbgetDefaultLanguage, dbdeleteLanguage } from 'src/services/dbTenant';
+import { dbdeleteLanguageTexts } from 'src/services/dbText';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
@@ -57,6 +57,7 @@ const deleteLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
             return formatJSONResponse({ "error": "language is original" });
 
         //execute the delete
+        await dbdeleteLanguageTexts(tenant, language);
         await dbdeleteLanguage(tenant, language);
 
     }
