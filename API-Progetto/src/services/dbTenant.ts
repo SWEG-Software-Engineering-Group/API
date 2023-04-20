@@ -303,15 +303,17 @@ const dbRemoveAdminFromTenant = async (tenant: string, username: string) => {
 };
 const dbgetUserTenant = async (username: string) => {
     // Set the parameters.
-    const params: ScanCommandInput = {
+    // CHECK IF USER IS IN FIELD USERS OR ADMINS
+    const params = {
         TableName: environment.dynamo.TenantTable.tableName,
-        FilterExpression: "contains(#users, :username)",
+        FilterExpression: "contains(#users, :username) OR contains(#admins, :username)",
         ExpressionAttributeNames: {
             "#users": "users",
+            "#admins": "admins"
         },
         ExpressionAttributeValues: {
-            ":username": username,
-        },
+            ":username": username
+        }
     };
     try {
         const tenant = await ddbDocClient.send(new ScanCommand(params));
