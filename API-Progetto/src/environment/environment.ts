@@ -45,7 +45,7 @@ interface Environment {
             tableName: string;
             arn: string;
         },
-        TextCategoryinfo: {
+        TextCategoryInfoTable: {
             tableName: string;
             arn: string;
         },
@@ -76,8 +76,8 @@ const environment: Environment = {
             tableName: "TextCategoryTable",
             arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TextCategoryTable",
         },
-        TextCategoryinfo: {
-            tableName: "TextCategoryinfo",
+        TextCategoryInfoTable: {
+            tableName: "TextCategoryInfoTable",
             arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TextCategoryinfo",
         },
 

@@ -1,7 +1,7 @@
 interface TextCategory {
   idTenant: string;
-  languageidCategorytextId: string;
-  txt: string;
+  language_category_title: string;
+  text: string;
   stato: number;
 }
 enum state {

@@ -1,7 +1,15 @@
 import type { AWS } from '@serverless/typescript';
 import { environment } from 'src/environment/environment';
 //plama
-import { originalTexts, allCategories, rejectedText, untranslatedTexts, pendingTranslations, textbyid, approveText, rejectText, } from '@functions/index';
+import {
+    originalTexts,
+    allCategories,
+    rejectedText,
+    untranslatedTexts,
+    pendingTranslations,
+    textbyid, approveText,
+    rejectText,
+} from '@functions/index';
 //marco
 import {
   putTenant,
@@ -30,7 +38,22 @@ import {
   setRole,
   getUserTenant
 } from '@functions/index';
-
+//milo
+import {
+    getTenantAdmins,
+    getTenantUsers,
+    getAllTexts,
+    getText,
+    getTextFromCategory,
+    getTextFromLanguage,
+    deleteText,
+    deleteLanguage,
+    postOriginalText,
+    postTranslation,
+    putOriginalText,
+    putTextCategory,
+    putTranslation
+} from '@functions/index';
 
 const serverlessConfiguration: AWS = {
   service: 'api-progetto',
@@ -142,7 +165,7 @@ const serverlessConfiguration: AWS = {
               AttributeType: 'S',
             },
             {
-              AttributeName: 'languageidCategorytextId',
+              AttributeName: 'language_category_title',
               AttributeType: 'S',
             },
           ],
@@ -152,7 +175,7 @@ const serverlessConfiguration: AWS = {
               KeyType: 'HASH',
             },
             {
-              AttributeName: 'languageidCategorytextId',
+              AttributeName: 'language_category_title',
               KeyType: 'RANGE',
             },
           ],
@@ -161,7 +184,7 @@ const serverlessConfiguration: AWS = {
       TextCategoryinfo: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
-          TableName: environment.dynamo.TextCategoryinfo.tableName,
+          TableName: environment.dynamo.TextCategoryInfoTable.tableName,
           BillingMode: 'PAY_PER_REQUEST',
           AttributeDefinitions: [
             {
@@ -169,7 +192,7 @@ const serverlessConfiguration: AWS = {
               AttributeType: 'S',
             },
             {
-              AttributeName: 'languageidCategorytextId',
+              AttributeName: 'language_category_title',
               AttributeType: 'S',
             },
           ],
@@ -179,7 +202,7 @@ const serverlessConfiguration: AWS = {
               KeyType: 'HASH',
             },
             {
-              AttributeName: 'languageidCategorytextId',
+              AttributeName: 'language_category_title',
               KeyType: 'RANGE',
             },
           ],
@@ -190,7 +213,6 @@ const serverlessConfiguration: AWS = {
   // import the function via paths
   functions: {
     //marco
-
     putTenant,
     getTenants,
     getTenant,
@@ -225,8 +247,22 @@ const serverlessConfiguration: AWS = {
     pendingTranslations,
     textbyid,
     approveText,
-    rejectText
+    rejectText,
 
+    //milo
+     getTenantAdmins,
+     getTenantUsers,
+     getAllTexts,
+     getTextFromCategory,
+     getTextFromLanguage,
+     getText,
+     deleteLanguage,
+     deleteText,
+     postOriginalText,
+     postTranslation,
+     putOriginalText,
+     putTextCategory,
+     putTranslation,
   },
   package: { individually: true },
   custom: {

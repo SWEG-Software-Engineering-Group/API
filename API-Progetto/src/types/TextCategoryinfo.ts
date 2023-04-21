@@ -1,9 +1,9 @@
-interface TextCategoryinfo {
+interface TextCategoryInfo {
     idTenant: string;
-    languageidCategorytextId: string;
+    language_category_title: string;
     feedback: string | null;
     comment: string | null;
     link: string | null;
 }
 
-export { TextCategoryinfo };
+export { TextCategoryInfo };

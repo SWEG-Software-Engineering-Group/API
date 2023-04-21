@@ -40,3 +40,19 @@ export { default as textbyid } from './textcategory/get/searchTextsById';
 //put
 export { default as approveText } from './textcategory/put/approveText';
 export { default as rejectText } from './textcategory/put/rejectText';
+
+
+//milo
+export { default as getTenantAdmins } from './tenant/get/admin';
+export { default as getTenantUsers } from './tenant/get/user';
+export { default as getAllTexts } from './textcategory/get/allTexts';
+export { default as getTextFromCategory } from './textcategory/get/textFromCategory';
+export { default as getTextFromLanguage } from './textcategory/get/textFromLanguage';
+export { default as getText } from './textcategory/get/texts';
+export { default as deleteText } from './textcategory/delete/text';
+export { default as deleteLanguage } from './tenant/delete/language';
+export { default as postOriginalText } from './textcategory/post/originalText';
+export { default as postTranslation } from './textcategory/post/translation';
+export { default as putTextCategory } from './textcategory/put/textCategory';
+export { default as putOriginalText } from './textcategory/put/originalText';
+export { default as putTranslation } from './textcategory/put/translation';
