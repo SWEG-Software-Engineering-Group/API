@@ -76,15 +76,17 @@ const dbgetTenantinfo = async (tenant: string) => {
 };
 const dbgetUserTenant = async (username: string) => {
     // Set the parameters.
+    // CHECK IF USER IS IN FIELD USERS OR ADMINS
     const params: ScanCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
-        FilterExpression: "contains(#users, :username)",
+        FilterExpression: "contains(#users, :username) OR contains(#admins, :username)",
         ExpressionAttributeNames: {
             "#users": "users",
+            "#admins": "admins"
         },
         ExpressionAttributeValues: {
-            ":username": username,
-        },
+            ":username": username
+        }
     };
     try {
         const tenant = await ddbDocClient.send(new ScanCommand(params));
