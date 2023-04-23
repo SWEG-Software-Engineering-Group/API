@@ -7,7 +7,7 @@ export default {
     {
       http: {
         method: 'post',
-        path: 'text/{TenantId}/originalText',
+        path: 'text/{TenantId}/writeOriginalText',
         request: {
             schemas: {
                 'application/json': schema,

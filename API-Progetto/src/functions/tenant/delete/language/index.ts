@@ -6,7 +6,7 @@ export default {
     {
       http: {
         method: 'delete',
-            path: 'tenant/{TenantId}/{Language}/language',
+            path: 'tenant/{TenantId}/{Language}/deleteLanguage',
       },
     },
   ],

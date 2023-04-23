@@ -1,14 +1,14 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { getListUserCognito } from 'src/services/userManager';
+import { cggetListUserCognito } from 'src/services/userManager';
 
 import schema from './schema';
 
 const getUsers: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async () => {
   try
   {
-    let users = await getListUserCognito();
+    let users = await cggetListUserCognito();
     return formatJSONResponse({users});
   }
   catch (error) {

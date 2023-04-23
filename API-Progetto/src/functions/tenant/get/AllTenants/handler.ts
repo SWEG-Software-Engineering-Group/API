@@ -5,7 +5,7 @@ import { dbgetTenants } from 'src/services/dbTenant';
 
 import schema from './schema';
 
-const getTenants: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async () => {
+const getAllTenants: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async () => {
   try{
     let tenants=await dbgetTenants();
     return formatJSONResponse(tenants, 200);
@@ -20,4 +20,4 @@ const getTenants: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async () =
   }
 };
 
-export const main = middyfy(getTenants);
+export const main = middyfy(getAllTenants);

@@ -6,7 +6,7 @@ import { TextCategory, state } from 'src/types/TextCategory';
 
 import schema from './schema';
 
-const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const getTextsToVerify: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   var res: TextCategory[] = null;
   try {
     res = await textsOfState(event.pathParameters.TenantID, event.pathParameters.language, state.daVerificare);
@@ -16,4 +16,4 @@ const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
   return formatJSONResponse({ "texts": res });
 };
 
-export const main = middyfy(getText);
+export const main = middyfy(getTextsToVerify);

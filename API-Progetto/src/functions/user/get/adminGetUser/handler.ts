@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { AdminGetUser } from 'src/services/userManager';
+import { cgAdminGetUser } from 'src/services/userManager';
 
 import schema from './schema';
 
@@ -15,7 +15,7 @@ const admGetUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
         400
       );
     }
-    let users = await AdminGetUser(event.pathParameters.username);
+    let users = await cgAdminGetUser(event.pathParameters.username);
     return formatJSONResponse({users}, 200);
   } catch (error) {
     return formatJSONResponse(

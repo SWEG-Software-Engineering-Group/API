@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { createUser } from 'src/services/userManager';
+import { cgcreateUser } from 'src/services/userManager';
 
 import schema from './schema';
 
@@ -15,7 +15,7 @@ const signUpUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
         400
       );
     }
-    await createUser({
+    await cgcreateUser({
       username: event.body.email,
       password: event.body.password,
       email: event.body.email,

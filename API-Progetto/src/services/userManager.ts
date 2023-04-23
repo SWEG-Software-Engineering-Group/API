@@ -2,7 +2,7 @@ import { User } from "src/types/User";
 import { CognitoISP } from "./cognito";
 import { environment } from 'src/environment/environment';
 
-const createUser = async (User: User) => {
+const cgcreateUser = async (User: User) => {
     var params = {
         ClientId: environment.cognito.idclient,
         Password: User.password,
@@ -26,13 +26,13 @@ const createUser = async (User: User) => {
             UserPoolId: environment.cognito.userPoolId,
             Username: params.Username
         }).promise();
-        addUserRole(params.Username, User.role);
+        cgaddUserRole(params.Username, User.role);
     } catch (err) {
         console.log(err);
         throw {"Create User:": err};
     }
 }
-const addUserRole = async (username: string, role: string) => {
+const cgaddUserRole = async (username: string, role: string) => {
     try {
         await CognitoISP.adminAddUserToGroup({
             GroupName: role.toString(),
@@ -44,7 +44,7 @@ const addUserRole = async (username: string, role: string) => {
         throw{"Add User:": error};
     }
 }
-const removeUserRole = async (username: string, role: string) => {
+const cgremoveUserRole = async (username: string, role: string) => {
     try {
         await CognitoISP.adminRemoveUserFromGroup({
             GroupName: role.toString(),
@@ -57,18 +57,18 @@ const removeUserRole = async (username: string, role: string) => {
     }
 
 }
-const getUserFromToken   = async (token: string) => {
+const cggetUserFromToken   = async (token: string) => {
     return await CognitoISP.getUser({
         AccessToken: token
     }).promise();
 }
-const AdminGetUser = async (username: string) => {
+const cgAdminGetUser = async (username: string) => {
     return await CognitoISP.adminGetUser({
         UserPoolId: environment.cognito.userPoolId,
         Username: username
     }).promise();
 }
-const getListUserCognito = async () => {
+const cggetListUserCognito = async () => {
     try {
         const params = {
             UserPoolId: environment.cognito.userPoolId
@@ -76,7 +76,7 @@ const getListUserCognito = async () => {
 
         console.log('params', JSON.stringify(params));
 
-        const listUserResp = await getAllUserCognito(params);
+        const listUserResp = await cggetAllUserCognito(params);
 
         console.log('listUserResp', JSON.stringify(listUserResp));
 
@@ -86,7 +86,7 @@ const getListUserCognito = async () => {
     }
 };
 
-const getAllUserCognito = async (params) => {
+const cggetAllUserCognito = async (params) => {
     try {
         // string must not be empty
         let paginationToken = 'notEmpty';
@@ -117,7 +117,7 @@ const getAllUserCognito = async (params) => {
     }
 };
 
-const getListUserGroups = async (username : string) => {
+const cggetListUserGroups = async (username : string) => {
     try {
         const params = {
             UserPoolId: environment.cognito.userPoolId,
@@ -126,7 +126,7 @@ const getListUserGroups = async (username : string) => {
 
         console.log('params', JSON.stringify(params));
 
-        const listGroupsResp = await getAllUserGroups(params);
+        const listGroupsResp = await cggetAllUserGroups(params);
 
         console.log('listGroupsResp', JSON.stringify(listGroupsResp));
 
@@ -136,7 +136,7 @@ const getListUserGroups = async (username : string) => {
     }
 };
 
-const getAllUserGroups = async (params) => {
+const cggetAllUserGroups = async (params) => {
     try {
         // string must not be empty
         let paginationToken = 'notEmpty';
@@ -167,7 +167,7 @@ const getAllUserGroups = async (params) => {
     }
 };        
 
-const deleteUser = async (username: string) => {
+const cgdeleteUser = async (username: string) => {
     try {
         const params = {
             UserPoolId: environment.cognito.userPoolId,
@@ -179,4 +179,4 @@ const deleteUser = async (username: string) => {
     }
 }
 
-export { createUser, getListUserCognito, getUserFromToken, AdminGetUser, deleteUser, addUserRole, removeUserRole, getListUserGroups};
+export { cgcreateUser, cggetListUserCognito, cggetUserFromToken, cgAdminGetUser, cgdeleteUser, cgaddUserRole, cgremoveUserRole, cggetListUserGroups};

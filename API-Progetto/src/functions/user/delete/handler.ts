@@ -1,12 +1,12 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { deleteUser } from 'src/services/userManager';
+import { cgdeleteUser } from 'src/services/userManager';
 
 
 import schema from './schema';
 
-const delUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const deleteUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     try {
       if (event.pathParameters.username == null) {
         return formatJSONResponse(
@@ -16,7 +16,7 @@ const delUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
           400
         );
       }
-      await deleteUser(event.pathParameters.username);
+      await cgdeleteUser(event.pathParameters.username);
       return formatJSONResponse({}, 200);
     } catch (error) {
       return formatJSONResponse(
@@ -29,4 +29,4 @@ const delUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
   
 };
 
-export const main = middyfy(delUser);
+export const main = middyfy(deleteUser);

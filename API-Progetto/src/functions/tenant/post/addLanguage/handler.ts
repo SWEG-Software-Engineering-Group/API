@@ -5,9 +5,9 @@ import { dbAddSecLanguageToTenant } from 'src/services/dbTenant';
 
 import schema from './schema';
 
-const addSecLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const addLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    if (event.pathParameters.tenantId == null) {
+    if (event.pathParameters.TenantId == null) {
       return formatJSONResponse(
         {
           "error": "Missing tenantId",
@@ -23,7 +23,7 @@ const addSecLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
         400
       );
     }
-    let tenant = await dbAddSecLanguageToTenant(event.pathParameters.tenantId, event.body.Language.toString());
+    let tenant = await dbAddSecLanguageToTenant(event.pathParameters.TenantId, event.body.Language.toString());
     return formatJSONResponse({tenant}, 200);
   } catch (error) {
     console.log(error);
@@ -36,4 +36,4 @@ const addSecLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
   }
 };
 
-export const main = middyfy(addSecLanguage);
+export const main = middyfy(addLanguage);

@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { addUserRole } from 'src/services/userManager';
+import { cgaddUserRole } from 'src/services/userManager';
 
 import schema from './schema';
 
@@ -23,7 +23,7 @@ const addRole: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
         400
       );
     }
-    let role = await addUserRole(event.pathParameters.username, event.body.group.toString());
+    let role = await cgaddUserRole(event.pathParameters.username, event.body.group.toString());
     return formatJSONResponse({role}, 200);
   } catch (error) {
     console.log(error);

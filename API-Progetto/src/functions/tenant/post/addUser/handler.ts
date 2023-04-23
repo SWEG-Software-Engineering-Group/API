@@ -5,7 +5,7 @@ import { dbAddUserToTenant } from 'src/services/dbTenant';
 
 import schema from './schema';
 
-const addTenantUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const addUserToTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
     if (event.pathParameters.tenantId == null) {
       return formatJSONResponse(
@@ -36,4 +36,4 @@ const addTenantUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
   }
 };
 
-export const main = middyfy(addTenantUser);
+export const main = middyfy(addUserToTenant);

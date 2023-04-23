@@ -1,0 +1,713 @@
+{
+	"info": {
+		"_postman_id": "ab273499-4a64-4857-bc6f-184cb3f042b7",
+		"name": "local",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tenant",
+			"item": [
+				{
+					"name": "getAllTenants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/tenant/allTenants",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"tenant",
+								"allTenants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getTenant",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/tenant/TenantId/tenant",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"tenant",
+								"TenantId",
+								"tenant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCategories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/tenant/TenantId/allCategories",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"tenant",
+								"TenantId",
+								"allCategories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getTenantLanguages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/tenant/TenantId/secondaryLanguages",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"tenant",
+								"TenantId",
+								"secondaryLanguages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addTenant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"\",\r\n    \"Language\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/dev/tenant/create",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"tenant",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addLanguage",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Language\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/dev/tenant/TenantId/addLanguage",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"tenant",
+								"TenantId",
+								"addLanguage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addUserToTenant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"User\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/dev/tenant/TenantId/addUser",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"tenant",
+								"TenantId",
+								"addUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "putCategoryName",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/dev/tenant/TenantId/Category/editCategoryName",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"tenant",
+								"TenantId",
+								"Category",
+								"editCategoryName"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteTenant",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/tenant/TenantId/delete",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"tenant",
+								"TenantId",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteTenantLanguage",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/tenant/TenantId/Language/deleteLanguage",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"tenant",
+								"TenantId",
+								"Language",
+								"deleteLanguage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeCategery",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/tenant/TenantId/Category/deleteCategory",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"tenant",
+								"TenantId",
+								"Category",
+								"deleteCategory"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "getUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/user/AccessToken/user",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"user",
+								"AccessToken",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signUpUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Email\":\"\",\r\n    \"Username\":\"\",\r\n    \"Name\":\"\",\r\n    \"Surname\":\"\",\r\n    \"Group\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/dev/user/create",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "recoverPassword",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/user/Username/recoverPassword",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"user",
+								"Username",
+								"recoverPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUser",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/user/Username/delete",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"user",
+								"Username",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Text",
+			"item": [
+				{
+					"name": "getUntranslatedTexts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/Language/untranslatedTexts",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"Language",
+								"untranslatedTexts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getTranslationLanguages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/Category/Title/getOriginalTextLanguages",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"Category",
+								"Title",
+								"getOriginalTextLanguages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getTextsToVerify",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/Language/pendingTranslations",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"Language",
+								"pendingTranslations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getText",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/Language/Category/Title/text",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"Language",
+								"Category",
+								"Title",
+								"text"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllTexts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/allTexts",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"allTexts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getRejectedTexts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/Language/rejectedTexts",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"Language",
+								"rejectedTexts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOriginalTexts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/originalTexts",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"originalTexts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCountLanguageForCategory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/Category/countTexts",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"Category",
+								"countTexts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "postOriginalText",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Title\":\"\",\r\n    \"Category\":\"\",\r\n    \"Text\":\"\",\r\n    \"Comment\":\"\",\r\n    \"Link\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/writeOriginalText",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"writeOriginalText"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "putTranslation",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Text\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/Language/Category/Title/updateTranslation",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"Language",
+								"Category",
+								"Title",
+								"updateTranslation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "putAcceptText",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/Language/Category/Title/approveText",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"Language",
+								"Category",
+								"Title",
+								"approveText"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "putRejectText",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Feedback\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/Language/Category/Title/rejectText",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"Language",
+								"Category",
+								"Title",
+								"rejectText"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "putOriginalText",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Category\":\"\",\r\n    \"Text\":\"\",\r\n    \"Comment\":\"\",\r\n    \"Link\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/dev/text/TenantId/Category/Title/editOriginalText",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"dev",
+								"text",
+								"TenantId",
+								"Category",
+								"Title",
+								"editOriginalText"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

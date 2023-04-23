@@ -6,7 +6,7 @@ import { dbputTenant } from 'src/services/dbTenant';
 import schema from './schema';
 var crypto = require('crypto');
 
-const putTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const addTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try{
 
   
@@ -43,4 +43,4 @@ const putTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (even
   }
 };
 
-export const main = middyfy(putTenant);
+export const main = middyfy(addTenant);

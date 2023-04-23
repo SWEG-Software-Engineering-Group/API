@@ -7,7 +7,7 @@ export default {
     {
       http: {
         method: 'put',
-        path: 'text/{TenantID}/{language}/{category}/{id}/approveText',
+        path: 'text/{TenantId}/{Language}/{Category}/{Title}/approveText',
         request: {
           schemas: {
             'application/json': schema,
