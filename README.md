@@ -2,10 +2,11 @@
 ### Backend
 Dentro la cartella API
 ```
-- cd SWEG-Traduzioni-api
+- cd SWEG-Traduzioni-api\API\API-Progetto
 - npm i -g serverless 
 - serverless dynamodb install (Per Linux - sls dynamodb install)
 - npm i (per installare tutto)
+- npm audit fix
 ```
 - Scaricare AWS CLI se non installato: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 (Per Linux - sudo apt install awscli)
