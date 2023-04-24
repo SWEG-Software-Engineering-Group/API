@@ -368,7 +368,7 @@ const dbGetTexts = async (tenantID: string, language: string = null, category: s
         const data = await ddbDocClient.send(new ScanCommand(params));
         console.log("Success - GET", data);
         if (!data.Items) return [];
-        return data.Items as TextCategory[];
+        return data.Items as Text[];
     } catch (err) {
         console.log("Error", err.stack);
         throw { err };
@@ -533,7 +533,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
         throw { "error": "tenant does not exist" };
 
     //check if this text already exists
-    if (await (dbGetTexts(tenant, tenantinfo.defaultLanguage, category, title)) as TextCategory[])
+    if (await (dbGetTexts(tenant, tenantinfo.defaultLanguage, category, title)) as Text[])
         throw { "error": "text already present" };
 
     //check language is inside the tenant and check if category exists
@@ -573,7 +573,7 @@ const dbpostTranslation = async (tenant: string, title: string, category: string
     //output: true / Eror
 
     //check if this text already exists
-    if (await (dbGetTexts(tenant, language, category, title)) as TextCategory[])
+    if (await (dbGetTexts(tenant, language, category, title)) as Text[])
         throw { "error": "text already present" };
 
     const tenantinfo: Tenant = await (dbgetTenantinfo(tenant));

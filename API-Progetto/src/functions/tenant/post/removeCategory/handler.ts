@@ -7,15 +7,15 @@ import schema from './schema';
 
 const removeCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    if (event.pathParameters.tenantId == null) {
+    if (event.pathParameters.TenantId == null) {
       return formatJSONResponse(
         {
-          "error": "Missing tenantId",
+          "error": "Missing TenantId",
         },
         400
       );
     }
-    if (event.body.Category === undefined) {
+    if (event.pathParameters.Category === undefined) {
       return formatJSONResponse(
         {
           "error": "Invalid Body Format",
@@ -23,7 +23,7 @@ const removeCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
         400
       );
     }
-    let tenant = await dbRemoveCategoryFromTenant(event.pathParameters.tenantId, event.body.Category.toString());
+    let tenant = await dbRemoveCategoryFromTenant(event.pathParameters.TenantId, event.pathParameters.Category.toString());
     return formatJSONResponse({tenant}, 200);
   } catch (error) {
     console.log(error);

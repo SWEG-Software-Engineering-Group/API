@@ -7,7 +7,7 @@ export default {
     {
       http: {
         method: 'get',
-        path: 'tenant/{tenantId}/defaultLanguage',
+        path: 'tenant/{TenantId}/defaultLanguage',
         authorizer: {
           arn: environment.cognito.userPoolArn,
         },

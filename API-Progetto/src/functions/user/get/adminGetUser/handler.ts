@@ -7,15 +7,15 @@ import schema from './schema';
 
 const admGetUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    if (event.pathParameters.username == null) {
+    if (event.pathParameters.Username == null) {
       return formatJSONResponse(
         {
-          "error": "Missing username",
+          "error": "Missing Username",
         },
         400
       );
     }
-    let users = await cgAdminGetUser(event.pathParameters.username);
+    let users = await cgAdminGetUser(event.pathParameters.Username);
     return formatJSONResponse({users}, 200);
   } catch (error) {
     return formatJSONResponse(

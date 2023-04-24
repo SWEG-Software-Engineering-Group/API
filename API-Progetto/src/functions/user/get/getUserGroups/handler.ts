@@ -8,16 +8,16 @@ import schema from './schema';
 const getUserGroups: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try
   {
-    if (event.pathParameters.username == null) 
+    if (event.pathParameters.Username == null) 
     {
       return formatJSONResponse(
         {
-          "error": "Missing username",
+          "error": "Missing Username",
         },
         400
       );
     }
-    let groups = await cggetListUserGroups(event.pathParameters.username.toString());
+    let groups = await cggetListUserGroups(event.pathParameters.Username.toString());
     return formatJSONResponse({groups});
   }
   catch (error) {

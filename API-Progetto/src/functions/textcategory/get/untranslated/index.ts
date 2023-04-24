@@ -1,4 +1,4 @@
-import schema from './schema';
+import { environment } from 'src/environment/environment';
 import { handlerPath } from '@libs/handler-resolver';
 
 export default {
@@ -7,11 +7,9 @@ export default {
     {
       http: {
         method: 'GET',
-        path: 'text/{TenantID}/{Language}/untranslatedTexts',
-        request: {
-          schemas: {
-            'application/json': schema,
-          },
+        path: 'text/{TenantId}/{Language}/untranslatedTexts',
+        authorizer: {
+          arn: environment.cognito.userPoolArn,
         },
       },
     },

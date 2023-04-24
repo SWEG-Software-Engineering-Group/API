@@ -2,11 +2,11 @@
 export default {
     type: "object",
     properties: {
-      email: { type: 'string' },
-      password: { type: 'string' },
-      name: { type: 'string' },
-      surname: { type: 'string' },
-      group: { type: 'string' }
+      Email: { type: 'string' },
+      Password: { type: 'string' },
+      Name: { type: 'string' },
+      Surname: { type: 'string' },
+      Group: { type: 'string' }
     },
-    required: ['email', 'password', "name", "surname","group"]
+    required: ['Email', 'Password', "Name", "Surname","Group"]
   } as const;

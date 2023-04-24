@@ -9,11 +9,14 @@ import schema from './schema';
 const getUntranslatedTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   var res: TextCategory[] = null;
   try {
-    res = await textsOfState(event.pathParameters.TenantID, event.pathParameters.Language, state.daTradurre);
+    if (event.pathParameters.TenantId == null)
+      return formatJSONResponse({ "error": "Missing TenantID" }, 400);
+    if (event.pathParameters.Language == null)
+      return formatJSONResponse({ "error": "Missing Language" }, 400);
+    res = await textsOfState(event.pathParameters.TenantId, event.pathParameters.Language, state.daTradurre);
   } catch {
     return formatJSONResponse({ "error": "error" }, 403);
   }
   return formatJSONResponse({ "texts": res });
 };
-
 export const main = middyfy(getUntranslatedTexts);

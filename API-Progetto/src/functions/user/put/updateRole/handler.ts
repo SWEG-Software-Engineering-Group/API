@@ -8,9 +8,9 @@ import schema from './schema';
 const setRole: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
     // Get User Groups
-    let userGroups = await cggetListUserGroups(event.pathParameters.username);
+    let userGroups = await cggetListUserGroups(event.pathParameters.Username);
     // If userGroups.GroupName has the role, return error
-    if (userGroups.some((group) => group.GroupName === event.body.group.toString())) {
+    if (userGroups.some((group) => group.GroupName === event.body.Group.toString())) {
       return formatJSONResponse(
         {
           "Error": "User already has this role",
@@ -21,10 +21,10 @@ const setRole: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
 
     // Remove all user roles
     userGroups.forEach(async (group) => {
-      await cgremoveUserRole(event.pathParameters.username, group.GroupName);
+      await cgremoveUserRole(event.pathParameters.Username, group.GroupName);
     });
     // Add new role
-    await cgaddUserRole(event.pathParameters.username, event.body.group.toString());
+    await cgaddUserRole(event.pathParameters.Username, event.body.Group.toString());
     return formatJSONResponse({"Role Updated":"User role sucessfully updated"}, 200);
   } catch (error) {
     return formatJSONResponse(

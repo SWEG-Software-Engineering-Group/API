@@ -24,9 +24,9 @@ putAcceptText,
 putRejectText,
 getTenantLanguages,
 removeLanguage,
-addLanguage,
-allCategories,
+addLanguage, 
 removeCategory,
+getCategories
 } from '@functions/index';
 
 
@@ -210,8 +210,8 @@ const serverlessConfiguration: AWS = {
       getTenantLanguages,
       removeLanguage,
       addLanguage,
-      allCategories,
       removeCategory,
+      getCategories
   },
   package: { individually: true },
   custom: {

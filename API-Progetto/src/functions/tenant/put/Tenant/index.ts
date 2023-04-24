@@ -7,7 +7,7 @@ export default {
     {
       http: {
         method: "PUT",
-        path: 'tenant/{tenantId}/reset',
+        path: 'tenant/{TenantId}/reset',
         authorizer: {
           arn: environment.cognito.userPoolArn,
         },

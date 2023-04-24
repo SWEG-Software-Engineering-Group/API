@@ -7,10 +7,10 @@ import schema from './schema';
 
 const removeSecLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    if (event.pathParameters.tenantId == null) {
+    if (event.pathParameters.TenantId == null) {
       return formatJSONResponse(
         {
-          "error": "Missing tenantId",
+          "error": "Missing TenantId",
         },
         400
       );
@@ -23,7 +23,7 @@ const removeSecLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asy
         400
       );
     }
-    let tenant = await dbRemoveSecLanguageFromTenant(event.pathParameters.tenantId, event.body.Language.toString());
+    let tenant = await dbRemoveSecLanguageFromTenant(event.pathParameters.TenantId, event.body.Language.toString());
     return formatJSONResponse({tenant}, 200);
   } catch (error) {
     console.log(error);

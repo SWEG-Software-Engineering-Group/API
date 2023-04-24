@@ -8,7 +8,7 @@ export default {
     {
       http: {
         method: "PUT",
-        path: 'user/{username}/role',
+        path: 'user/{Username}/role',
         request: {
           schemas: {
             'application/json': schema,

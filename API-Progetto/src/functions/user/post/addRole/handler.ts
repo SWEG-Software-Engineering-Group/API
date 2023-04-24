@@ -7,15 +7,15 @@ import schema from './schema';
 
 const addRole: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    if (event.pathParameters.username == null) {
+    if (event.pathParameters.Username == null) {
       return formatJSONResponse(
         {
-          "error": "Missing username",
+          "error": "Missing Username",
         },
         400
       );
     }
-    if (event.body.group === undefined) {
+    if (event.body.Group === undefined) {
       return formatJSONResponse(
         {
           "error": "Invalid Body Format",
@@ -23,7 +23,7 @@ const addRole: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
         400
       );
     }
-    let role = await cgaddUserRole(event.pathParameters.username, event.body.group.toString());
+    let role = await cgaddUserRole(event.pathParameters.Username, event.body.Group.toString());
     return formatJSONResponse({role}, 200);
   } catch (error) {
     console.log(error);

@@ -7,7 +7,7 @@ export default {
     {
       http: {
         method: 'get',
-        path: 'user/{username}/groups',
+        path: 'user/{Username}/groups',
         authorizer: {
           arn: environment.cognito.userPoolArn,
         },

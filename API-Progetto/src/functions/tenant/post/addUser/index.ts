@@ -8,7 +8,7 @@ export default {
     {
       http: {
         method: 'post',
-        path: 'tenant/{tenantId}/addUser',
+        path: 'tenant/{TenantId}/addUser',
         request: {
           schemas: {
             'application/json': schema,

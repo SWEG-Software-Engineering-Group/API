@@ -35,7 +35,6 @@ const putTextCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
         return formatJSONResponse({ "error": "no valid input" });
     if (event.body.Category == null)
         return formatJSONResponse({ "error": "body request missing parameters" });
-
     let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
     let name = sanitizeHtml(event.body.Category, { allowedTags: [], allowedAttributes: {} });
     let category = sanitizeHtml(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} });

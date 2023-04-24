@@ -62,23 +62,23 @@ interface Environment {
 }
 
 const environment: Environment = {
-    awsRegion: "eu-west-2",
+    awsRegion: "us-east-2",
     dynamo: {
         TokenTable: {
             tableName: "TokenTable",
-            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TokenTable",
+            arn: "arn:aws:dynamodb:us-east-2:574522373582:table/TokenTable",
         },
         TenantTable: {
             tableName: "TenantTable",
-            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TenantTable",
+            arn: "arn:aws:dynamodb:us-east-2:574522373582:table/TenantTable",
         },
         TextCategoryTable: {
             tableName: "TextCategoryTable",
-            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TextCategoryTable",
+            arn: "arn:aws:dynamodb:us-east-2:574522373582:table/TextCategoryTable",
         },
         TextCategoryInfoTable: {
             tableName: "TextCategoryInfoTable",
-            arn: "arn:aws:dynamodb:eu-west-2:574522373582:table/TextCategoryinfo",
+            arn: "arn:aws:dynamodb:us-east-2:574522373582:table/TextCategoryInfoTable",
         },
 
 

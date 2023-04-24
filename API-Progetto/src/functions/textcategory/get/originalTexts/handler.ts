@@ -5,9 +5,10 @@ import { dbGetTexts } from 'src/services/dbTextCategory';
 import { TextCategory } from 'src/types/TextCategory';
 
 import schema from './schema';
+import { Text } from 'src/types/Text';
 
 const getOriginalTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  var res: TextCategory[] = null;
+  var res: Text[] = null;
   try {
     res = await dbGetTexts(event.pathParameters.TenantId);
   } catch {

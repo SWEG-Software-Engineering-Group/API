@@ -8,15 +8,15 @@ import schema from './schema';
 
 const deleteUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     try {
-      if (event.pathParameters.username == null) {
+      if (event.pathParameters.Username == null) {
         return formatJSONResponse(
           {
-            "error": "Missing username",
+            "error": "Missing Username",
           },
           400
         );
       }
-      await cgdeleteUser(event.pathParameters.username);
+      await cgdeleteUser(event.pathParameters.Username);
       return formatJSONResponse({}, 200);
     } catch (error) {
       return formatJSONResponse(

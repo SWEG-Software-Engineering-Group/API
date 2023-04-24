@@ -8,15 +8,15 @@ import schema from './schema';
 const getUserTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try
   {
-    if (event.pathParameters.username == null) {
+    if (event.pathParameters.Username == null) {
       return formatJSONResponse(
         {
-          "Error": "Missing username",
+          "Error": "Missing Username",
         },
         400
       );
     }
-    let tenants = await dbgetUserTenant(event.pathParameters.username.toString());
+    let tenants = await dbgetUserTenant(event.pathParameters.Username.toString());
     // Return errror if no tenant is found
     if (tenants.length == 0) {
       return formatJSONResponse(

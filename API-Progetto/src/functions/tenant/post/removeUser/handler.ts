@@ -7,7 +7,7 @@ import schema from './schema';
 
 const removeTenantAdmin: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    if (event.pathParameters.tenantId == null) {
+    if (event.pathParameters.TenantId == null) {
       return formatJSONResponse(
         {
           "error": "Missing tenantId",
@@ -23,7 +23,7 @@ const removeTenantAdmin: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asy
         400
       );
     }
-    let tenant = await dbRemoveUserFromTenant(event.pathParameters.tenantId, event.body.User.toString());
+    let tenant = await dbRemoveUserFromTenant(event.pathParameters.TenantId, event.body.User.toString());
     return formatJSONResponse({tenant}, 200);
   } catch (error) {
     console.log(error);

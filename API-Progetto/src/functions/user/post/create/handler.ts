@@ -7,7 +7,7 @@ import schema from './schema';
 
 const signUpUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    if (event.body.email === undefined || event.body.password === undefined || event.body.group === undefined || event.body.name === undefined || event.body.surname === undefined) {
+    if (event.body.Email === undefined || event.body.Password === undefined || event.body.Group === undefined || event.body.Name === undefined || event.body.Surname === undefined) {
       return formatJSONResponse(
         {
           "error": "Invalid Body Format",
@@ -16,15 +16,15 @@ const signUpUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
       );
     }
     await cgcreateUser({
-      username: event.body.email,
-      password: event.body.password,
-      email: event.body.email,
-      role: event.body.group,
-      name: event.body.name,
-      surname: event.body.surname
+      username: event.body.Email,
+      password: event.body.Password,
+      email: event.body.Email,
+      role: event.body.Group,
+      name: event.body.Name,
+      surname: event.body.Surname
     });
     return formatJSONResponse({
-      message: `Created user ${event.body.name} from the code, welcome to the exciting SWEG world!`,
+      message: `Created user ${event.body.Name} from the code, welcome to the exciting SWEG world!`,
       event,
     });
   } catch (error) {

@@ -26,6 +26,7 @@ export { default as removeLanguage } from './tenant/post/removeLanguage';
 export { default as addLanguage } from './tenant/post/addLanguage';
 export { default as allCategories } from './textcategory/get/allCategories';
 export { default as removeCategory } from './tenant/post/removeCategory';
+export { default as getCategories } from './textcategory/get/allCategories';
 
 
 
@@ -33,8 +34,7 @@ export { default as removeCategory } from './tenant/post/removeCategory';
 
 
 
-
-//queste non servono più, ma meglio tenerle per ora.
+//queste non servono piï¿½, ma meglio tenerle per ora.
 //marco
 export { default as getDefaultLanguage } from './tenant/get/DefaultLanguage';
 export { default as resetTenant } from './tenant/put/Tenant';

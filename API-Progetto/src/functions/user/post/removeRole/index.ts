@@ -8,7 +8,7 @@ export default {
     {
       http: {
         method: 'post',
-        path: 'user/{username}/removeRole',
+        path: 'user/{Username}/removeRole',
         request: {
           schemas: {
             'application/json': schema,

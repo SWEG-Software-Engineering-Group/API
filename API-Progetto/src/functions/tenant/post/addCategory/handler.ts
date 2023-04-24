@@ -7,10 +7,10 @@ import schema from './schema';
 
 const addCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    if (event.pathParameters.tenantId == null) {
+    if (event.pathParameters.TenantId == null) {
       return formatJSONResponse(
         {
-          "error": "Missing tenantId",
+          "error": "Missing TenantId",
         },
         400
       );
@@ -23,7 +23,7 @@ const addCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
         400
       );
     }
-    let tenant = await dbAddCategoryToTenant(event.pathParameters.tenantId, event.body.Category.toString());
+    let tenant = await dbAddCategoryToTenant(event.pathParameters.TenantId, event.body.Category.toString());
     return formatJSONResponse({tenant}, 200);
   } catch (error) {
     console.log(error);

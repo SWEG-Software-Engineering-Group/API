@@ -6,7 +6,7 @@ import schema from './schema';
 
 const getTenantLanguages: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try{
-    if (event.pathParameters.tenantId == null) {
+    if (event.pathParameters.TenantId == null) {
       return formatJSONResponse(
         {
           "Error": "Missing tenantId",

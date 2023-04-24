@@ -9,11 +9,14 @@ import { TextCategory, state } from 'src/types/TextCategory';
 const getRejectedTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   var res: TextCategory[] = null;
   try {
-    res = await textsOfState(event.pathParameters.TenantID, event.pathParameters.Language, state.rifiutato);
+    if (event.pathParameters.TenantId == null)
+      return formatJSONResponse({ "error": "Missing TenantId" }, 400);
+    if (event.pathParameters.Language == null)
+      return formatJSONResponse({ "error": "Missing Language" }, 400);
+    res = await textsOfState(event.pathParameters.TenantId, event.pathParameters.Language, state.rifiutato);
+    return formatJSONResponse({ "texts": res });
   } catch {
     return formatJSONResponse({ "error": "error" }, 403);
   }
-  return formatJSONResponse({ "texts": res });
 };
-
 export const main = middyfy(getRejectedTexts);
