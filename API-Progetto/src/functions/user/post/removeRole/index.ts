@@ -16,7 +16,15 @@ export default {
         },
         authorizer: {
           arn: environment.cognito.userPoolArn,
-        }
+        },
+        cors: {
+          origin: '*',
+          headers: [
+            'Content-Type',
+            'X-Amz-Date',
+          ],
+          allowCredentials: false,
+        },
       },
     },
   ],
