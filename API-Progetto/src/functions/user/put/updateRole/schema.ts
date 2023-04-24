@@ -3,5 +3,5 @@ export default {
     properties: {
       Group: { type: 'string' }
     },
-    required: ["group"]
+    required: ["Group"]
 } as const;

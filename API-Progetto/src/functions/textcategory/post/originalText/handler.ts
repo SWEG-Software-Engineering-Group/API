@@ -56,11 +56,12 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
 
     try {
         //collect the data from db
-        await dbAddCategoryToTenant(title, category);
+        await dbAddCategoryToTenant(tenant, category);
         await dbpostOriginalText(tenant, title, category, text, comment, link);
         
     }
     catch (error) {
+        console.log(error);
         //if connection fails do stuff
         return formatJSONResponse({ "error": error });
     }

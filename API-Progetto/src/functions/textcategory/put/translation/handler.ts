@@ -33,15 +33,15 @@ const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null || event.pathParameters.Title == null)
         return formatJSONResponse({ "error": "no valid input" });
-    if (event.body.Title == null || event.body.Text == null || event.body.Category == null || event.body.Language == null)
+    if (event.pathParameters.Title == null || event.body.Text == null || event.pathParameters.Category == null || event.pathParameters.Language == null)
         return formatJSONResponse({ "error": "body request missing parameters" });
 
     let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
     let title = sanitizeHtml(event.pathParameters.Title, { allowedTags: [], allowedAttributes: {} });
     let text = sanitizeHtml(event.body.Text);
-    let category = sanitizeHtml(event.body.Category, { allowedTags: [], allowedAttributes: {} });
-    let language = sanitizeHtml(event.body.Language, { allowedTags: [], allowedAttributes: {} })
-    let feedback = sanitizeHtml(event.body.Feedback, { allowedTags: [], allowedAttributes: {} })
+    let category = sanitizeHtml(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} });
+    let language = sanitizeHtml(event.pathParameters.Language, { allowedTags: [], allowedAttributes: {} })
+    let feedback = "Default feedback"
     if (tenant === '' || title === '' || text === '' || category === '' || language === '')
         return formatJSONResponse({ "error": "input is empty" });
 

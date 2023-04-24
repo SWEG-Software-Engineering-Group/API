@@ -103,7 +103,6 @@ const dbgetAllTexts = async (tenant: string) => {
         const categories: Category[] = await (dbgetCategories(tenant));
         if (categories == null)
             throw { "error": "error" };
-
         //request all the data from the Text and metadata tables
         const param1: ScanCommandInput = {
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
@@ -121,9 +120,13 @@ const dbgetAllTexts = async (tenant: string) => {
         //the call could fail, throttle or take quite a lot of time.
         //this is a case that migth brake this function!
         const txt = await (await ddbDocClient.send(new ScanCommand(param2))).Items as TextCategory[];
+        console.log("dbgetAllTexts: " + txt);
+        console.log("dbgetAllTexts: " + info);
         if (info == null || txt == null)
             throw { "error": "error reading texts from db" };
-
+        if (info.length === 0 || txt.length === 0){
+            throw { "error": "No data in db" };
+        }
         //merge the data together between texts and infos
         var result = [];
 
@@ -137,6 +140,7 @@ const dbgetAllTexts = async (tenant: string) => {
         //return all the data
         return result;
     } catch (err) {
+        console.log(err);
         throw { err };
     }
 };
@@ -533,12 +537,15 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
         throw { "error": "tenant does not exist" };
 
     //check if this text already exists
-    if (await (dbGetTexts(tenant, tenantinfo.defaultLanguage, category, title)) as Text[])
+    let testi = await (dbGetTexts(tenant, tenantinfo.defaultLanguage, category, title)) as Text[]
+    console.log(testi)
+    if (testi.length > 0)
         throw { "error": "text already present" };
 
-    //check language is inside the tenant and check if category exists
-    if (tenantinfo.defaultLanguage === tenantinfo.defaultLanguage || tenantinfo.languages.indexOf(tenantinfo.defaultLanguage) === -1 || tenantinfo.categories.findIndex(item => item.id === category) === -1)
-        throw { "error": "missing language or category inside tenant" };
+    //check if the category is present inside the tenant
+
+    //if (tenantinfo.categories.findIndex(item => item.id === category) === -1)
+    //    throw { "error": "Missing category inside the tenant" };
 
     const paramsInfo: PutCommandInput = {
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
@@ -563,6 +570,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
         await ddbDocClient.send(new PutCommand(paramsText));
         return await ddbDocClient.send(new PutCommand(paramsInfo));
     } catch (err) {
+        console.log("Error", err.stack);
         throw { err };
     }
 };
@@ -571,18 +579,16 @@ const dbpostTranslation = async (tenant: string, title: string, category: string
     //PUT new Translation of one language inside a Tenant
     //input: tenant(String), title(String), category(String), language(String), comment(String), link(String)
     //output: true / Eror
-
+    const tenantinfo: Tenant = await (dbgetTenantinfo(tenant));
+    if (tenantinfo == null)
+        throw { "error": "Tenant doesn't exists" };
     //check if this text already exists
     if (await (dbGetTexts(tenant, language, category, title)) as Text[])
         throw { "error": "text already present" };
 
-    const tenantinfo: Tenant = await (dbgetTenantinfo(tenant));
-    if (tenantinfo == null)
-        throw { "error": "error" };
-
     //check language is inside the tenant and check if category exists
     if (tenantinfo.defaultLanguage === language || tenantinfo.languages.indexOf(language) === -1 || tenantinfo.categories.findIndex(item => item.id === category) === -1)
-        throw { "error": "error" };
+        throw { "error": "If inutile chissà a cosa serve" };
 
     //need to check if language is inside the tenant
     //need to check if category is inside the tenant or else add it
@@ -710,7 +716,7 @@ const dbputTranslation = async (tenant: string, language: string, id: string, te
                 language_category_title: language + "#" + id,
                 isDefault: false,
             },
-            UpdateExpression: "set text = {:t} and set state = {:s} and set feedback = {:f}",
+            UpdateExpression: "set text = :t and set stato = :s and set feedback = :f",
             ExpressionAttributeValues: {
                 ":t": text,
                 ":s": stato,

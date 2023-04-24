@@ -8,7 +8,7 @@ import { state } from 'src/types/TextCategory';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
-const getTextLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const getTextFromLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
      * INPUT:   Tenant (String), Language (String)
      * OUTPUT:  {response: Text[]} / Error
@@ -63,4 +63,4 @@ const getTextLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     return formatJSONResponse({ "response": texts });
 };
 
-export const main = middyfy(getTextLanguage);
+export const main = middyfy(getTextFromLanguage);

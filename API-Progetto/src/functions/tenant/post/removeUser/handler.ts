@@ -5,7 +5,7 @@ import { dbRemoveUserFromTenant } from 'src/services/dbTenant';
 
 import schema from './schema';
 
-const removeTenantAdmin: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const removeTenantUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
     if (event.pathParameters.TenantId == null) {
       return formatJSONResponse(
@@ -36,4 +36,4 @@ const removeTenantAdmin: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asy
   }
 };
 
-export const main = middyfy(removeTenantAdmin);
+export const main = middyfy(removeTenantUser);

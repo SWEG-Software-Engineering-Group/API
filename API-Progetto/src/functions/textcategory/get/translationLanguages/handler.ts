@@ -6,7 +6,7 @@ import { dbcheckUserInTenant } from 'src/services/dbTenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
-const getTranslationsLanguages: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const getTranslationLanguages: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
      * INPUT:   Tenant (String), Category(String), Title(String)
      * OUTPUT:  {response: String[]} / Error
@@ -61,4 +61,4 @@ const getTranslationsLanguages: ValidatedEventAPIGatewayProxyEvent<typeof schema
     return formatJSONResponse({ "response": languages });
 };
 
-export const main = middyfy(getTranslationsLanguages);
+export const main = middyfy(getTranslationLanguages);

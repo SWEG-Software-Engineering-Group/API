@@ -25,7 +25,7 @@ export { default as getTenantLanguages } from './tenant/get/SecondaryLanguage';
 export { default as removeLanguage } from './tenant/post/removeLanguage';
 export { default as addLanguage } from './tenant/post/addLanguage';
 export { default as allCategories } from './textcategory/get/allCategories';
-export { default as removeCategory } from './tenant/post/removeCategory';
+export { default as removeCategory } from './tenant/delete/removeCategory';
 export { default as getCategories } from './textcategory/get/allCategories';
 
 
@@ -56,8 +56,9 @@ export { default as getTenantAdmins } from './tenant/get/admin';
 export { default as getTenantUsers } from './tenant/get/user';
 export { default as getTextFromCategory } from './textcategory/get/textFromCategory';
 export { default as getTextFromLanguage } from './textcategory/get/textFromLanguage';
-export { default as getTextAltroNonRicordo } from './textcategory/get/texts';
+export { default as getTexts } from './textcategory/get/texts';
 export { default as deleteText } from './textcategory/delete/text';
 export { default as deleteLanguage } from './tenant/delete/language';
 export { default as postTranslation } from './textcategory/post/translation';
 export { default as putTextCategory } from './textcategory/put/textCategory';
+export { default as getTextCategory } from './textcategory/get/textFromCategory';

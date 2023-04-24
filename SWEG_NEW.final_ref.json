@@ -1,0 +1,1127 @@
+{
+	"info": {
+		"_postman_id": "8a4702ac-9121-4ac2-a315-2a778fc173cc",
+		"name": "SWEG_NEW",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "createUser",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Email\":\"marco@it.it\",\r\n    \"Password\":\"123Stella.\",\r\n    \"Name\":\"Giacomo\",\r\n    \"Surname\":\"Leopardi\",\r\n    \"Group\":\"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/user/create",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addRole",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Group\":\"superadmin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/user/{{UserId}}/addRole",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"user",
+								"{{UserId}}",
+								"addRole"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveRole",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Group\":\"superadmin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/user/{{UserId}}/removeRole",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"user",
+								"{{UserId}}",
+								"removeRole"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUsers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/user/getUsers",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"user",
+								"getUsers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adminGetUser",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/user/{{UserId}}/adminGetUser",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"user",
+								"{{UserId}}",
+								"adminGetUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserGroups",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/user/{{UserId}}/groups",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"user",
+								"{{UserId}}",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserTenant",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/user/{{UserId}}/tenant",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"user",
+								"{{UserId}}",
+								"tenant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateRole",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Group\":\"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/user/{{UserId}}/role",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"user",
+								"{{UserId}}",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUser",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/user/{{UserId}}/delete",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"user",
+								"{{UserId}}",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUser",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}user/usertoken/{{AWSToken}}",
+							"host": [
+								"{{ENDPOINT}}user"
+							],
+							"path": [
+								"usertoken",
+								"{{AWSToken}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tenant",
+			"item": [
+				{
+					"name": "createTenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tenantName\":\"Test\",\r\n    \"defaultLanguage\":\"Italiano\",\r\n    \"creationDate\":100000,\r\n    \"languages\":[\"Sardo\",\"Kurdo\"],\r\n    \"admins\":[\"Pinco\",\"Pallino\"],\r\n    \"users\":[\"Utentino\"],\r\n    \"categories\":[\"Header\",\"Footer\",\"Altro\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/create",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addAdminToTenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Admin\":\"{{UserId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/addAdmin",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"addAdmin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addUserToTenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"User\":\"{{UserId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/addUser",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"addUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addCategory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Category\":\"TestCatto\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/addCategory",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"addCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addLanguages",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Language\":\"Afghano\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/addLanguage",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"addLanguage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeAdminFromTenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Admin\":\"{{UserId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/removeAdmin",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"removeAdmin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeUserFromTenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"User\":\"{{UserId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/removeUser",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"removeUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeLanguages",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Language\":\"Afghano\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/removeLanguages",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"removeLanguages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "resetTenant",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJraWQiOiIwcHhwOUNDeXYyXC9cL1Z1XC9Rb2V2dStSWGRReVIzSWgremQxb24zREIzbW9VPSIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiY05lTElPQkpUZThnZlhMYUpiU1o5ZyIsInN1YiI6ImIxYjk1ODMxLTUyMmMtNGNlYy04NTk0LWRkZDg4M2I0ZTFjMyIsImNvZ25pdG86Z3JvdXBzIjpbImFkbWluIl0sImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuZXUtd2VzdC0yLmFtYXpvbmF3cy5jb21cL2V1LXdlc3QtMl90bGVBWG9xYmIiLCJjb2duaXRvOnVzZXJuYW1lIjoiYjFiOTU4MzEtNTIyYy00Y2VjLTg1OTQtZGRkODgzYjRlMWMzIiwiY3VzdG9tOnN1cm5hbWUiOiJhZG1pbnN1ciIsImF1ZCI6IjRhZnR2b28yNGo1c3Vkc2swbWpxY3FjcGVoIiwiZXZlbnRfaWQiOiI3OTk1ZDA2MS02NjQyLTRkM2UtYjgxMy0yNTk2ODkwMDUxNzMiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY4MTI0MTk1MSwibmFtZSI6ImFkbWlubmFtZSIsImV4cCI6MTY4MTI0NTU1MSwiaWF0IjoxNjgxMjQxOTUxLCJqdGkiOiIwOTM1OWFkNy02N2UyLTQ5ZWEtYTkxZS0zMzllNmFhZDAxMDYiLCJlbWFpbCI6ImFkbWluQHN3ZWcuaXQifQ.yi_dgB6xvuJiRgsCmkNN9yWJIxnWEQaqf9GxuVsfvKeQl8grLUjXnfnU_LdVN8OlBAUai7GGIdSO9aD6pwQ_ro2503pOzDX3M9T5gSEzBpgIcYdYzmU54qqz_BoBHypE77R4fwfkITUnEihXadn_VfLMKM1MhV2ZLpuxA6izikcyGsDpqGoFRPM5hVijKVvcltChqnlGse-vO7pAMOfDZi0APMNl9UVFgppzV3gEa_cg4hRSG3t1fRRSzAL1qwNnB8YBPnPY15oN75rG2BDAwlbS5IycP56KATzzKrrI-MZaVCfcE_ssR44m4ouS4LbZ9JohYXlj658c7a2cY4WuAA",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/reset",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCategory",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/{{Category}}/deleteCategory",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"{{Category}}",
+								"deleteCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteTenant",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/delete",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteSecLanguage - Da verificare",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/language/{{Language}}/deleteLanguage",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"language",
+								"{{Language}}",
+								"deleteLanguage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "allTenants",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/allTenants",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"allTenants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adminUsersNames",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/adminUsersNames",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"adminUsersNames"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "contentUsersNames",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/contentUsersNames",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"contentUsersNames"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "secondaryLanguage",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/secondaryLanguage",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"secondaryLanguage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "tenantInfo",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/tenant",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"tenant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "defaultLanguage",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/defaultLanguage",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"defaultLanguage"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Text",
+			"item": [
+				{
+					"name": "allCategories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/allCategories",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"allCategories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "allTexts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/allTexts",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"allTexts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "originalTexts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/originalTexts",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"originalTexts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUntranslatedTexts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/untranslatedTexts",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"{{Language}}",
+								"untranslatedTexts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getRejectedTexts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/rejectedTexts",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"{{Language}}",
+								"rejectedTexts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getText",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/{{Category}}/{{Title}}/text",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"{{Language}}",
+								"{{Category}}",
+								"{{Title}}",
+								"text"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "postOriginalText",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Title\":\"The test text2\",\r\n    \"Category\":\"18834fc7-88bb-463f-99b5-467e5fb77689\",\r\n    \"Text\":\"Un bel text di test\",\r\n    \"Comment\":\"123stella\",\r\n    \"Link\":\"url.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/writeOriginalText",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"writeOriginalText"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "putTranslation",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Text\":\"Bho non so\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/{{Category}}/{{Title}}/updateTranslation",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"{{Language}}",
+								"{{Category}}",
+								"{{Title}}",
+								"updateTranslation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "putAcceptText",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/{{Category}}/{{Title}}/approveText",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"{{Language}}",
+								"{{Category}}",
+								"{{Title}}",
+								"approveText"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "putRejectText",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Feedback\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/{{Category}}/{{Title}}/rejectText",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"{{Language}}",
+								"{{Category}}",
+								"{{Title}}",
+								"rejectText"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

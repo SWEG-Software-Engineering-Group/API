@@ -2,6 +2,7 @@ import { PutCommand, PutCommandInput, ScanCommand, ScanCommandInput, GetCommand,
 import { environment } from "src/environment/environment";
 import { Tenant, Category } from "src/types/Tenant";
 import { v4 as uuidv4 } from "uuid";
+var crypto = require('crypto');
 import { ddbDocClient } from "./dbConnection";
 
 //UTIL
@@ -197,22 +198,20 @@ const dbAddCategoryToTenant = async (tenant: string, category: string) => {
         let categories = await (await dbgetCategories(tenant));
         if (categories == null)
             throw { "error": "tenant has no categories" };
-
         let index = categories.findIndex(element => element.id === category);
         if (index !== -1)
-            throw { "error": "error" };
-        categories.push({ id: uuidv4, name: category });
+            return true;
+        categories.push({ id: crypto.randomUUID(), name: category });
         const params: UpdateCommandInput = {
-            TableName: environment.dynamo.TextCategoryTable.tableName,
+            TableName: environment.dynamo.TenantTable.tableName,
             Key: {
-                idTenant: tenant,
+                id: tenant,
             },
-            UpdateExpression: "set categories = {:c}",
+            UpdateExpression: "set categories = :c",
             ExpressionAttributeValues: {
                 ":c": categories,
             },
         };
-
         await ddbDocClient.send(new UpdateCommand(params));
         return true;
     } catch (err) {
@@ -234,7 +233,7 @@ const dbRemoveCategoryFromTenant = async (tenant: string, category: string) => {
         Key: {
             idTenant: tenant,
         },
-        UpdateExpression: "set categories = {:c}",
+        UpdateExpression: "set categories = :c",
         ExpressionAttributeValues: {
             ":c": categories,
         },
@@ -272,7 +271,7 @@ const dbAddSecLanguageToTenant = async (tenant: string, language: string) => {
     try {
         const tenant = await ddbDocClient.send(new UpdateCommand(params));
         console.log("Success - GET", tenant);
-        return "Add language to tenant success";
+        return "Language successfully added to tenant";
     } catch (err) {
         console.log("Error", err.stack);
         throw { "Error:" : err.stack };

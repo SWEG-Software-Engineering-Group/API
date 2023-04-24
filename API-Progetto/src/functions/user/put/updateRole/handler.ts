@@ -27,6 +27,7 @@ const setRole: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
     await cgaddUserRole(event.pathParameters.Username, event.body.Group.toString());
     return formatJSONResponse({"Role Updated":"User role sucessfully updated"}, 200);
   } catch (error) {
+    console.log(error);
     return formatJSONResponse(
       {
         "Error": error,
