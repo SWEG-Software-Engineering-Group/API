@@ -117,7 +117,7 @@ const dbgetDefaultLanguage = async (tenant: string) => {
         throw { "Error": err.stack };
     }
 };
-const dbgetSecondaryLanguage = async (tenant: string) => {
+const dbgetSecondaryLanguages = async (tenant: string) => {
     // Set the parameters.
     if (!await dbgetTenantinfo(tenant)) {
         return { err: "Tenant not found" };
@@ -196,8 +196,9 @@ const dbAddCategoryToTenant = async (tenant: string, category: string) => {
     //output: true / Error
     try {
         let categories = await (await dbgetCategories(tenant));
-        if (categories == null)
-            throw { "error": "tenant has no categories" };
+        //this fails when the tenant is empty in the begining
+        //if (categories == null)
+        //    throw { "error": "tenant has no categories" };
         let index = categories.findIndex(element => element.id === category);
         if (index !== -1)
             return true;
@@ -474,4 +475,4 @@ const dbresetTenant = async (tenant: string) => {
     }
 };
 
-export { dbcheckUserInTenant, dbcheckAdminInTenant, dbputTenant, dbgetTenants, dbgetCategories, dbdeleteTenant, dbresetTenant, dbAddUserToTenant, dbRemoveUserFromTenant, dbAddAdminToTenant, dbRemoveAdminFromTenant, dbgetUserTenant, dbgetTenantinfo, dbgetDefaultLanguage, dbgetSecondaryLanguage, dbAddCategoryToTenant, dbRemoveCategoryFromTenant,dbAddSecLanguageToTenant,dbRemoveSecLanguageFromTenant };
+export { dbcheckUserInTenant, dbcheckAdminInTenant, dbputTenant, dbgetTenants, dbgetCategories, dbdeleteTenant, dbresetTenant, dbAddUserToTenant, dbRemoveUserFromTenant, dbAddAdminToTenant, dbRemoveAdminFromTenant, dbgetUserTenant, dbgetTenantinfo, dbgetDefaultLanguage, dbgetSecondaryLanguages, dbAddCategoryToTenant, dbRemoveCategoryFromTenant,dbAddSecLanguageToTenant,dbRemoveSecLanguageFromTenant };

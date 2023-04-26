@@ -1,8 +1,8 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbpostOriginalText } from 'src/services/dbTextCategory';
-import { dbAddCategoryToTenant, dbcheckUserInTenant, dbgetSecondaryLanguage } from 'src/services/dbTenant';
+import { dbpostOriginalText, dbpostTranslation } from 'src/services/dbTextCategory';
+import { dbAddCategoryToTenant, dbcheckUserInTenant, dbgetSecondaryLanguagess, } from 'src/services/dbTenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
@@ -48,8 +48,9 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
     let category = sanitizeHtml(event.body.Category, { allowedTags: [], allowedAttributes: {} });
     let comment = sanitizeHtml(event.body.Comment, { allowedTags: [], allowedAttributes: {} });
     let link = sanitizeHtml(event.body.Link, { allowedTags: [], allowedAttributes: {} });
-    //event.body.Languages;
-    if (tenant === '' || title === '' || text === '' || category === '')
+    //event.body.Languages need sanitization;
+    let languages = event.body.Languages;
+    if (tenant === '' || title === '' || text === '' || category === '' || event.body.Languages == null)
         return formatJSONResponse({ "error": "input is empty" });
 
     
@@ -60,9 +61,20 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
     //TO DO
 
     try {
-        //collect the data from db
+        //check if all the languages are inside the Tenant.
+        let lang = dbgetSecondaryLanguagess;
+        languages.forEach(function(language){
+            if(lang.include(language))
+                throw {"error": " one of the languages is not present inside the Tenant"};
+        });
+        //add category if it doesn't already exists.
         await dbAddCategoryToTenant(tenant, category);
+        //create the original text
         await dbpostOriginalText(tenant, title, category, text, comment, link);
+        //iterate over all languages to create the new translation
+        await Promise.all(languages.map(async (language) => {
+            await dbpostTranslation(tenant, title, category, language, comment, link);
+        }));
         
     }
     catch (error) {

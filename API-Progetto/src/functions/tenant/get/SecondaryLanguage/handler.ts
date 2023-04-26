@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetSecondaryLanguage } from 'src/services/dbTenant';
+import { dbgetSecondaryLanguages } from 'src/services/dbTenant';
 import schema from './schema';
 
 const getTenantLanguages: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -14,7 +14,7 @@ const getTenantLanguages: ValidatedEventAPIGatewayProxyEvent<typeof schema> = as
         400
       );
     }
-    let languages=await dbgetSecondaryLanguage(event.pathParameters.TenantId.toString());
+    let languages=await dbgetSecondaryLanguages(event.pathParameters.TenantId.toString());
     return formatJSONResponse({languages}, 200);
   } catch(error){
     console.log(error);
