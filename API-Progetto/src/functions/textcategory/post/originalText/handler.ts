@@ -47,7 +47,7 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
     if (tenant === '' || title === '' || text === '' || category === '')
         return formatJSONResponse({ "error": "input is empty" });
 
-    
+
     //check user is admin inside this tenant
     if (false)
         if (dbcheckUserInTenant(tenant, "Username"))
@@ -56,9 +56,10 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
 
     try {
         //collect the data from db
-        await dbAddCategoryToTenant(tenant, category);
+        //await dbAddCategoryToTenant(tenant, category);
+        //TODO add category if not exists
         await dbpostOriginalText(tenant, title, category, text, comment, link);
-        
+
     }
     catch (error) {
         console.log(error);

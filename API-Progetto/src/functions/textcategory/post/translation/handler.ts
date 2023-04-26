@@ -33,7 +33,7 @@ const postTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null)
         return formatJSONResponse({ "error": "no valid input" });
-    if (event.body.Title == null ||event.body.Text == null || event.body.Category == null, event.body.Language == null)
+    if (event.body.Title == null || event.body.Text == null || event.body.Category == null, event.body.Language == null)
         return formatJSONResponse({ "error": "body request missing parameters" });
 
     let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
@@ -56,11 +56,11 @@ const postTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
 
         //collect the data from db
         await dbpostTranslation(tenant, title, category, language, comment, link);
-        
+
     }
     catch (error) {
         //if connection fails do stuff
-        return formatJSONResponse({ "error": "db connection failed OR tenant does not exist OR other" });
+        return formatJSONResponse({ error });
     }
 
     //return result

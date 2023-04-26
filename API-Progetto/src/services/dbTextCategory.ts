@@ -1,11 +1,11 @@
 import { BatchWriteCommand, BatchWriteCommandInput, ScanCommand, ScanCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput } from "@aws-sdk/lib-dynamodb";
 import { environment } from 'src/environment/environment';
 import { Text } from "src/types/Text";
-import { TextCategoryInfo } from "src/types/TextCategoryInfo";
 import { TextCategory, state } from "src/types/TextCategory";
 import { Tenant, Category } from "src/types/Tenant";
 import { ddbDocClient } from "./dbConnection";
 import { dbgetTenantinfo, dbgetCategories, dbgetDefaultLanguage } from "./dbTenant";
+import { TextCategoryInfo } from "src/types/TextCategoryinfo";
 
 
 
@@ -124,7 +124,7 @@ const dbgetAllTexts = async (tenant: string) => {
         console.log("dbgetAllTexts: " + info);
         if (info == null || txt == null)
             throw { "error": "error reading texts from db" };
-        if (info.length === 0 || txt.length === 0){
+        if (info.length === 0 || txt.length === 0) {
             throw { "error": "No data in db" };
         }
         //merge the data together between texts and infos
@@ -583,12 +583,21 @@ const dbpostTranslation = async (tenant: string, title: string, category: string
     if (tenantinfo == null)
         throw { "error": "Tenant doesn't exists" };
     //check if this text already exists
-    if (await (dbGetTexts(tenant, language, category, title)) as Text[])
+    const original: Text[] = await (dbGetTexts(tenant, language, category, title)) as Text[]
+    if (original.length == 1) {
         throw { "error": "text already present" };
+    }
 
     //check language is inside the tenant and check if category exists
-    if (tenantinfo.defaultLanguage === language || tenantinfo.languages.indexOf(language) === -1 || tenantinfo.categories.findIndex(item => item.id === category) === -1)
-        throw { "error": "If inutile chissà a cosa serve" };
+    if (tenantinfo.defaultLanguage === language) {
+        throw { "error": "lingua default" };
+    }
+    if (tenantinfo.languages.indexOf(language) === -1) {
+        throw { "error": "lingua non esiste" };
+    }
+    if (tenantinfo.categories.findIndex(item => { return item.id === category }) === -1) {
+        throw { "error": "categoria non esiste" };
+    }
 
     //need to check if language is inside the tenant
     //need to check if category is inside the tenant or else add it
