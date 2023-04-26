@@ -2,16 +2,19 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbpostOriginalText } from 'src/services/dbTextCategory';
-import { dbAddCategoryToTenant, dbcheckUserInTenant } from 'src/services/dbTenant';
+import { dbAddCategoryToTenant, dbcheckUserInTenant, dbgetSecondaryLanguage } from 'src/services/dbTenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
 const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
-     * INPUT:   Tenant (String), {body: Title(String), Category(String), Text(String), Comment(String), Link(String)}
+     * INPUT:   Tenant (String), {body: Title(String), Category(String), Text(String), Comment(String), Link(String), Lanaguages[](String)}
      * OUTPUT:  {result: OK} / Error
      * 
-     * DESCRIPTION: add a new text in the original language, else return error.
+     * DESCRIPTION: check the category. if it doesn't exists already then it crates a new one.
+     *              add a new text in the original language.
+     *              create all the translations in the languages requested.
+     *              else return error.
      * 
      * SAFETY:  
      *  -   check authorization of the user for this function with Cognito (admin);
@@ -25,6 +28,7 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
      *  -   input is invalid;
      *  -   request to db failed;
      *  -   tenant requested does not exist;
+     *  -   language requested does not exist;
      *  -   user requested does not exist;
      */
 
@@ -44,10 +48,11 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
     let category = sanitizeHtml(event.body.Category, { allowedTags: [], allowedAttributes: {} });
     let comment = sanitizeHtml(event.body.Comment, { allowedTags: [], allowedAttributes: {} });
     let link = sanitizeHtml(event.body.Link, { allowedTags: [], allowedAttributes: {} });
+    //event.body.Languages;
     if (tenant === '' || title === '' || text === '' || category === '')
         return formatJSONResponse({ "error": "input is empty" });
 
-
+    
     //check user is admin inside this tenant
     if (false)
         if (dbcheckUserInTenant(tenant, "Username"))
@@ -56,10 +61,9 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
 
     try {
         //collect the data from db
-        //await dbAddCategoryToTenant(tenant, category);
-        //TODO add category if not exists
+        await dbAddCategoryToTenant(tenant, category);
         await dbpostOriginalText(tenant, title, category, text, comment, link);
-
+        
     }
     catch (error) {
         console.log(error);

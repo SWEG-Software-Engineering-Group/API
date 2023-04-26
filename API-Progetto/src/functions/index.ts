@@ -3,30 +3,30 @@ export { default as hello } from './hello';
 
 export { default as getAllTenants } from './tenant/get/AllTenants';
 export { default as getTenant } from './tenant/get/Tenant';
-export { default as getUser } from './user/get/getUser';
+export { default as getUser } from './user/get/User';
 export { default as deleteTenant } from './tenant/delete/Tenant';
 export { default as addTenant } from './tenant/post/create';
 export { default as signUpUser } from './user/post/create';
 export { default as addUserToTenant } from './tenant/post/addUser';
-export { default as deleteUser } from './user/delete';
-export { default as getRejectedText } from './textcategory/get/rejectedText';
+export { default as deleteUser } from './user/delete/deleteUser';
+export { default as getRejectedTexts } from './textcategory/get/rejectedText';
 export { default as getUntranslatedTexts } from './textcategory/get/untranslated';
 export { default as getText } from './textcategory/get/singleText';
 export { default as putTranslation } from './textcategory/put/translation';
 export { default as getAllTexts } from './textcategory/get/allTexts';
 export { default as postOriginalText } from './textcategory/post/originalText';
 export { default as putOriginalText } from './textcategory/put/originalText';
+export { default as deleteText } from './textcategory/delete/text';
 export { default as getOriginalTexts } from './textcategory/get/originalTexts';
 export { default as getTranslationLanguages } from './textcategory/get/translationLanguages';
 export { default as getTextToVerify } from './textcategory/get/pendingTranslations';
 export { default as putAcceptText } from './textcategory/put/approveText';
 export { default as putRejectText } from './textcategory/put/rejectText';
 export { default as getTenantLanguages } from './tenant/get/SecondaryLanguage';
-export { default as removeLanguage } from './tenant/post/removeLanguage';
+export { default as removeLanguage } from './tenant/delete/removeLanguage';
 export { default as addLanguage } from './tenant/post/addLanguage';
 export { default as allCategories } from './textcategory/get/allCategories';
 export { default as removeCategory } from './tenant/delete/removeCategory';
-export { default as getCategories } from './textcategory/get/allCategories';
 
 
 
@@ -34,7 +34,7 @@ export { default as getCategories } from './textcategory/get/allCategories';
 
 
 
-//queste non servono pi�, ma meglio tenerle per ora.
+//queste non servono più, ma meglio tenerle per ora.
 //marco
 export { default as getDefaultLanguage } from './tenant/get/DefaultLanguage';
 export { default as resetTenant } from './tenant/put/Tenant';
@@ -61,4 +61,3 @@ export { default as deleteText } from './textcategory/delete/text';
 export { default as deleteLanguage } from './tenant/delete/language';
 export { default as postTranslation } from './textcategory/post/translation';
 export { default as putTextCategory } from './textcategory/put/textCategory';
-export { default as getTextCategory } from './textcategory/get/textFromCategory';
