@@ -12,14 +12,7 @@ export default {
           arn: environment.cognito.userPoolArn,
         },
         // SET CORS FOR ACCEPT EVERY ORIGIN
-        cors: {
-          origin: '*',
-          headers: [
-            'Content-Type',
-            'X-Amz-Date',
-          ],
-          allowCredentials: false,
-        },
+        cors: true,
       },
     },
   ],

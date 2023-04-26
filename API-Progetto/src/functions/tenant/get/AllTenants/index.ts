@@ -12,6 +12,7 @@ export default {
         authorizer: {
           arn: environment.cognito.userPoolArn,
         },
+        cors: true,
       },
     },
   ],

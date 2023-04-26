@@ -87,7 +87,6 @@ const serverlessConfiguration: AWS = {
       },
     },
   },
-
   resources: {
     Resources: {
       TokenTable: {

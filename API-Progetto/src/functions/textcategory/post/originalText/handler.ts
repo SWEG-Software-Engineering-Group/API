@@ -2,7 +2,7 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbpostOriginalText, dbpostTranslation } from 'src/services/dbTextCategory';
-import { dbAddCategoryToTenant, dbcheckUserInTenant, dbgetSecondaryLanguagess, } from 'src/services/dbTenant';
+import { dbAddCategoryToTenant, dbcheckUserInTenant, dbgetSecondaryLanguages, } from 'src/services/dbTenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
@@ -62,7 +62,7 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
 
     try {
         //check if all the languages are inside the Tenant.
-        let lang = dbgetSecondaryLanguagess;
+        let lang = await dbgetSecondaryLanguages(tenant);
         languages.forEach(function(language){
             if(lang.include(language))
                 throw {"error": " one of the languages is not present inside the Tenant"};

@@ -12,8 +12,9 @@ export const formatJSONResponse = (
     statusCode,
     // ADD CORS SUPPORT TO YOUR API
     headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*", // Allow from anywhere 
+      "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT" 
     },
     body: JSON.stringify(response),
   };

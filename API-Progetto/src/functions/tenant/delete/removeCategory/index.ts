@@ -10,7 +10,8 @@ export default {
         path: 'tenant/{TenantId}/{Category}/deleteCategory',
         authorizer: {
           arn: environment.cognito.userPoolArn,
-        }
+        },
+        cors: true,
       },
     },
   ],

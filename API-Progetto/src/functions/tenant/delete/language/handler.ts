@@ -31,7 +31,7 @@ const deleteLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
 
 
     //check user is allowed to use this function
-    //TO DO
+    //TO DO///
 
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null || event.pathParameters.Language == null)
