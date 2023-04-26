@@ -27,3 +27,11 @@ export { default as removeLanguage } from './tenant/delete/language';
 export { default as addLanguage } from './tenant/post/addLanguage';
 export { default as allCategories } from './textcategory/get/allCategories';
 export { default as removeCategory } from './tenant/delete/removeCategory';
+
+export { default as getUsers } from './user/get/getUsers';
+export { default as adminGetUser } from './user/get/adminGetUser';
+export { default as getUserGroups } from './user/get/getUserGroups';
+export { default as addRole } from './user/post/addRole';
+export { default as removeRole } from './user/post/removeRole';
+export { default as setRole } from './user/put/updateRole';
+export { default as getUserTenant } from './user/get/getTenant';

@@ -3,9 +3,16 @@ import { environment } from 'src/environment/environment';
 
 // IMPORT USER FUNC
 import {
-  signUpUser,
-  deleteUser,
-  getUser
+    signUpUser,
+    getUsers,
+    adminGetUser,
+    getUserGroups,
+    addRole,
+    removeRole,
+    setRole,
+    getUserTenant,
+    deleteUser,
+    getUser
 } from '@functions/index';
 
 // IMPORT TENANT FUNC
@@ -194,6 +201,13 @@ const serverlessConfiguration: AWS = {
   // import the function via paths
   functions: {
       signUpUser,
+      getUsers,
+      adminGetUser,
+      getUserGroups,
+      addRole,
+      removeRole,
+      setRole,
+      getUserTenant,
       deleteUser,
       getUser,
       ////
