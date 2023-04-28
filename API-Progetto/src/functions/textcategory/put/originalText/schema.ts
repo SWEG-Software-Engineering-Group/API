@@ -5,6 +5,7 @@ export default {
         Text: { type: 'string' },
         Comment: { type: 'string' },
         Link: { type: 'string' },
+        Languages: { type: "array", items: { type: "string" } }
     },
-    required: ["Category", "Text"]
+    required: ["Category", "Text", "Languages"]
 } as const;
