@@ -23,7 +23,7 @@ const addTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (even
       tenantName: event.body.tenantName,
       admins: event.body.admins,
       users: event.body.users,
-      creationDate: event.body.creationDate,
+      creationDate: new Date().getTime()/1000,
       languages: event.body.languages,
       defaultLanguage: event.body.defaultLanguage,
       categories: []//TODO//event.body.categories.map((val) => { return { id: crypto.randomUUID(), name: val } })//TODO map with created id//

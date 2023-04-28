@@ -6,8 +6,8 @@ export default {
   events: [
     {
       http: {
-        method: "delete",
-        path: 'tenant/{TenantId}',
+        method: 'get',
+        path: 'tenant/{TenantId}/admins',
         authorizer: {
           arn: environment.cognito.userPoolArn,
         },

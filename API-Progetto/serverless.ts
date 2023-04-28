@@ -10,22 +10,26 @@ import {
   getUserGroups,
   admGetUser,
   getUserTenant,
-  addRole,
-  removeRole,
-  setRole
+  //addRole,
+  //removeRole,
+  setRole,
+  getResetCode,
+  resetPassword
 } from '@functions/index';
 
 // IMPORT TENANT FUNC
 import {
   addLanguage,
-  addUserToTenant,
+  //addUserToTenant,
   addTenant,
   removeCategory,
   removeLanguage,
   getAllTenants,
   getTenantLanguages,
   getTenant,
-  deleteTenant
+  deleteTenant,
+  getAdmins,
+  getAllCategories
 } from '@functions/index';
 
 // IMPORT TEXTCATEGORY FUNC
@@ -207,12 +211,14 @@ const serverlessConfiguration: AWS = {
       getUserGroups,
       admGetUser,
       getUserTenant,
-      addRole,
-      removeRole,
+      //addRole,
+      //removeRole,
       setRole,
+      getResetCode,
+      resetPassword,
       ////
       addLanguage,
-      addUserToTenant,
+      //addUserToTenant,
       addTenant,
       removeCategory,
       removeLanguage,
@@ -220,6 +226,8 @@ const serverlessConfiguration: AWS = {
       getTenantLanguages,
       getTenant,
       deleteTenant,
+      getAdmins,
+      getAllCategories,
       ////
       deleteText,
       getAllTexts,

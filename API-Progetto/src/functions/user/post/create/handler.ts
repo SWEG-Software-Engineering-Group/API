@@ -2,6 +2,7 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { cgcreateUser } from 'src/services/userManager';
+import { dbAddUserToTenant, dbAddAdminToTenant } from 'src/services/dbTenant';
 
 import schema from './schema';
 
@@ -15,7 +16,7 @@ const signUpUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
         400
       );
     }
-    await cgcreateUser({
+    let user = await cgcreateUser({
       username: event.body.Email,
       password: event.body.Password,
       email: event.body.Email,
@@ -23,10 +24,12 @@ const signUpUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
       name: event.body.Name,
       surname: event.body.Surname
     });
-    return formatJSONResponse({
-      message: `Created user ${event.body.Name} from the code, welcome to the exciting SWEG world!`,
-      event,
-    });
+    if (event.body.Group === "admin") {
+      await dbAddAdminToTenant(event.pathParameters.TenantId, user.Username);
+    } else {
+      await dbAddUserToTenant(event.pathParameters.TenantId, user.Username);
+    }
+    return formatJSONResponse({user});
   } catch (error) {
     return formatJSONResponse(
       {

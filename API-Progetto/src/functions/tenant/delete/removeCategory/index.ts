@@ -7,7 +7,7 @@ export default {
     {
       http: {
         method: 'delete',
-        path: 'tenant/{TenantId}/{Category}/deleteCategory',
+        path: 'tenant/{TenantId}/{Category}/category',
         authorizer: {
           arn: environment.cognito.userPoolArn,
         },

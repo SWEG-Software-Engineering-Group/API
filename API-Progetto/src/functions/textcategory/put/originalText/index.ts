@@ -7,7 +7,7 @@ export default {
     {
       http: {
         method: 'put',
-        path: 'text/{TenantId}/category/{Category}/{Title}/editOriginalText',
+        path: 'text/{TenantId}/category/{Category}/{Title}/originalText',
         authorizer: {
           arn: environment.cognito.userPoolArn,
         },

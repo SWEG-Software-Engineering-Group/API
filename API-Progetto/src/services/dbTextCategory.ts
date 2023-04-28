@@ -365,8 +365,8 @@ const dbgetSingleText = async (tenant: string, language: string, category: strin
                 language_category_title: "<" + language + "&" + category + "\\" + title + " >",
             }
         };
-        const text = await ddbDocClient.send(new GetCommand(getparamT)) as TextCategory;
-        const info = await ddbDocClient.send(new GetCommand( getparamI )) as TextCategoryInfo;
+        const text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
+        const info = (await ddbDocClient.send(new GetCommand( getparamI ))).Item as TextCategoryInfo;
 
         return({
             idTenant: text.idTenant,
@@ -836,8 +836,8 @@ const dbputOriginalText = async (tenant: string, category: string, title: string
                 language_category_title: "<" + language + "&" + category + "\\" + title + " >",
             }
         };
-        const currtext = await ddbDocClient.send(new GetCommand(getparamT)) as TextCategory;
-        const currinfo = await ddbDocClient.send(new GetCommand( getparamI )) as TextCategoryInfo;
+        const currtext = (await ddbDocClient.send(new GetCommand(getparamT))).Item as  TextCategory;
+        const currinfo = (await ddbDocClient.send(new GetCommand(getparamI))).Item as TextCategoryInfo;
         if (currtext == null || currinfo == null)
             throw { "error": "original text not found" };
 

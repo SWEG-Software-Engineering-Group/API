@@ -1,6 +1,6 @@
 export { default as hello } from './hello';
-
-
+export { default as getAllCategories } from './tenant/get/AllCategories';
+export { default as getAdmins } from './tenant/get/Admins';
 export { default as getAllTenants } from './tenant/get/AllTenants';
 export { default as getTenant } from './tenant/get/Tenant';
 export { default as getUser } from './user/get/getUser';
@@ -35,3 +35,5 @@ export { default as getUsers } from './user/get/getUsers';
 export { default as addRole } from './user/post/addRole';
 export { default as removeRole } from './user/post/removeRole';
 export { default as setRole } from './user/put/updateRole';
+export { default as getResetCode } from './user/get/getResetCode';
+export { default as resetPassword } from './user/post/resetPassword';

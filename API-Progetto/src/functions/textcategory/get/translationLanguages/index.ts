@@ -7,7 +7,7 @@ export default {
     {
       http: {
         method: 'get',
-            path: 'text/{TenantId}/category/{Category}/{Title}/getOriginalTextLanguages',
+            path: 'text/{TenantId}/category/{Category}/{Title}/translationLanguages',
         authorizer: {
           arn: environment.cognito.userPoolArn,
         },

@@ -1,6 +1,8 @@
 import { User } from "src/types/User";
 import { CognitoISP } from "./cognito";
 import { environment } from 'src/environment/environment';
+import { dbgetUserTenant, dbRemoveUserFromTenant} from "./dbTenant";
+
 
 const cgcreateUser = async (User: User) => {
     var params = {
@@ -27,6 +29,7 @@ const cgcreateUser = async (User: User) => {
             Username: params.Username
         }).promise();
         cgaddUserRole(params.Username, User.role);
+        return cgAdminGetUser(params.Username);
     } catch (err) {
         console.log(err);
         throw {"Create User:": err};
@@ -174,9 +177,41 @@ const cgdeleteUser = async (username: string) => {
             Username: username
         };
         await CognitoISP.adminDeleteUser(params).promise();
+        // REMOVE FROM TENANT
+        const tenant = await dbgetUserTenant(username);
+        if(tenant){
+            await dbRemoveUserFromTenant(tenant[0].id, username);
+        }
     } catch (error) {
         throw {"Delete user": error};
     }
 }
+const cgsendResetCode = async (username: string) => {
+    try {
+        const params = {
+            ClientId: environment.cognito.idclient,
+            Username: username
+        };
+        await CognitoISP.forgotPassword(params).promise();
+        return "Reset code sent"
+    } catch (error) {
+        throw {"Send reset code": error};
+    }
+}
+const cgresetPassword = async (username: string, code: string, newPassword: string) => {
+    try {
+        const params = {
+            ClientId: environment.cognito.idclient,
+            ConfirmationCode: code,
+            Password: newPassword,
+            Username: username
+        };
+        await CognitoISP.confirmForgotPassword(params).promise();
+        return "Password resetted"
+    } catch (error) {
+        console.log(error);
+        throw {"Reset password": error};
+    }
+}
 
-export { cgcreateUser, cggetListUserCognito, cggetUserFromToken, cgAdminGetUser, cgdeleteUser, cgaddUserRole, cgremoveUserRole, cggetListUserGroups};
+export { cgsendResetCode,cgresetPassword,cgcreateUser, cggetListUserCognito, cggetUserFromToken, cgAdminGetUser, cgdeleteUser, cgaddUserRole, cgremoveUserRole, cggetListUserGroups};
