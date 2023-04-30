@@ -2,12 +2,13 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { textsOfState } from 'src/services/dbTextCategory';
-import { TextCategory, state } from 'src/types/TextCategory';
+import { state } from 'src/types/TextCategory';
+import { Text } from 'src/types/Text';
 
 import schema from './schema';
 
 const getUntranslatedTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  var res: TextCategory[] = null;
+  var res: Text[] = null;
   try {
     if (event.pathParameters.TenantId == null)
       return formatJSONResponse({ "error": "Missing TenantID" }, 400);

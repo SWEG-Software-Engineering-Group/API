@@ -8,10 +8,10 @@ import schema from './schema';
 
 const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
-     * INPUT:   Tenant (String), Title (String)
+     * INPUT:   Tenant (String), Title (String), Category(String)
      * OUTPUT:  {result: OK} / Error
      * 
-     * DESCRIPTION: delete all texts original and translation corresponding to a specific ID from a Tenant, else return error.
+     * DESCRIPTION: delete all texts original and translation corresponding to a specific Title inside a Category from a Tenant, else return error.
      * 
      * SAFETY:  
      *  -   check authorization of the user for this function with Cognito (admin);
@@ -31,12 +31,13 @@ const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
     //TO DO
 
     //sanitize input and check if is empty
-    if (event.pathParameters.TenantId == null || event.pathParameters.Title == null)
+    if (event.pathParameters.TenantId == null || event.pathParameters.Title == null || event.pathParameters.Category == null)
         return formatJSONResponse({ "error": "no valid input" });
 
     let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
     let title = sanitizeHtml(event.pathParameters.Title, { allowedTags: [], allowedAttributes: {} })
-    if (title === '' || tenant === '')
+    let category = sanitizeHtml(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} })
+    if (title === '' || tenant === '' || category === '')
         return formatJSONResponse({ "error": "input is empty" });
 
     //check user is admin inside this tenant
@@ -47,7 +48,7 @@ const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
 
     try {
         //execute the delete
-        await dbdeleteText(tenant, title);
+        await dbdeleteText(tenant, title, category);
     }
     catch (error) {
         //request to db failed

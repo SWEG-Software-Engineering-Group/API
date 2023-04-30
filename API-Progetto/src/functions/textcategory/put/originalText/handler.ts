@@ -49,7 +49,7 @@ const putOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     let link = sanitizeHtml(event.body.Link, { allowedTags: [], allowedAttributes: {} });
     //need to sanitize this event.body.Languages
     let languages = event.body.Languages;
-    if (tenant === '' || title === '' || text === '' || category === '' || newcategory === '' || languages === '')
+    if (tenant === '' || title === '' || text === '' || category === '' || newcategory === '' ) //|| languages.length === '-1') TO ADD IN SOME WAY
         return formatJSONResponse({ "error": "input is empty" });
 
     //check user is admin inside this tenant

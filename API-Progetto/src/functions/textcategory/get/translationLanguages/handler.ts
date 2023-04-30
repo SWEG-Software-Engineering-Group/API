@@ -11,7 +11,7 @@ const getTranslationLanguages: ValidatedEventAPIGatewayProxyEvent<typeof schema>
      * INPUT:   Tenant (String), Category(String), Title(String)
      * OUTPUT:  {response: String[]} / Error
      * 
-     * DESCRIPTION: returns all languages witch an original text from a Tenant is translated to, else return error.
+     * DESCRIPTION: returns all languages which an original text from a Tenant is translated to, else return error.
      * 
      * SAFETY:  
      *  -   check authorization of the user for this function with Cognito (user, admin);
