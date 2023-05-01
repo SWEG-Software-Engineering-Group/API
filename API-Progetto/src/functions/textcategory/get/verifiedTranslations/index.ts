@@ -1,13 +1,13 @@
-import { handlerPath } from '@libs/handler-resolver';
 import { environment } from 'src/environment/environment';
+import { handlerPath } from '@libs/handler-resolver';
 
 export default {
   handler: `${handlerPath(__dirname)}/handler.main`,
   events: [
     {
       http: {
-        method: 'delete',
-            path: 'text/{TenantId}/Category/{Category}/{Title}/originalText',
+        method: 'GET',
+        path: 'text/{TenantId}/{Language}/verified',
         authorizer: {
           arn: environment.cognito.userPoolArn,
         },

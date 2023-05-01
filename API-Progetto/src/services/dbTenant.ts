@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { cgAdminGetUser } from "./userManager";
 var crypto = require('crypto');
 import { ddbDocClient } from "./dbConnection";
+import { dbgetCategoryLanguages } from "./dbTextCategory";
 
 //UTIL
 const dbcheckUserInTenant = async (tenant: string, user: string) => {
@@ -173,6 +174,43 @@ const dbgetCategories = async (tenant: string) => {
     }
 };
 
+const dbgetCountLanguagesForCategory = async (tenant: string) => {
+    //GET the categories stats of a Tenant
+    //input: tenant(String)
+    //output: [] / Error
+    //{  example
+    //    footer: {
+    //        id: nasjdhua8sda
+    //        languages: {
+    //            english: 20,
+    //            french: 15,
+    //            italian: 7,
+    //        }
+    //    }
+    //}
+    const params: GetCommandInput = {
+        TableName: environment.dynamo.TenantTable.tableName,
+        Key: { id: tenant },
+    };
+    try {
+        let ten = (await ddbDocClient.send(new GetCommand(params))).Item as Tenant;
+        if (ten == null)
+            throw { err: "Tenant not found" };
+
+        let res = [];
+        ten.categories.forEach(function (cat) {
+            res[cat.name] = {
+                id: cat.id,
+                languages: dbgetCategoryLanguages(tenant, cat.id),
+            };
+        });
+
+        return res;
+    } catch (err) {
+        throw { err };
+    }
+};
+
 //__________DELETE__________
 const dbdeleteTenant = async (tenant: string) => {
     // Set the parameters.
@@ -250,7 +288,7 @@ const dbRemoveCategoryFromTenant = async (tenant: string, category: string) => {
     else
         categories.splice(index, 1);
     const params: UpdateCommandInput = {
-        TableName: environment.dynamo.TextCategoryTable.tableName,
+        TableName: environment.dynamo.TenantTable.tableName,
         Key: {
             idTenant: tenant,
         },
@@ -471,4 +509,4 @@ const dbresetTenant = async (tenant: string) => {
     }
 };
 
-export { dbgetTenantinfo, dbcheckAdminInTenant, dbcheckUserInTenant, dbgetTenants, dbgetUserTenant, dbgetTenantUsers, dbputTenant, dbgetCategories, dbdeleteTenant, dbresetTenant, dbAddUserToTenant, dbRemoveUserFromTenant, dbAddAdminToTenant, dbgetDefaultLanguage, dbgetSecondaryLanguages, dbAddCategoryToTenant, dbRemoveCategoryFromTenant, dbAddSecLanguageToTenant, dbRemoveSecLanguageFromTenant };
+export { dbgetTenantinfo, dbcheckAdminInTenant, dbcheckUserInTenant, dbgetTenants, dbgetUserTenant, dbgetTenantUsers, dbputTenant, dbgetCategories, dbgetCountLanguagesForCategory, dbdeleteTenant, dbresetTenant, dbAddUserToTenant, dbRemoveUserFromTenant, dbAddAdminToTenant, dbgetDefaultLanguage, dbgetSecondaryLanguages, dbAddCategoryToTenant, dbRemoveCategoryFromTenant, dbAddSecLanguageToTenant, dbRemoveSecLanguageFromTenant };

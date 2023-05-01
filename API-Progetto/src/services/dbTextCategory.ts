@@ -1,4 +1,4 @@
-import { GetCommand, GetCommandInput, BatchWriteCommand, BatchWriteCommandInput, ScanCommand, ScanCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput, QueryCommand, QueryCommandInput } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, GetCommandInput, BatchWriteCommand, BatchWriteCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput, QueryCommand, QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import { environment } from 'src/environment/environment';
 import { Text } from "src/types/Text";
 
@@ -56,9 +56,9 @@ const utilChangeStateTranslations = async (tenant: string, defaultlanguage: stri
     //input: tenant(String), defaultlanguage(String), category(String), title(String), state(state)
     //output: True / Error
     try {
-        const params: ScanCommandInput = {
+        const params: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            FilterExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
+            KeyConditionExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":ct": "#" + category + "#" + title + "#",
@@ -68,7 +68,7 @@ const utilChangeStateTranslations = async (tenant: string, defaultlanguage: stri
                 "#language_category_title": "language_category_title",
             },
         };
-        const info = (await ddbDocClient.send(new ScanCommand(params))).Items as TextCategoryInfo[];
+        const info = (await ddbDocClient.send(new QueryCommand(params))).Items as TextCategoryInfo[];
 
         //this part should make the calls in parallel and wait for the map array of promises
         //instead of waiting for the complition of every single item like in forEach loop
@@ -126,10 +126,6 @@ const dbgetAllTexts = async (tenant: string) => {
             ExpressionAttributeNames: { "#idTenant": "idTenant", },
         };
         const info = await (await ddbDocClient.send(new QueryCommand(param1))).Items as TextCategoryInfo[];
-        //------------------NOTE----!!!!
-        //this function gets all texts from a tenant. in case all the data goes over 1MB in size
-        //the call could fail, throttle or take quite a lot of time.
-        //this is a case that migth brake this function!
         const txt = await (await ddbDocClient.send(new QueryCommand(param2))).Items as TextCategory[];
         console.log("dbgetAllTexts: " + txt);
         console.log("dbgetAllTexts: " + info);
@@ -283,7 +279,7 @@ const dbgetByLanguage = async (tenant: string, language: string, state: state) =
 };
 */
 const dbgetTexts = async (tenant: string, language: string, category: string) => {
-    //SCAN and return all Texts from a Category within a language of one Tenant
+    //QUERY and return all Texts from a Category within a language of one Tenant
     //input: tenant(String), language(String), category(String)
     //output: Text[] / Error
     try {
@@ -293,9 +289,9 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
             throw { "error": "error" };
 
         //request all the data from the Text and metadata tables
-        const param1: ScanCommandInput = {
+        const param1: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
-            FilterExpression: "#idTenant = :t and begins_with(#language_category_title,:lc)",
+            KeyConditionExpression: "#idTenant = :t and begins_with(#language_category_title,:lc)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":lc": "<" + language + "&" + category + "\\",
@@ -305,9 +301,9 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
                 "#language_category_title": "language_category_title",
             },
         };
-        const param2: ScanCommandInput = {
+        const param2: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            FilterExpression: "#idTenant= :t and begins_with(#language_category_title,:lc)",
+            KeyConditionExpression: "#idTenant= :t and begins_with(#language_category_title,:lc)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":lc": "<" + language + "&" + category + "\\",
@@ -317,12 +313,8 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
                 "#language_category_title": "language_category_title",
             },
         };
-        const info = await (await ddbDocClient.send(new ScanCommand(param1))).Items as TextCategoryInfo[];
-        //------------------NOTE!!!!
-        //this function gets all texts from a tenant. in case all the data goes over 1MB in size
-        //the call could fail, throttle or take quite a lot of time.
-        //this is a case that migth brake this function!
-        const txt = await (await ddbDocClient.send(new ScanCommand(param2))).Items as TextCategory[];
+        const info = await (await ddbDocClient.send(new QueryCommand(param1))).Items as TextCategoryInfo[];
+        const txt = await (await ddbDocClient.send(new QueryCommand(param2))).Items as TextCategory[];
         if (info == null || txt == null)
             throw { "error": "error reading texts from db" };
 
@@ -344,13 +336,13 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
 };
 
 const dbgetSingleText = async (tenant: string, language: string, category: string, title: string) => {
-    //SCAN and return all Texts from a Category within a language of one Tenant
+    //QUERY and return all Texts from a Category within a language of one Tenant
     //input: tenant(String), language(String), category(String)
     //output: Text[] / Error
     try {
         const categories: Category[] = await (dbgetCategories(tenant));
         if (categories == null)
-            throw { "error": "error" };
+            throw { "error": "couldn't collect the categories" };
 
         const getparamT: GetCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
@@ -398,12 +390,12 @@ const dbgetTranslationsLanguages = async (tenant: string, category: string, titl
         //get categories of the tenant
         const deflang = await (dbgetDefaultLanguage(tenant));
         if (deflang == null)
-            throw { "error": "error" };
+            throw { "error": "couldn't retrieve the default language" };
 
         //request all the data from the Text and metadata tables
-        const param: ScanCommandInput = {
+        const param: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            FilterExpression: "#idTenant= :t and begins_with(#language_category_title,:lc)",
+            KeyConditionExpression: "#idTenant= :t and contains(#language_category_title,:lc)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":ct": "&" + category + "\\" + title + ">",
@@ -413,11 +405,7 @@ const dbgetTranslationsLanguages = async (tenant: string, category: string, titl
                 "#language_category_title": "language_category_title",
             },
         };
-        //------------------NOTE!!!!
-        //this function gets all texts from a tenant. in case all the data goes over 1MB in size
-        //the call could fail, throttle or take quite a lot of time.
-        //this is a case that migth brake this function!
-        const txt = await (await ddbDocClient.send(new ScanCommand(param))).Items as TextCategory[];
+        const txt = await (await ddbDocClient.send(new QueryCommand(param))).Items as TextCategory[];
         if (txt == null)
             throw { "error": "error reading texts from db" };
 
@@ -438,29 +426,92 @@ const dbgetTranslationsLanguages = async (tenant: string, category: string, titl
 
 }
 
-const dbGetTexts = async (tenantID: string, language: string = null, category: string = null, id: string = null) => {
-    var params: ScanCommandInput = { TableName: environment.dynamo.TextCategoryTable.tableName, };
-    //caso lingua = null ritorna la lingua di default
-    if (language == null) {
-        language = await dbgetDefaultLanguage(tenantID);
-    }
-    params["Key"] = {
-        idTenant: tenantID,
-    }
-    params["FilterExpression"] = "begins_with(#attributename, :begin)";
-    params["ExpressionAttributeNames"] =
-    {
-        "#attributename": "language_category_title",
-    };
-    params["ExpressionAttributeValues"] =
-    {
-        ':begin': "<" + language + "&" + ((category == null) ? "" : (category + "\\" + (id == null) ? "" : (id + ">")))
-    };
+const dbgetCategoryLanguages = async (tenant: string, category: string) => {
+    //GET all the text count for each languages inside a category.
+    //input: tenant(String), category:(String)
+    //output: languages[] / Error
+
     try {
-        const data = await ddbDocClient.send(new ScanCommand(params));
+        //request all the data from the Text and metadata tables
+        const param: QueryCommandInput = {
+            TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+            KeyConditionExpression: "#idTenant= :t and contains(#language_category_title,:lc)",
+            ExpressionAttributeValues: {
+                ":t": tenant,
+                ":ct": "&" + category + "\\",
+            },
+            ExpressionAttributeNames: {
+                "#idTenant": "idTenant",
+                "#language_category_title": "language_category_title",
+            },
+            ProjectionExpression: "language_category_title",
+        };
+        const txt = await (await ddbDocClient.send(new QueryCommand(param))).Items as TextCategoryInfo[];
+        if (txt == null)
+            throw { "error": "error reading texts from db" };
+        let languages = [];
+        for (var i = 0; i < txt.length; i++)
+            languages.push(txt[i].language_category_title.split("&")[0].split("<")[1]);
+
+        return languages.reduce((acc: { [key: string]: number; }, current: string) => {
+            const amount = acc[current] ?? 0; // or could do || 0;
+            acc[current] = amount + 1;
+            return acc;
+        }, {}); // { A: 4, B: 2, C: 1 };
+        // source: https://stackoverflow.com/questions/65670439/group-elements-in-an-array-with-count
+
+    } catch (err) {
+        throw { err };
+    }
+
+}
+
+const dbGetTexts = async (tenantID: string, language: string = null, category: string = null, id: string = null) => {
+    try {
+        const tenantinfo = await (dbgetTenantinfo(tenantID)) as Tenant;
+        if (tenantinfo == null)
+            throw { "error": "tenant does not exist" };
+        //caso lingua = null ritorna la lingua di default
+        if (language == null) {
+            language = tenantinfo.defaultLanguage;
+        }
+        var params: QueryCommandInput = {
+            TableName: environment.dynamo.TextCategoryTable.tableName,
+            KeyConditionExpression: "#idTenant = :tenant and begins_with(#language_category_title, :begin)",
+            ExpressionAttributeNames: {
+                "#language_category_title": "language_category_title",
+                '#idTenant': 'idTenant',
+            },
+            ExpressionAttributeValues: {
+                ':begin': "<" + language + "&" + ((category == null) ? "" : (category + "\\" + (id == null) ? "" : (id + ">"))),
+                ':tenant': tenantID,
+            }
+        };
+        var paramsinfo: QueryCommandInput = {
+            TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+            KeyConditionExpression: "#idTenant = :tenant and begins_with(#language_category_title, :begin)",
+            ExpressionAttributeNames: {
+                "#language_category_title": "language_category_title",
+                '#idTenant': 'idTenant',
+            },
+            ExpressionAttributeValues: {
+                ':begin': "<" + language + "&" + ((category == null) ? "" : (category + "\\" + (id == null) ? "" : (id + ">"))),
+                ':tenant': tenantID,
+            }
+        };
+        
+        const text = await (await ddbDocClient.send(new QueryCommand(params))).Items as TextCategory[];
+        const info = await (await ddbDocClient.send(new QueryCommand(paramsinfo))).Items as TextCategoryInfo[];
+        var data = [];
+        text.forEach(function (text) {
+            //iterate over every row of Text table
+            let merge = utilMergeMeta(text, info, tenantinfo.categories);
+            if (merge == null)
+                throw { "error": "error mergind metadata" };
+            data.push(merge);
+        });
         console.log("Success - GET", data);
-        if (!data.Items) return [];
-        return data.Items;
+        return data as Text[];
     } catch (err) {
         console.log("Error", err.stack);
         throw { err };
@@ -511,30 +562,55 @@ const dbGetTexts = async (tenantID: string, language: string = null, category: s
 */
 
 const textsOfState = async (tenantID: string, language: string, state: state) => {
-    var params: ScanCommandInput = { TableName: environment.dynamo.TextCategoryTable.tableName, };
-    params["Key"] = {
-        idTenant: tenantID,
-    }
-    params["FilterExpression"] = "stato=:stato AND begins_with(#attributename, :begin)";
-    params["ExpressionAttributeNames"] =
-    {
-        "#attributename": "language_category_title",
-    };
-    params["ExpressionAttributeValues"] =
-    {
-        ':begin': "<" + language + "&",
-        ':stato': state
-    };
-
     try {
-        const data = await ddbDocClient.send(new ScanCommand(params));
+        const categories: Category[] = await (dbgetCategories(tenantID));
+        if (categories == null)
+            throw { "error": "couldn't collect the categories" };
+
+        var params: QueryCommandInput = {
+            TableName: environment.dynamo.TextCategoryTable.tableName,
+            KeyConditionExpression: "#idTenant = :tenant and #stato=:stato and begins_with(#language_category_title, :begin)",
+            ExpressionAttributeNames: {
+                "#language_category_title": "language_category_title",
+                '#idTenant': 'idTenant',
+                '#stato': 'stato',
+            },
+            ExpressionAttributeValues: {
+                ':begin': "<" + language + "&",
+                ':tenant': tenantID,
+                ':stato': state,
+            }
+        };
+        var paramsinfo: QueryCommandInput = {
+            TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+            KeyConditionExpression: "#idTenant = :tenant and begins_with(#language_category_title, :begin)",
+            ExpressionAttributeNames: {
+                "#language_category_title": "language_category_title",
+                '#idTenant': 'idTenant',
+            },
+            ExpressionAttributeValues: {
+                ':begin': "<" + language + "&",
+                ':tenant': tenantID,
+            }
+        };
+
+        const text = await (await ddbDocClient.send(new QueryCommand(params))).Items as TextCategory[];
+        const info = await (await ddbDocClient.send(new QueryCommand(paramsinfo))).Items as TextCategoryInfo[];
+        var data = [];
+        text.forEach(function (text) {
+            //iterate over every row of Text table
+            let merge = utilMergeMeta(text, info, categories);
+            if (merge == null)
+                throw { "error": "error mergind metadata" };
+            data.push(merge);
+        });
+        
         console.log("Success - GET", data);
-        if (!data.Items) return [];
 
         //filtra qui gli oggetti rimuovendo i duplicati
-        var text: TextCategory[] = data.Items as TextCategory[];
+        //var text: TextCategory[] = data.Items as TextCategory[];
 
-        return text;
+        return data as Text[];
 
     } catch (err) {
         console.log("Error", err.stack);
@@ -544,9 +620,9 @@ const textsOfState = async (tenantID: string, language: string, state: state) =>
 
 
 //__________DELETE__________
-const dbdeleteText = async (tenant: string, title: string) => {
-    //DELETE a specific TextId. This will cause the deletion of the text in every language.
-    //input: tenant(String), title(String)
+const dbdeleteText = async (tenant: string, title: string, category: string) => {
+    //DELETE a specific Text inside a Category. This will cause the deletion of the text in every language.
+    //input: tenant(String), title(String), category(String)
     //output: true / Error
 
     //for the chance of errors first it performs the delete of all texts, then it deletes all the metadata.
@@ -557,9 +633,9 @@ const dbdeleteText = async (tenant: string, title: string) => {
         Key: {
             idTenant: tenant,
         },
-        ConditionExpression: "contains(#language_category_title, :t)",
+        ConditionExpression: "contains(#language_category_title, :ct)",
         ExpressionAttributeValues: {
-            ":t": "\\" + title + ">",
+            ":ct": "&" + category + "\\" + title + ">",
         },
         ExpressionAttributeNames: {
             "#language_category_title": "language_category_title",
@@ -570,9 +646,9 @@ const dbdeleteText = async (tenant: string, title: string) => {
         Key: {
             idTenant: tenant,
         },
-        ConditionExpression: "contains(#language_category_title, :t)",
+        ConditionExpression: "contains(#language_category_title, :ct)",
         ExpressionAttributeValues: {
-            ":t": "\\" + title + ">",
+            ":ct": "&" + category + "\\" + title + ">",
         },
         ExpressionAttributeNames: {
             "#language_category_title": "language_category_title",
@@ -612,6 +688,45 @@ const dbdeleteLanguageTexts = async (tenant: string, language: string) => {
         ConditionExpression: "begins_with(#language_category_title, :l)",
         ExpressionAttributeValues: {
             ":l": "<" + language + "&",
+        },
+        ExpressionAttributeNames: {
+            "#language_category_title": "language_category_title",
+        },
+    };
+    try {
+        await ddbDocClient.send(new DeleteCommand(param1));
+        return await ddbDocClient.send(new DeleteCommand(param2));
+    } catch (err) {
+        throw { err };
+    }
+};
+
+const dbdeleteCategoryTexts = async (tenant: string, category: string) => {
+    //DELETE all texts that are inside a category.
+    //input: tenant(String), category(String)
+    //output: true / Error
+
+    const param1: DeleteCommandInput = {
+        TableName: environment.dynamo.TextCategoryTable.tableName,
+        Key: {
+            idTenant: tenant,
+        },
+        ConditionExpression: "contains(#language_category_title, :c)",
+        ExpressionAttributeValues: {
+            ":c": "&" + category + "\\",
+        },
+        ExpressionAttributeNames: {
+            "#language_category_title": "language_category_title",
+        },
+    };
+    const param2: DeleteCommandInput = {
+        TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+        Key: {
+            idTenant: tenant,
+        },
+        ConditionExpression: "contains(#language_category_title, :c)",
+        ExpressionAttributeValues: {
+            ":c": "&" + category + "\\",
         },
         ExpressionAttributeNames: {
             "#language_category_title": "language_category_title",
@@ -961,13 +1076,13 @@ const dbputTranslation = async (tenant: string, title: string, category: string,
     }
 };
 
-const updateText = async (tenantID: string, language: string, category: string, id: string, state: state) => {
+const updateText = async (tenantID: string, language: string, category: string, title: string, state: state) => {
 
     var params: UpdateCommandInput = {
         TableName: environment.dynamo.TextCategoryTable.tableName,
         Key: {
             idTenant: tenantID,
-            language_category_title: language + "#" + category + "#" + id
+            language_category_title: "<" + language + "&" + category + "\\" + title + ">"
         }
     };
     params["UpdateExpression"] = "SET #state = :newState";
@@ -990,4 +1105,4 @@ const updateText = async (tenantID: string, language: string, category: string, 
     }
 }
 
-export { dbgetAllTexts, dbgetTexts, dbgetSingleText, dbgetTranslationsLanguages, dbGetTexts, textsOfState, dbdeleteText, dbdeleteLanguageTexts, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation, updateText };
+export { dbgetAllTexts, dbgetTexts, dbgetSingleText, dbgetTranslationsLanguages, dbgetCategoryLanguages, dbGetTexts, textsOfState, dbdeleteText, dbdeleteLanguageTexts, dbdeleteCategoryTexts, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation, updateText };

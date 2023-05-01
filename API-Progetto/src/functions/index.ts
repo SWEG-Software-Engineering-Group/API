@@ -19,7 +19,8 @@ export { default as putOriginalText } from './textcategory/put/originalText';
 export { default as deleteText } from './textcategory/delete/text';
 export { default as getOriginalTexts } from './textcategory/get/originalTexts';
 export { default as getTranslationLanguages } from './textcategory/get/translationLanguages';
-export { default as getTextToVerify } from './textcategory/get/pendingTranslations';
+export { default as getToBeVerified } from './textcategory/get/pendingTranslations';
+export { default as getVerified } from './textcategory/get/verifiedTranslations';
 export { default as putAcceptText } from './textcategory/put/approveText';
 export { default as putRejectText } from './textcategory/put/rejectText';
 export { default as getTenantLanguages } from './tenant/get/SecondaryLanguage';
@@ -27,6 +28,7 @@ export { default as removeLanguage } from './tenant/delete/language';
 export { default as addLanguage } from './tenant/post/addLanguage';
 export { default as allCategories } from './textcategory/get/allCategories';
 export { default as removeCategory } from './tenant/delete/removeCategory';
+export { default as getCountLanguagesForCategory } from './tenant/get/categoryStats';
 // export user func
 export { default as admGetUser } from './user/get/adminGetUser';
 export { default as getUserTenant } from './user/get/getTenant';
