@@ -15,8 +15,8 @@ const getUntranslatedTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = 
     if (event.pathParameters.Language == null)
       return formatJSONResponse({ "error": "Missing Language" }, 400);
     res = await textsOfState(event.pathParameters.TenantId, event.pathParameters.Language, state.daTradurre);
-  } catch {
-    return formatJSONResponse({ "error": "error" }, 403);
+  } catch (e) {
+    return formatJSONResponse({ "error": e }, 403);
   }
   return formatJSONResponse({ "texts": res });
 };

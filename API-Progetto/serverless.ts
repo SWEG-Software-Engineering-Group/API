@@ -29,7 +29,8 @@ import {
   getTenant,
   deleteTenant,
   getAdmins,
-  getAllCategories
+  getAllCategories,
+  getCountLanguagesForCategory
 } from '@functions/index';
 
 // IMPORT TEXTCATEGORY FUNC
@@ -37,7 +38,8 @@ import {
   deleteText,
   getAllTexts,
   getOriginalTexts,
-  getTextToVerify,
+  getToBeVerified,
+  getVerified,
   getText,
   getTranslationLanguages,
   getUntranslatedTexts,

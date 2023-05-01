@@ -499,7 +499,7 @@ const dbGetTexts = async (tenantID: string, language: string = null, category: s
                 ':tenant': tenantID,
             }
         };
-        
+
         const text = await (await ddbDocClient.send(new QueryCommand(params))).Items as TextCategory[];
         const info = await (await ddbDocClient.send(new QueryCommand(paramsinfo))).Items as TextCategoryInfo[];
         var data = [];
@@ -569,7 +569,8 @@ const textsOfState = async (tenantID: string, language: string, state: state) =>
 
         var params: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            KeyConditionExpression: "#idTenant = :tenant and #stato=:stato and begins_with(#language_category_title, :begin)",
+            KeyConditionExpression: "#idTenant = :tenant and begins_with(#language_category_title, :begin)",
+            FilterExpression: "#stato=:stato",
             ExpressionAttributeNames: {
                 "#language_category_title": "language_category_title",
                 '#idTenant': 'idTenant',
@@ -604,7 +605,7 @@ const textsOfState = async (tenantID: string, language: string, state: state) =>
                 throw { "error": "error mergind metadata" };
             data.push(merge);
         });
-        
+
         console.log("Success - GET", data);
 
         //filtra qui gli oggetti rimuovendo i duplicati
