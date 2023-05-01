@@ -53,7 +53,7 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
     if (tenant === '' || title === '' || text === '' || category === '' || event.body.Languages == null)
         return formatJSONResponse({ "error": "input is empty" });
 
-    
+
     //check user is admin inside this tenant
     if (false)
         if (dbcheckUserInTenant(tenant, "Username"))
@@ -62,20 +62,19 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
 
     try {
         //check if all the languages are inside the Tenant.
-        let lang = await dbgetSecondaryLanguages(tenant);
-        languages.forEach(function(language){
-            if(lang.include(language))
-                throw {"error": " one of the languages is not present inside the Tenant"};
+        let lang: Array<String> = await dbgetSecondaryLanguages(tenant) as Array<String>;
+        languages.forEach(function (language) {
+            if (lang.indexOf(language) === -1)
+                throw { "error": " one of the languages is not present inside the Tenant" };
         });
-        //add category if it doesn't already exists.
-        await dbAddCategoryToTenant(tenant, category);
+        //add category if it doesn't already exists get the id and use it
+        let categoryId: string = await dbAddCategoryToTenant(tenant, category);
         //create the original text
-        await dbpostOriginalText(tenant, title, category, text, comment, link);
+        await dbpostOriginalText(tenant, title, categoryId, text, comment, link);
         //iterate over all languages to create the new translation
         await Promise.all(languages.map(async (language) => {
-            await dbpostTranslation(tenant, title, category, language, comment, link);
+            await dbpostTranslation(tenant, title, categoryId, language, comment, link);
         }));
-        
     }
     catch (error) {
         console.log(error);

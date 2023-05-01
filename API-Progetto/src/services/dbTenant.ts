@@ -107,7 +107,7 @@ const dbgetTenantUsers = async (tenant: string, usertype: string) => {
         throw { err: "Tenant not found" };
     }
     // Get User info from cognito userpool
-    try{
+    try {
         let users = [];
         if (usertype == "content") {
             users = await Promise.all(tnt.users.map(async (user) => {
@@ -147,22 +147,12 @@ const dbgetDefaultLanguage = async (tenant: string) => {
 };
 const dbgetSecondaryLanguages = async (tenant: string) => {
     // Set the parameters.
-    if (!await dbgetTenantinfo(tenant)) {
+    let ten: Tenant = await dbgetTenantinfo(tenant);
+    if (ten == null) {
         return { err: "Tenant not found" };
     }
-    const params: GetCommandInput = {
-        TableName: environment.dynamo.TenantTable.tableName,
-        Key: { id: tenant },
-    };
-    try {
-        const tenant = await ddbDocClient.send(new GetCommand(params));
+    return ten.languages;
 
-        console.log("Success - GET", tenant);
-        return tenant.Item.languages;
-    } catch (err) {
-        console.log("Error", err.stack);
-        throw { err };
-    }
 };
 const dbgetCategories = async (tenant: string) => {
     //GET the categories list inside a Tenant
@@ -227,10 +217,12 @@ const dbAddCategoryToTenant = async (tenant: string, category: string) => {
         //this fails when the tenant is empty in the begining
         //if (categories == null)
         //    throw { "error": "tenant has no categories" };
-        let index = categories.findIndex(element => element.id === category);
-        if (index !== -1)
-            return true;
-        categories.push({ id: crypto.randomUUID(), name: category });
+        let index = categories.findIndex(element => { return element.id === category });
+        if (index != -1) {
+            return category;
+        }
+        let newCat = { id: crypto.randomUUID(), name: category } as Category;
+        categories.push(newCat);
         const params: UpdateCommandInput = {
             TableName: environment.dynamo.TenantTable.tableName,
             Key: {
@@ -242,9 +234,9 @@ const dbAddCategoryToTenant = async (tenant: string, category: string) => {
             },
         };
         await ddbDocClient.send(new UpdateCommand(params));
-        return true;
+        return newCat.id;
     } catch (err) {
-        throw { err };
+        throw { "Error": "errore nel db per la funzione dbAddCategoryToTenant", "err2": err };
     }
 };
 const dbRemoveCategoryFromTenant = async (tenant: string, category: string) => {
@@ -256,7 +248,7 @@ const dbRemoveCategoryFromTenant = async (tenant: string, category: string) => {
     if (index === -1)
         throw { "error": "error" };
     else
-        categories.splice(index,1);
+        categories.splice(index, 1);
     const params: UpdateCommandInput = {
         TableName: environment.dynamo.TextCategoryTable.tableName,
         Key: {
@@ -278,16 +270,16 @@ const dbAddSecLanguageToTenant = async (tenant: string, language: string) => {
     // Check if the tenant exists
     const tenantInfo = await dbgetTenantinfo(tenant);
     if (!tenantInfo) {
-        throw { "Error:" : "Tenant not found" };
+        throw { "Error:": "Tenant not found" };
     }
     // CHECK IF THE LANGUAGE IS ALREADY IN THE TENANT
     if (tenantInfo.languages.includes(language)) {
-        throw { "Error:" : "Language already in tenant" };
+        throw { "Error:": "Language already in tenant" };
     }
     // Set the parameters.
     const params: UpdateCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
-        Key: { id : tenant },
+        Key: { id: tenant },
         UpdateExpression: "SET #languages = list_append(#languages, :language)",
         ExpressionAttributeNames: {
             "#languages": "languages",
@@ -303,18 +295,18 @@ const dbAddSecLanguageToTenant = async (tenant: string, language: string) => {
         return "Language successfully added to tenant";
     } catch (err) {
         console.log("Error", err.stack);
-        throw { "Error:" : err.stack };
+        throw { "Error:": err.stack };
     }
 };
 const dbRemoveSecLanguageFromTenant = async (tenant: string, language: string) => {
     // Check if the tenant exists
     const tenantInfo = await dbgetTenantinfo(tenant);
     if (!tenantInfo) {
-        throw { "Error:" : "Tenant not found" };
+        throw { "Error:": "Tenant not found" };
     }
     // Check if the language exists in the tenant othwerwise return error
     if (!tenantInfo.languages.includes(language)) {
-        throw { "Error:" : "Language not found in tenant" };
+        throw { "Error:": "Language not found in tenant" };
     }
     let idx = tenantInfo.languages.indexOf(language);
     console.log("L'indice della lingua è ", idx);
@@ -322,7 +314,7 @@ const dbRemoveSecLanguageFromTenant = async (tenant: string, language: string) =
     // Remove the language in the list with the index idx
     const params: UpdateCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
-        Key: { id : tenant },
+        Key: { id: tenant },
         UpdateExpression: "REMOVE #languages[" + idx + "]",
         ExpressionAttributeNames: {
             "#languages": "languages",
@@ -335,23 +327,23 @@ const dbRemoveSecLanguageFromTenant = async (tenant: string, language: string) =
         return "Remove language from tenant success";
     } catch (err) {
         console.log("Error", err.stack);
-        throw { "Error:" : err.stack };
+        throw { "Error:": err.stack };
     }
 };
 const dbAddUserToTenant = async (tenant: string, username: string) => {
     // Check if the tenant exists
     const tenantInfo = await dbgetTenantinfo(tenant);
     if (!tenantInfo) {
-        throw { "Error:" : "Tenant not found" };
+        throw { "Error:": "Tenant not found" };
     }
     // CHECK IF THE USER IS ALREADY IN THE TENANT
     if (tenantInfo.users.includes(username)) {
-        throw { "Error:" : "User already in tenant" };
+        throw { "Error:": "User already in tenant" };
     }
     // Set the parameters.
     const params: UpdateCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
-        Key: { id : tenant },
+        Key: { id: tenant },
         UpdateExpression: "SET #users = list_append(#users, :username)",
         ExpressionAttributeNames: {
             "#users": "users",
@@ -367,19 +359,19 @@ const dbAddUserToTenant = async (tenant: string, username: string) => {
         return "Add user to tenant success";
     } catch (err) {
         console.log("Error", err.stack);
-        throw { "Error:" : err.stack };
+        throw { "Error:": err.stack };
     }
 };
 const dbRemoveUserFromTenant = async (tenant: string, username: string) => {
     // Check if the tenant exists
     const tenantInfo = await dbgetTenantinfo(tenant);
     if (!tenantInfo) {
-        throw { "Error:" : "Tenant not found" };
+        throw { "Error:": "Tenant not found" };
     }
     let idx = 0;
     const params: UpdateCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
-        Key: { id : tenant },
+        Key: { id: tenant },
         UpdateExpression: "REMOVE #users[" + idx + "]",
         ExpressionAttributeNames: {
             "#users": "users",
@@ -391,13 +383,13 @@ const dbRemoveUserFromTenant = async (tenant: string, username: string) => {
         idx = tenantInfo.users.indexOf(username);
         params.UpdateExpression = "REMOVE #users[" + idx + "]";
         console.log("L'indice dell'utente è ", idx);
-    } else if (tenantInfo.admins.includes(username)){
+    } else if (tenantInfo.admins.includes(username)) {
         idx = tenantInfo.admins.indexOf(username);
         params.UpdateExpression = "REMOVE #admins[" + idx + "]";
         params.ExpressionAttributeNames["#admins"] = "admins";
         console.log("L'indice dell'admin è ", idx);
-    } else{
-        throw { "DB Error:" : "User not found in tenant" };
+    } else {
+        throw { "DB Error:": "User not found in tenant" };
     }
     // Set the parameters.
     // Remove the user in the list with the given index
@@ -407,23 +399,23 @@ const dbRemoveUserFromTenant = async (tenant: string, username: string) => {
         return "Remove user from tenant success";
     } catch (err) {
         console.log("Error", err.stack);
-        throw { "Error:" : err.stack };
+        throw { "Error:": err.stack };
     }
 };
 const dbAddAdminToTenant = async (tenant: string, username: string) => {
     // Check if tenant exists
     const tenantInfo = await dbgetTenantinfo(tenant);
     if (!tenantInfo) {
-        throw { "Error:" : "Tenant not found" };
+        throw { "Error:": "Tenant not found" };
     }
     // CHECK IF THE ADMIN IS ALREADY IN THE TENANT
     if (tenantInfo.users.includes(username)) {
-        throw { "Error:" : "Admin already in tenant" };
+        throw { "Error:": "Admin already in tenant" };
     }
     // Set the parameters.
     const params: UpdateCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
-        Key: { id : tenant },
+        Key: { id: tenant },
         UpdateExpression: "SET #admins = list_append(#admins, :username)",
         ExpressionAttributeNames: {
             "#admins": "admins",
@@ -439,7 +431,7 @@ const dbAddAdminToTenant = async (tenant: string, username: string) => {
         return "Add admin to tenant success";
     } catch (err) {
         console.log("Error", err.stack);
-        throw { "Error:" : err.stack };
+        throw { "Error:": err.stack };
     }
 };
 
@@ -479,4 +471,4 @@ const dbresetTenant = async (tenant: string) => {
     }
 };
 
-export { dbgetTenantinfo,dbcheckAdminInTenant,dbcheckUserInTenant,dbgetTenants,dbgetUserTenant,dbgetTenantUsers, dbputTenant, dbgetCategories, dbdeleteTenant, dbresetTenant, dbAddUserToTenant, dbRemoveUserFromTenant, dbAddAdminToTenant, dbgetDefaultLanguage, dbgetSecondaryLanguages, dbAddCategoryToTenant, dbRemoveCategoryFromTenant,dbAddSecLanguageToTenant,dbRemoveSecLanguageFromTenant };
+export { dbgetTenantinfo, dbcheckAdminInTenant, dbcheckUserInTenant, dbgetTenants, dbgetUserTenant, dbgetTenantUsers, dbputTenant, dbgetCategories, dbdeleteTenant, dbresetTenant, dbAddUserToTenant, dbRemoveUserFromTenant, dbAddAdminToTenant, dbgetDefaultLanguage, dbgetSecondaryLanguages, dbAddCategoryToTenant, dbRemoveCategoryFromTenant, dbAddSecLanguageToTenant, dbRemoveSecLanguageFromTenant };

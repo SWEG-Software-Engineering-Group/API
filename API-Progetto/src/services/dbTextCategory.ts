@@ -1,11 +1,12 @@
 import { GetCommand, GetCommandInput, BatchWriteCommand, BatchWriteCommandInput, ScanCommand, ScanCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput, QueryCommand, QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import { environment } from 'src/environment/environment';
 import { Text } from "src/types/Text";
-import { TextCategoryInfo } from "src/types/TextCategoryInfo";
+
 import { TextCategory, state } from "src/types/TextCategory";
 import { Tenant, Category } from "src/types/Tenant";
 import { ddbDocClient } from "./dbConnection";
 import { dbgetTenantinfo, dbgetCategories, dbgetDefaultLanguage } from "./dbTenant";
+import { TextCategoryInfo } from "src/types/TextCategoryinfo";
 
 
 
@@ -116,7 +117,7 @@ const dbgetAllTexts = async (tenant: string) => {
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
             KeyConditionExpression: "#idTenant = :t",
             ExpressionAttributeValues: { ":t": tenant },
-            ExpressionAttributeNames: {"#idTenant": "idTenant", },
+            ExpressionAttributeNames: { "#idTenant": "idTenant", },
         };
         const param2: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
@@ -134,7 +135,7 @@ const dbgetAllTexts = async (tenant: string) => {
         console.log("dbgetAllTexts: " + info);
         if (info == null || txt == null)
             throw { "error": "error reading texts from db" };
-        if (info.length === 0 || txt.length === 0){
+        if (info.length === 0 || txt.length === 0) {
             throw { "error": "No data in db" };
         }
         //merge the data together between texts and infos
@@ -366,19 +367,23 @@ const dbgetSingleText = async (tenant: string, language: string, category: strin
             }
         };
         const text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
-        const info = (await ddbDocClient.send(new GetCommand( getparamI ))).Item as TextCategoryInfo;
+        const info = (await ddbDocClient.send(new GetCommand(getparamI))).Item as TextCategoryInfo;
+        if (text != null) {
+            return ({
+                idTenant: text.idTenant,
+                language: language,
+                category: categories.find(element => element.id === category),
+                title: title,
+                text: text.text,
+                stato: text.stato,
+                comment: info.comment,
+                link: info.link,
+                feedback: info.feedback,
+            } as Text);
+        } else {
+            return null;
+        }
 
-        return({
-            idTenant: text.idTenant,
-            language: language,
-            category: categories.find(element => element.id === category),
-            title: title,
-            text: text.text,
-            stato: text.stato,
-            comment: info.comment,
-            link: info.link,
-            feedback: info.feedback,
-        } as Text);
     } catch (err) {
         throw { err };
     }
@@ -633,7 +638,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
 
     //check if this text already exists
     const original: Text = await (dbgetSingleText(tenant, tenantinfo.defaultLanguage, category, title)) as Text
-    if (original == null) {
+    if (original != null) {
         throw { "error": "text already present" };
     }
 
@@ -658,7 +663,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
             idTenant: tenant,
             language_category_title: "<" + tenantinfo.defaultLanguage + "&" + category + "\\" + title + ">",
             text: text,
-            stato: 'testoOriginale',
+            stato: state.testoOriginale,
         },
     };
     try {
@@ -666,7 +671,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
         return await ddbDocClient.send(new PutCommand(paramsInfo));
     } catch (err) {
         console.log("Error", err.stack);
-        throw { err };
+        throw { "error": "errore nel db per la funzione dbpostOriginalText" };
     }
 };
 
@@ -679,7 +684,7 @@ const dbpostTranslation = async (tenant: string, title: string, category: string
         throw { "error": "Tenant doesn't exists" };
     //check if this text already exists
     const translation: Text = await (dbgetSingleText(tenant, language, category, title)) as Text
-    if (translation == null) {
+    if (translation != null) {
         throw { "error": "text already present" };
     }
 
@@ -713,14 +718,14 @@ const dbpostTranslation = async (tenant: string, title: string, category: string
             idTenant: tenant,
             language_category_title: "<" + language + "&" + category + "\\" + title + ">",
             text: null,
-            stato: 'daTradurre',
+            stato: state.daTradurre,
         },
     };
     try {
         await ddbDocClient.send(new PutCommand(paramsText));
         return await ddbDocClient.send(new PutCommand(paramsInfo));
     } catch (err) {
-        throw { err };
+        throw { "errore": "errore nel db per la funzione ", "err2": err };
     }
 };
 
@@ -836,7 +841,7 @@ const dbputOriginalText = async (tenant: string, category: string, title: string
                 language_category_title: "<" + language + "&" + category + "\\" + title + " >",
             }
         };
-        const currtext = (await ddbDocClient.send(new GetCommand(getparamT))).Item as  TextCategory;
+        const currtext = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
         const currinfo = (await ddbDocClient.send(new GetCommand(getparamI))).Item as TextCategoryInfo;
         if (currtext == null || currinfo == null)
             throw { "error": "original text not found" };
