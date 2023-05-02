@@ -10,13 +10,13 @@ import { TextCategoryInfo } from "src/types/TextCategoryinfo";
 
 
 
-//NOTE: language_category_title is formatted: " <language&category\title> "
-//          "<" + language + "&" + category + "\\" + title + ">"
+//NOTE: language_category_title is formatted: " <language&category'title> "
+//          "<" + language + "&" + category + "'" + title + ">"
 //using charactes <&\> that are escaped by the lambda to avoid conflict with user input
 //lang      = language_category_title.split("&")[0].split("<")[1];
-//category  = language_category_title.split("\\")[0].split("&")[1];
-//title     = language_category_title.split(">")[0].split("\\")[1];
-//split("&")[0].split("<")[1].split("\\")[0].split("&")[1]..split(">")[0].split("\\")[1];
+//category  = language_category_title.split("'")[0].split("&")[1];
+//title     = language_category_title.split(">")[0].split("'")[1];
+//split("&")[0].split("<")[1].split("'")[0].split("&")[1]..split(">")[0].split("'")[1];
 
 //---------------------
 //UTIL functions that will be used across all db functions 
@@ -28,8 +28,8 @@ const utilMergeMeta = (text: TextCategory, info: TextCategoryInfo[], categories:
     //output: Text / Error
     try {
         let lang = text.language_category_title.split("&")[0].split("<")[1];
-        let category = text.language_category_title.split("\\")[0].split("&")[1];
-        let title = text.language_category_title.split(">")[0].split("\\")[1];
+        let category = text.language_category_title.split("'")[0].split("&")[1];
+        let title = text.language_category_title.split(">")[0].split("'")[1];
         //seach the meta by textId
         let meta = info.find(element => element.language_category_title === text.language_category_title);
         //construct the object merging records from the two tables
@@ -62,7 +62,7 @@ const utilChangeStateTranslations = async (tenant: string, defaultlanguage: stri
             FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":ct": "#" + category + "#" + title + "#",
+                ":ct": "&" + category + "'" + title + ">",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
@@ -170,7 +170,7 @@ const dbgetByCategory = async (tenant: string, category: string) => {
             FilterExpression: "#idTenant = :t and contains(#language_category_title, :c)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":c": "&" + category + "\\",
+                ":c": "&" + category + "'",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
@@ -183,7 +183,7 @@ const dbgetByCategory = async (tenant: string, category: string) => {
             FilterExpression: "#idTenant = :t and contains(#language_category_title, :c)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":c": "&" + category + "\\",
+                ":c": "&" + category + "'",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
@@ -295,7 +295,7 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
             KeyConditionExpression: "#idTenant = :t and begins_with(#language_category_title,:lc)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":lc": "<" + language + "&" + category + "\\",
+                ":lc": "<" + language + "&" + category + "'",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
@@ -307,7 +307,7 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
             KeyConditionExpression: "#idTenant= :t and begins_with(#language_category_title,:lc)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":lc": "<" + language + "&" + category + "\\",
+                ":lc": "<" + language + "&" + category + "'",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
@@ -349,14 +349,14 @@ const dbgetSingleText = async (tenant: string, language: string, category: strin
             TableName: environment.dynamo.TextCategoryTable.tableName,
             Key: {
                 idTenant: tenant,
-                language_category_title: "<" + language + "&" + category + "\\" + title + " >",
+                language_category_title: "<" + language + "&" + category + "'" + title + " >",
             }
         };
         const getparamI: GetCommandInput = {
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
             Key: {
                 idTenant: tenant,
-                language_category_title: "<" + language + "&" + category + "\\" + title + " >",
+                language_category_title: "<" + language + "&" + category + "'" + title + " >",
             }
         };
         const text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
@@ -400,7 +400,7 @@ const dbgetTranslationsLanguages = async (tenant: string, category: string, titl
             FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":ct": "&" + category + "\\" + title + ">",
+                ":ct": "&" + category + "'" + title + ">",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
@@ -441,7 +441,7 @@ const dbgetCategoryLanguages = async (tenant: string, category: string) => {
             FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":ct": "&" + category + "\\",
+                ":ct": "&" + category + "'",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
@@ -486,7 +486,7 @@ const dbGetTexts = async (tenantID: string, language: string = null, category: s
                 '#idTenant': 'idTenant',
             },
             ExpressionAttributeValues: {
-                ':begin': "<" + language + "&" + ((category == null) ? "" : (category + "\\" + (id == null) ? "" : (id + ">"))),
+                ':begin': "<" + language + "&" + ((category == null) ? "" : (category + "'" + (id == null) ? "" : (id + ">"))),
                 ':tenant': tenantID,
             }
         };
@@ -498,7 +498,7 @@ const dbGetTexts = async (tenantID: string, language: string = null, category: s
                 '#idTenant': 'idTenant',
             },
             ExpressionAttributeValues: {
-                ':begin': "<" + language + "&" + ((category == null) ? "" : (category + "\\" + (id == null) ? "" : (id + ">"))),
+                ':begin': "<" + language + "&" + ((category == null) ? "" : (category + "'" + (id == null) ? "" : (id + ">"))),
                 ':tenant': tenantID,
             }
         };
@@ -549,7 +549,7 @@ const dbGetTexts = async (tenantID: string, language: string = null, category: s
         var values: string[] = [];
 
         text.forEach((val) => {
-            var current = val["language_category_title"].split("\\")[0].split("&")[1];
+            var current = val["language_category_title"].split("'")[0].split("&")[1];
             if (values.includes(current)) {
                 values.push(current);
             }
@@ -639,7 +639,7 @@ const dbdeleteText = async (tenant: string, title: string, category: string) => 
         },
         ConditionExpression: "contains(#language_category_title, :ct)",
         ExpressionAttributeValues: {
-            ":ct": "&" + category + "\\" + title + ">",
+            ":ct": "&" + category + "'" + title + ">",
         },
         ExpressionAttributeNames: {
             "#language_category_title": "language_category_title",
@@ -652,7 +652,7 @@ const dbdeleteText = async (tenant: string, title: string, category: string) => 
         },
         ConditionExpression: "contains(#language_category_title, :ct)",
         ExpressionAttributeValues: {
-            ":ct": "&" + category + "\\" + title + ">",
+            ":ct": "&" + category + "'" + title + ">",
         },
         ExpressionAttributeNames: {
             "#language_category_title": "language_category_title",
@@ -716,7 +716,7 @@ const dbdeleteCategoryTexts = async (tenant: string, category: string) => {
             FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":ct": "&" + category + "\\",
+                ":ct": "&" + category + "'",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
@@ -729,7 +729,7 @@ const dbdeleteCategoryTexts = async (tenant: string, category: string) => {
             FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":ct": "&" + category + "\\",
+                ":ct": "&" + category + "'",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
@@ -790,7 +790,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: "<" + tenantinfo.defaultLanguage + "&" + category + "\\" + title + ">",
+            language_category_title: "<" + tenantinfo.defaultLanguage + "&" + category + "'" + title + ">",
             comment: comment,
             link: link,
             feedback: null,
@@ -800,7 +800,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
         TableName: environment.dynamo.TextCategoryTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: "<" + tenantinfo.defaultLanguage + "&" + category + "\\" + title + ">",
+            language_category_title: "<" + tenantinfo.defaultLanguage + "&" + category + "'" + title + ">",
             text: text,
             stato: state.testoOriginale,
         },
@@ -845,7 +845,7 @@ const dbpostTranslation = async (tenant: string, title: string, category: string
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: "<" + language + "&" + category + "\\" + title + ">",
+            language_category_title: "<" + language + "&" + category + "'" + title + ">",
             comment: comment,
             link: link,
             feedback: null,
@@ -855,7 +855,7 @@ const dbpostTranslation = async (tenant: string, title: string, category: string
         TableName: environment.dynamo.TextCategoryTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: "<" + language + "&" + category + "\\" + title + ">",
+            language_category_title: "<" + language + "&" + category + "'" + title + ">",
             text: null,
             stato: state.daTradurre,
         },
@@ -885,7 +885,7 @@ const dbputTextCategory = async (tenant: string, category: string, title: string
             FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":ct": "&" + category + "\\" + title + ">",
+                ":ct": "&" + category + "'" + title + ">",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
@@ -898,7 +898,7 @@ const dbputTextCategory = async (tenant: string, category: string, title: string
             FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":ct": "&" + category + "\\" + title + ">",
+                ":ct": "&" + category + "'" + title + ">",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
@@ -911,12 +911,12 @@ const dbputTextCategory = async (tenant: string, category: string, title: string
         //change all categories ID and prepare an array of PutRequest
         let text = [];
         txt.forEach(item => {
-            item.language_category_title = item.language_category_title.split("&")[0].split("<")[1] + "#" + newcategory + "#" + item.language_category_title.split(">")[0].split("\\")[1] + "#";
+            item.language_category_title = item.language_category_title.split("&")[0].split("<")[1] + "#" + newcategory + "#" + item.language_category_title.split(">")[0].split("'")[1] + "#";
             text.push({ PutRequest: { Item: item } });
         });
         let info = [];
         meta.forEach(item => {
-            item.language_category_title = item.language_category_title.split("&")[0].split("<")[1] + "#" + newcategory + "#" + item.language_category_title.split(">")[0].split("\\")[1] + "#";
+            item.language_category_title = item.language_category_title.split("&")[0].split("<")[1] + "#" + newcategory + "#" + item.language_category_title.split(">")[0].split("'")[1] + "#";
             info.push({ PutRequest: { Item: item } });
         });
 
@@ -972,14 +972,14 @@ const dbputOriginalText = async (tenant: string, category: string, title: string
             TableName: environment.dynamo.TextCategoryTable.tableName,
             Key: {
                 idTenant: tenant,
-                language_category_title: "<" + language + "&" + category + "\\" + title + " >",
+                language_category_title: "<" + language + "&" + category + "'" + title + " >",
             }
         };
         const getparamI: GetCommandInput = {
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
             Key: {
                 idTenant: tenant,
-                language_category_title: "<" + language + "&" + category + "\\" + title + " >",
+                language_category_title: "<" + language + "&" + category + "'" + title + " >",
             }
         };
         const currtext = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
@@ -994,7 +994,7 @@ const dbputOriginalText = async (tenant: string, category: string, title: string
                 TableName: environment.dynamo.TextCategoryTable.tableName,
                 Key: {
                     idTenant: tenant,
-                    language_category_title: "<" + language + "&" + category + "\\" + title + ">",
+                    language_category_title: "<" + language + "&" + category + "'" + title + ">",
                 },
                 UpdateExpression: "set #text = {:t}",
                 ExpressionAttributeValues: {
@@ -1016,7 +1016,7 @@ const dbputOriginalText = async (tenant: string, category: string, title: string
                 TableName: environment.dynamo.TextCategoryInfoTable.tableName,
                 Key: {
                     idTenant: tenant,
-                    categoryIdtextId: "<" + language + "&" + category + "\\" + title + ">",
+                    categoryIdtextId: "<" + language + "&" + category + "'" + title + ">",
                 },
                 UpdateExpression: "set #comment = {:c} and set #link = {:l}",
                 ExpressionAttributeValues: {
@@ -1036,7 +1036,7 @@ const dbputOriginalText = async (tenant: string, category: string, title: string
                     TableName: environment.dynamo.TextCategoryInfoTable.tableName,
                     Key: {
                         idTenant: tenant,
-                        categoryIdtextId: "<" + lang + "&" + category + "\\" + title + ">",
+                        categoryIdtextId: "<" + lang + "&" + category + "'" + title + ">",
                     },
                     UpdateExpression: "set #comment = {:c} and set #link = {:l}",
                     ExpressionAttributeValues: {
@@ -1068,7 +1068,7 @@ const dbputTranslation = async (tenant: string, title: string, category: string,
             TableName: environment.dynamo.TextCategoryTable.tableName,
             Key: {
                 idTenant: tenant,
-                language_category_title: "<" + language + "&" + category + "\\" + title + ">",
+                language_category_title: "<" + language + "&" + category + "'" + title + ">",
             },
             UpdateExpression: "set #text = :t and set #stato = :s",
             ExpressionAttributeValues: {
@@ -1084,7 +1084,7 @@ const dbputTranslation = async (tenant: string, title: string, category: string,
             TableName: environment.dynamo.TextCategoryTable.tableName,
             Key: {
                 idTenant: tenant,
-                language_category_title: "<" + language + "&" + category + "\\" + title + ">",
+                language_category_title: "<" + language + "&" + category + "'" + title + ">",
             },
             UpdateExpression: "set #feedback = :f",
             ExpressionAttributeValues: {
@@ -1108,7 +1108,7 @@ const updateText = async (tenantID: string, language: string, category: string, 
         TableName: environment.dynamo.TextCategoryTable.tableName,
         Key: {
             idTenant: tenantID,
-            language_category_title: "<" + language + "&" + category + "\\" + title + ">"
+            language_category_title: "<" + language + "&" + category + "'" + title + ">"
         }
     };
     params["UpdateExpression"] = "SET #state = :newState";
