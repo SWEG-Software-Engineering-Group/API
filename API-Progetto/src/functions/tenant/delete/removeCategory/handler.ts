@@ -23,8 +23,8 @@ const removeCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
         },
         400
       );
-      }
-      await dbdeleteCategoryTexts(event.pathParameters.TenantId, event.pathParameters.Category);
+    }
+    await dbdeleteCategoryTexts(event.pathParameters.TenantId, event.pathParameters.Category);
     let tenant = await dbRemoveCategoryFromTenant(event.pathParameters.TenantId, event.pathParameters.Category.toString());
     return formatJSONResponse({tenant}, 200);
   } catch (error) {
