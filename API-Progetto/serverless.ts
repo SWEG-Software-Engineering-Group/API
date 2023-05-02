@@ -29,6 +29,7 @@ import {
   getTenant,
   deleteTenant,
   getAdmins,
+  tenantGetUsers,
   getAllCategories,
   getCountLanguagesForCategory
 } from '@functions/index';
@@ -42,12 +43,13 @@ import {
   getVerified,
   getText,
   getTranslationLanguages,
-  getUntranslatedTexts,
+  getToBeTranslated,
   postOriginalText,
   putAcceptText,
   putRejectText,
   putOriginalText,
-  putTranslation
+  putTranslation,
+  getRejectedTexts
 } from '@functions/index';
 const serverlessConfiguration: AWS = {
   service: 'api-progetto',
@@ -229,6 +231,7 @@ const serverlessConfiguration: AWS = {
     getTenant,
     deleteTenant,
     getAdmins,
+    tenantGetUsers,
     getAllCategories,
     getCountLanguagesForCategory,
     ////
@@ -239,12 +242,13 @@ const serverlessConfiguration: AWS = {
     getVerified,
     getText,
     getTranslationLanguages,
-    getUntranslatedTexts,
+    getToBeTranslated,
     postOriginalText,
     putAcceptText,
     putRejectText,
     putOriginalText,
-    putTranslation
+    putTranslation,
+    getRejectedTexts
   },
   package: { individually: true },
   custom: {

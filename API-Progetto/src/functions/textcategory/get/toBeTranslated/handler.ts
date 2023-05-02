@@ -7,7 +7,7 @@ import { Text } from 'src/types/Text';
 
 import schema from './schema';
 
-const getUntranslatedTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const getToBeTranslated: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   var res: Text[] = null;
   try {
     if (event.pathParameters.TenantId == null)
@@ -20,4 +20,4 @@ const getUntranslatedTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = 
   }
   return formatJSONResponse({ "texts": res });
 };
-export const main = middyfy(getUntranslatedTexts);
+export const main = middyfy(getToBeTranslated);

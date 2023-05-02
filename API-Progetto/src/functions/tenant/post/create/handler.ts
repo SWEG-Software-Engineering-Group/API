@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbputTenant } from 'src/services/dbTenant';
+import { dbputTenant, dbgetTenantinfo } from 'src/services/dbTenant';
 
 import schema from './schema';
 var crypto = require('crypto');
@@ -18,8 +18,18 @@ const addTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (even
         400
       );
     }
+    let randid = crypto.randomUUID();
+    // IF LANGUAGES CONTAINS DEFAULT LANGUAGE return error
+    if (event.body.languages.includes(event.body.defaultLanguage)) {
+      return formatJSONResponse(
+        {
+          "error": "Secondari languages cannot contain default language",
+        },
+        400
+      );
+    }
     await dbputTenant({
-      id: crypto.randomUUID(),
+      id: randid,
       tenantName: event.body.tenantName,
       admins: event.body.admins,
       users: event.body.users,
@@ -29,8 +39,7 @@ const addTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (even
       categories: []//TODO//event.body.categories.map((val) => { return { id: crypto.randomUUID(), name: val } })//TODO map with created id//
     });
     return formatJSONResponse({
-      message: `Created tenant ${event.body.tenantName}, welcome to the exciting SWEG world!`,
-      event,
+      Tenant: await dbgetTenantinfo(randid)
     });
   }catch(error){
     console.log(error);

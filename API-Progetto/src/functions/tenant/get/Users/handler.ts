@@ -4,7 +4,7 @@ import { middyfy } from '@libs/lambda';
 import { dbgetTenantUsers } from 'src/services/dbTenant';
 import schema from './schema';
 
-const getUsers: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const tenantGetUsers: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try{
     if (event.pathParameters.TenantId == null) {
       return formatJSONResponse(
@@ -27,4 +27,4 @@ const getUsers: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event
   }
 };
 
-export const main = middyfy(getUsers);
+export const main = middyfy(tenantGetUsers);

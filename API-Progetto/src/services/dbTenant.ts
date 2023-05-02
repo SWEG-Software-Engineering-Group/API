@@ -314,6 +314,9 @@ const dbAddSecLanguageToTenant = async (tenant: string, language: string) => {
     if (tenantInfo.languages.includes(language)) {
         throw { "Error:": "Language already in tenant" };
     }
+    if (tenantInfo.defaultLanguage === language) {
+        throw { "Error:": "Language equal to default language" };
+    }
     // Set the parameters.
     const params: UpdateCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
