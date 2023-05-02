@@ -58,7 +58,8 @@ const utilChangeStateTranslations = async (tenant: string, defaultlanguage: stri
     try {
         const params: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            KeyConditionExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
+            KeyConditionExpression: "#idTenant = :t",
+            FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":ct": "#" + category + "#" + title + "#",
@@ -395,7 +396,8 @@ const dbgetTranslationsLanguages = async (tenant: string, category: string, titl
         //request all the data from the Text and metadata tables
         const param: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            KeyConditionExpression: "#idTenant= :t and contains(#language_category_title,:lc)",
+            KeyConditionExpression: "#idTenant= :t",
+            FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":ct": "&" + category + "\\" + title + ">",
@@ -435,7 +437,8 @@ const dbgetCategoryLanguages = async (tenant: string, category: string) => {
         //request all the data from the Text and metadata tables
         const param: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
-            KeyConditionExpression: "#idTenant= :t and contains(#language_category_title,:lc)",
+            KeyConditionExpression: "#idTenant= :t",
+            FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":ct": "&" + category + "\\",
@@ -709,7 +712,8 @@ const dbdeleteCategoryTexts = async (tenant: string, category: string) => {
     try {
         const param1: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            KeyConditionExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
+            KeyConditionExpression: "#idTenant = :t",
+            FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":ct": "&" + category + "\\",
@@ -721,7 +725,8 @@ const dbdeleteCategoryTexts = async (tenant: string, category: string) => {
         };
         const param2: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
-            KeyConditionExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
+            KeyConditionExpression: "#idTenant = :t",
+            FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":ct": "&" + category + "\\",
@@ -876,7 +881,8 @@ const dbputTextCategory = async (tenant: string, category: string, title: string
         //grab all texts
         const param1: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            KeyConditionExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
+            KeyConditionExpression: "#idTenant = :t",
+            FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":ct": "&" + category + "\\" + title + ">",
@@ -888,7 +894,8 @@ const dbputTextCategory = async (tenant: string, category: string, title: string
         };
         const param2: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
-            KeyConditionExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
+            KeyConditionExpression: "#idTenant = :t",
+            FilterExpression: "contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":ct": "&" + category + "\\" + title + ">",
