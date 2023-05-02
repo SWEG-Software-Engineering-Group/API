@@ -706,36 +706,54 @@ const dbdeleteCategoryTexts = async (tenant: string, category: string) => {
     //DELETE all texts that are inside a category.
     //input: tenant(String), category(String)
     //output: true / Error
-
-    const param1: DeleteCommandInput = {
-        TableName: environment.dynamo.TextCategoryTable.tableName,
-        Key: {
-            idTenant: tenant,
-        },
-        ConditionExpression: "contains(#language_category_title, :c)",
-        ExpressionAttributeValues: {
-            ":c": "&" + category + "\\",
-        },
-        ExpressionAttributeNames: {
-            "#language_category_title": "language_category_title",
-        },
-    };
-    const param2: DeleteCommandInput = {
-        TableName: environment.dynamo.TextCategoryInfoTable.tableName,
-        Key: {
-            idTenant: tenant,
-        },
-        ConditionExpression: "contains(#language_category_title, :c)",
-        ExpressionAttributeValues: {
-            ":c": "&" + category + "\\",
-        },
-        ExpressionAttributeNames: {
-            "#language_category_title": "language_category_title",
-        },
-    };
     try {
-        await ddbDocClient.send(new DeleteCommand(param1));
-        return await ddbDocClient.send(new DeleteCommand(param2));
+        const param1: QueryCommandInput = {
+            TableName: environment.dynamo.TextCategoryTable.tableName,
+            KeyConditionExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
+            ExpressionAttributeValues: {
+                ":t": tenant,
+                ":ct": "&" + category + "\\",
+            },
+            ExpressionAttributeNames: {
+                "#idTenant": "idTenant",
+                "#language_category_title": "language_category_title",
+            },
+        };
+        const param2: QueryCommandInput = {
+            TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+            KeyConditionExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
+            ExpressionAttributeValues: {
+                ":t": tenant,
+                ":ct": "&" + category + "\\",
+            },
+            ExpressionAttributeNames: {
+                "#idTenant": "idTenant",
+                "#language_category_title": "language_category_title",
+            },
+        };
+        const txt = await (await ddbDocClient.send(new QueryCommand(param1))).Items as TextCategory[];
+        const meta = await (await ddbDocClient.send(new QueryCommand(param2))).Items as TextCategoryInfo[];
+
+        //prepare the DeleteRequest with all the Keys needed
+        let text = [];
+        txt.forEach(item => {
+            text.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: item.language_category_title } } });
+        });
+        let info = [];
+        meta.forEach(item => {
+            info.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: item.language_category_title } } });
+        });
+
+        //delete the texts with the old category
+        let paramBatch: BatchWriteCommandInput = {
+            RequestItems: {
+                [environment.dynamo.TextCategoryTable.tableName]: text,
+                [environment.dynamo.TextCategoryInfoTable.tableName]: info
+            }
+        };
+        await ddbDocClient.send(new BatchWriteCommand(paramBatch));
+
+        return true;
     } catch (err) {
         throw { err };
     }
