@@ -255,7 +255,7 @@ const dbAddCategoryToTenant = async (tenant: string, category: string) => {
         //this fails when the tenant is empty in the begining
         //if (categories == null)
         //    throw { "error": "tenant has no categories" };
-        let index = categories.findIndex(element => { return element.id === category });
+        let index = categories.findIndex(element => { return element.name === category });
         if (index != -1) {
             return category;
         }
