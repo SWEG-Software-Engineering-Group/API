@@ -18,6 +18,9 @@ export { default as getAllTexts } from './textcategory/get/allTexts';
 export { default as postOriginalText } from './textcategory/post/originalText';
 export { default as putOriginalText } from './textcategory/put/originalText';
 export { default as deleteText } from './textcategory/delete/text';
+
+export { default as deleteAllTexts } from './textcategory/delete/Alltexts';
+
 export { default as getOriginalTexts } from './textcategory/get/originalTexts';
 export { default as getTranslationLanguages } from './textcategory/get/translationLanguages';
 export { default as getToBeVerified } from './textcategory/get/getTextsToVerify';

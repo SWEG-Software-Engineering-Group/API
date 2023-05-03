@@ -37,6 +37,7 @@ import {
 // IMPORT TEXTCATEGORY FUNC
 import {
   deleteText,
+  deleteAllTexts,
   getAllTexts,
   getOriginalTexts,
   getToBeVerified,
@@ -236,6 +237,7 @@ const serverlessConfiguration: AWS = {
     getCountLanguagesForCategory,
     ////
     deleteText,
+    deleteAllTexts,
     getAllTexts,
     getOriginalTexts,
     getToBeVerified,

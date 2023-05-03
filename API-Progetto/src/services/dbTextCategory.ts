@@ -674,8 +674,7 @@ const dbdeleteLanguageTexts = async (tenant: string, language: string) => {
     try {
         const param1: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            KeyConditionExpression: "#idTenant = :t",
-            FilterExpression: "begins_with(#language_category_title, :l)",
+            KeyConditionExpression: "#idTenant = :t and begins_with(#language_category_title, :l)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":l": "<" + language + "&",
@@ -687,8 +686,7 @@ const dbdeleteLanguageTexts = async (tenant: string, language: string) => {
         };
         const param2: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
-            KeyConditionExpression: "#idTenant = :t",
-            FilterExpression: "begins_with(#language_category_title, :l)",
+            KeyConditionExpression: "#idTenant = :t and begins_with(#language_category_title, :l)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":l": "<" + language + "&",
@@ -755,6 +753,59 @@ const dbdeleteCategoryTexts = async (tenant: string, category: string) => {
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
                 "#language_category_title": "language_category_title",
+            },
+        };
+        const txt = await (await ddbDocClient.send(new QueryCommand(param1))).Items as TextCategory[];
+        const meta = await (await ddbDocClient.send(new QueryCommand(param2))).Items as TextCategoryInfo[];
+
+        //prepare the DeleteRequest with all the Keys needed
+        let text = [];
+        txt.forEach(item => {
+            text.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: item.language_category_title } } });
+        });
+        let info = [];
+        meta.forEach(item => {
+            info.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: item.language_category_title } } });
+        });
+
+        //delete the texts with the old category
+        let paramBatch: BatchWriteCommandInput = {
+            RequestItems: {
+                [environment.dynamo.TextCategoryTable.tableName]: text,
+                [environment.dynamo.TextCategoryInfoTable.tableName]: info
+            }
+        };
+        await ddbDocClient.send(new BatchWriteCommand(paramBatch));
+
+        return true;
+    } catch (err) {
+        throw { err };
+    }
+};
+
+const dbdeleteAllTexts = async (tenant: string) => {
+    //DELETE all texts.
+    //input: tenant(String)
+    //output: true / Error
+    try {
+        const param1: QueryCommandInput = {
+            TableName: environment.dynamo.TextCategoryTable.tableName,
+            KeyConditionExpression: "#idTenant = :t",
+            ExpressionAttributeValues: {
+                ":t": tenant,
+            },
+            ExpressionAttributeNames: {
+                "#idTenant": "idTenant",
+            },
+        };
+        const param2: QueryCommandInput = {
+            TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+            KeyConditionExpression: "#idTenant = :t",
+            ExpressionAttributeValues: {
+                ":t": tenant,
+            },
+            ExpressionAttributeNames: {
+                "#idTenant": "idTenant",
             },
         };
         const txt = await (await ddbDocClient.send(new QueryCommand(param1))).Items as TextCategory[];
@@ -1146,4 +1197,4 @@ const updateText = async (tenantID: string, language: string, category: string, 
     }
 }
 
-export { dbgetAllTexts, dbgetTexts, dbgetSingleText, dbgetTranslationsLanguages, dbgetCategoryLanguages, dbGetTexts, textsOfState, dbdeleteText, dbdeleteLanguageTexts, dbdeleteCategoryTexts, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation, updateText };
+export { dbgetAllTexts, dbgetTexts, dbgetSingleText, dbgetTranslationsLanguages, dbgetCategoryLanguages, dbGetTexts, textsOfState, dbdeleteText, dbdeleteLanguageTexts, dbdeleteCategoryTexts, dbdeleteAllTexts, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation, updateText };
