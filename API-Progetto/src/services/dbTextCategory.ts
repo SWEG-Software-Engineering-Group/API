@@ -40,7 +40,7 @@ const utilMergeMeta = (text: TextCategory, info: TextCategoryInfo[], categories:
             category: categories.find(element => element.id === category),
             title: title,
             text: text.text,
-            stato: text.stato,
+            state: text.stato,
             comment: meta.comment,
             link: meta.link,
             feedback: meta.feedback,
