@@ -814,32 +814,26 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
     }
 };
 
-const dbpostTranslation = async (tenant: string, title: string, category: string, language: string, comment: string, link: string) => {
+const dbpostTranslation = async (tenant: string, title: string, cat: string, language: string, comment: string, link: string) => {
     //PUT new Translation of one language inside a Tenant
     //input: tenant(String), title(String), category(String), language(String), comment(String), link(String)
     //output: true / Eror
     const tenantinfo: Tenant = await (dbgetTenantinfo(tenant));
     if (tenantinfo == null)
         throw { "error": "Tenant doesn't exists" };
+    const category = tenantinfo.categories.find(item => { return item.name === cat }).id;
+    if ( category === undefined) {
+        throw { "error": "categoria non esiste" };
+    }
     //check if this text already exists
-    const translation: Text = await (dbgetSingleText(tenant, language, category, title)) as Text
+    const translation: Text = await (dbgetSingleText(tenant, language, category, title)) as Text;
     if (translation != null) {
         throw { "error": "text already present" };
     }
-
     //check language is inside the tenant and check if category exists
     if (tenantinfo.defaultLanguage === language) {
         throw { "error": "lingua default" };
     }
-    if (tenantinfo.languages.indexOf(language) === -1) {
-        throw { "error": "lingua non esiste" };
-    }
-    if (tenantinfo.categories.findIndex(item => { return item.id === category }) === -1) {
-        throw { "error": "categoria non esiste" };
-    }
-
-    //need to check if language is inside the tenant
-    //need to check if category is inside the tenant or else add it
 
     const paramsInfo: PutCommandInput = {
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
