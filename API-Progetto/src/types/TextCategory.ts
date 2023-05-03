@@ -2,7 +2,7 @@ interface TextCategory {
   idTenant: string;
   language_category_title: string;
   text: string;
-  stato: number;
+  state: number;
 }
 enum state {
   testoOriginale, daTradurre, daVerificare, verificato, rifiutato

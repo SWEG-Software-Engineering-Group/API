@@ -6,7 +6,7 @@ interface Text{
     category: Category;
     title: string;
     text: string;
-    stato: state;
+    state: state;
     comment: string | null;
     link: string | null;
     feedback: string | null;
