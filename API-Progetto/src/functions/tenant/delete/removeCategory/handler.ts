@@ -31,7 +31,7 @@ const removeCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     console.log(error);
     return formatJSONResponse(
       {
-        "error": error,
+        "error": error.message,
       },
       400
     );
