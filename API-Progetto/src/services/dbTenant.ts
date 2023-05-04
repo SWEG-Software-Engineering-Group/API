@@ -2,7 +2,7 @@ import { PutCommand, PutCommandInput, ScanCommand, ScanCommandInput, GetCommand,
 import { environment } from "src/environment/environment";
 import { Tenant, Category } from "src/types/Tenant";
 import { v4 as uuidv4 } from "uuid";
-import { cgAdminGetUser } from "./userManager";
+import { cgAdminGetUser, cgdeleteUser } from "./userManager";
 var crypto = require('crypto');
 import { ddbDocClient } from "./dbConnection";
 import { dbgetCategoryLanguages } from "./dbTextCategory";
@@ -214,7 +214,8 @@ const dbgetCountLanguagesForCategory = async (tenant: string) => {
 //__________DELETE__________
 const dbdeleteTenant = async (tenant: string) => {
     // Set the parameters.
-    if (!await dbgetTenantinfo(tenant)) {
+    let tenantGetted = await dbgetTenantinfo(tenant)
+    if (!tenant) {
         return { err: "Tenant not found" };
     }
     const params: DeleteCommandInput = {
@@ -222,6 +223,12 @@ const dbdeleteTenant = async (tenant: string) => {
         Key: { id: tenant },
     };
     try {
+        tenantGetted.users.forEach(async (user) => {
+            await cgdeleteUser(user);
+        });
+        tenantGetted.admins.forEach(async (admin) => {
+            await cgdeleteUser(admin);
+        });
         await ddbDocClient.send(new DeleteCommand(params));
         return "Tenant deleted";
     } catch (err) {
