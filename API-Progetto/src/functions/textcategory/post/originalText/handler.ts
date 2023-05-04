@@ -38,9 +38,9 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
 
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null)
-        return formatJSONResponse({ "error": "no valid input" });
+        return formatJSONResponse({ "error": "no valid input" }, 400);
     if (event.body.Title == null || event.body.Text == null || event.body.Category == null)
-        return formatJSONResponse({ "error": "body request missing parameters" });
+        return formatJSONResponse({ "error": "body request missing parameters" }, 400);
 
     let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
     let title = sanitizeHtml(event.body.Title, { allowedTags: [], allowedAttributes: {} });
@@ -51,13 +51,13 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
     //event.body.Languages need sanitization;
     let languages = event.body.Languages;
     if (tenant === '' || title === '' || text === '' || category === '' || event.body.Languages == null)
-        return formatJSONResponse({ "error": "input is empty" });
+        return formatJSONResponse({ "error": "input is empty" }, 400);
 
 
     //check user is admin inside this tenant
     if (false)
         if (dbcheckUserInTenant(tenant, "Username"))
-            return formatJSONResponse({ "error": "user not in this tenant" });
+            return formatJSONResponse({ "error": "user not in this tenant" }, 400);
     //TO DO
 
     try {
@@ -79,7 +79,7 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
     catch (error) {
         console.log(error);
         //if connection fails do stuff
-        return formatJSONResponse({ "error": error });
+        return formatJSONResponse({ "error": error }, 400);
     }
 
     //return result

@@ -31,30 +31,32 @@ const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
     //TO DO
 
     //sanitize input and check if is empty
-    if (event.pathParameters.TenantId == null || event.pathParameters.Title == null || event.pathParameters.Category == null)
-        return formatJSONResponse({ "error": "no valid input" });
+    if (event.pathParameters.TenantId == null) {
+        return formatJSONResponse({ "error": "no valid input" }, 400);
+    }
 
     let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
     if (tenant === '')
-        return formatJSONResponse({ "error": "input is empty" });
+        return formatJSONResponse({ "error": "input is empty" }, 400);
 
     //check user is admin inside this tenant
     if (false)
         if (dbcheckAdminInTenant(tenant, "Username"))
-            return formatJSONResponse({ "error": "user not in this tenant" });
+            return formatJSONResponse({ "error": "user not in this tenant" },400);
     //TO DO
 
     try {
         //execute the delete
-        await dbdeleteAllTexts(tenant);
+        let result = await dbdeleteAllTexts(tenant);
+        console.log("risultato", result);
     }
     catch (error) {
         //request to db failed
-        return formatJSONResponse({ "error": error });
+        return formatJSONResponse({ "error": error },400);
     }
 
     //return result
-    return formatJSONResponse({ "result": "OK" });
+    return formatJSONResponse({ "result": "OK" },200);
 };
 
 export const main = middyfy(deleteText);
