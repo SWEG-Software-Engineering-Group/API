@@ -341,6 +341,9 @@ const dbgetSingleText = async (tenant: string, language: string, category: strin
     //QUERY and return all Texts from a Category within a language of one Tenant
     //input: tenant(String), language(String), category(String)
     //output: Text[] / Error
+    console.log("inside dbgetSingleText");
+    console.log("<" + language + "&" + category + "'" + title + " >");
+
     try {
         const categories: Category[] = await (dbgetCategories(tenant));
         if (categories == null)
@@ -362,6 +365,8 @@ const dbgetSingleText = async (tenant: string, language: string, category: strin
         };
         const text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
         const info = (await ddbDocClient.send(new GetCommand(getparamI))).Item as TextCategoryInfo;
+        console.log(text);
+        console.log(info);
         if (text != null) {
             return ({
                 idTenant: text.idTenant,
@@ -375,10 +380,12 @@ const dbgetSingleText = async (tenant: string, language: string, category: strin
                 feedback: info.feedback,
             } as Text);
         } else {
-            return null;
+            console.log("failed to retrieve text")
+            throw {"error": "couldn't retrieve the text"};
         }
 
     } catch (err) {
+        console.log("error", err);
         throw { err };
     }
 };
@@ -766,6 +773,7 @@ const dbdeleteCategoryTexts = async (tenant: string, category: string) => {
     //DELETE all texts that are inside a category.
     //input: tenant(String), category(String)
     //output: true / Error
+    console.log("entering dbdeleteCategoryTexts");
     console.log(tenant, category);
     try {
         const param1: ScanCommandInput = {
@@ -795,7 +803,7 @@ const dbdeleteCategoryTexts = async (tenant: string, category: string) => {
         const txt = await (await ddbDocClient.send(new ScanCommand(param1))).Items as TextCategory[];
         const meta = await (await ddbDocClient.send(new ScanCommand(param2))).Items as TextCategoryInfo[];
 
-        console.log(txt, meta);
+        console.log("texts:", txt, "mata:", meta);
 
         //if there is nothing skip
         if (txt.length === 0 && meta.length === 0)
@@ -848,11 +856,12 @@ const dbdeleteCategoryTexts = async (tenant: string, category: string) => {
                 }
             } as BatchWriteCommandInput);
         }
-        console.log(array);
+        console.log("BatchList", array);
         //mapp all the calls and send them in parallel
         await Promise.all(array.map(async (element) => {
             await ddbDocClient.send(new BatchWriteCommand(element));
         }));
+        console.log("dbDeleteCategoryTexts was a success");
         return true;
     } catch (err) {
         throw { err };
@@ -956,6 +965,7 @@ const dbpostOriginalText = async (tenant: string, title: string, cat: string, te
     //output: true / Error
 
     //get categories of the tenant
+    console.log("entering dbpostOriginal");
     const tenantinfo = await (dbgetTenantinfo(tenant)) as Tenant;
     if (tenantinfo == null)
         throw { "error": "tenant does not exist" };
@@ -967,6 +977,7 @@ const dbpostOriginalText = async (tenant: string, title: string, cat: string, te
     //check if this text already exists
     const original: Text = await (dbgetSingleText(tenant, tenantinfo.defaultLanguage, category.id, title)) as Text
     if (original != null) {
+        console.log("text already present");
         throw { "error": "text already present" };
     }
 
@@ -996,7 +1007,8 @@ const dbpostOriginalText = async (tenant: string, title: string, cat: string, te
     };
     try {
         await ddbDocClient.send(new PutCommand(paramsText));
-        return await ddbDocClient.send(new PutCommand(paramsInfo));
+        await ddbDocClient.send(new PutCommand(paramsInfo));
+        return true;
     } catch (err) {
         console.log("Error", err.stack);
         throw { "error": "errore nel db per la funzione dbpostOriginalText" };
@@ -1007,6 +1019,7 @@ const dbpostTranslation = async (tenant: string, title: string, cat: string, lan
     //PUT new Translation of one language inside a Tenant
     //input: tenant(String), title(String), category(String), language(String), comment(String), link(String)
     //output: true / Eror
+    console.log("entering dbpostOriginal");
     const tenantinfo: Tenant = await (dbgetTenantinfo(tenant));
     if (tenantinfo == null)
         throw { "error": "Tenant doesn't exists" };
@@ -1017,6 +1030,7 @@ const dbpostTranslation = async (tenant: string, title: string, cat: string, lan
     //check if this text already exists
     const translation: Text = await (dbgetSingleText(tenant, language, category.id, title)) as Text;
     if (translation != null) {
+        console.log("text already present");
         throw { "error": "text already present" };
     }
     //check language is inside the tenant and check if category exists

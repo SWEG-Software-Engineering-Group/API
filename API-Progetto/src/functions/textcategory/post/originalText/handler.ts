@@ -70,7 +70,8 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
         //add category if it doesn't already exists get the id and use it
         let categoryId: string = await dbAddCategoryToTenant(tenant, category);
         //create the original text
-        await dbpostOriginalText(tenant, title, categoryId, text, comment, link);
+        if (await dbpostOriginalText(tenant, title, categoryId, text, comment, link))
+            return formatJSONResponse({ "error": "failed to create a new text in orgiginal language" }, 400);
         //iterate over all languages to create the new translation
         await Promise.all(languages.map(async (language) => {
             await dbpostTranslation(tenant, title, categoryId, language, comment, link);

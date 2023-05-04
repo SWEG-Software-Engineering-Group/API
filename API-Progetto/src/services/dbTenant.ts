@@ -281,7 +281,8 @@ const dbRemoveCategoryFromTenant = async (tenant: string, category: string) => {
     //UPDATE the category name of one category inside the list in a Tenant. if it is not present then add it
     //input: tenant(String), category(string)
     //output: true / Error
-    console.log(tenant, category);
+    console.log("entering dbRemoveCategory");
+    console.log("tenant", tenant, "category", category);
     let categories = (await dbgetTenantinfo(tenant)).categories;
     let index = categories.findIndex(element => element.id === category);
     if (index === -1)
@@ -300,9 +301,9 @@ const dbRemoveCategoryFromTenant = async (tenant: string, category: string) => {
     try {
         const tenant = await ddbDocClient.send(new UpdateCommand(params));
         console.log("Success - GET", tenant);
-        return tenant;
+        return tenant['Attributes'];
     } catch (err) {
-        console.log(err);
+        console.log("errore dentro dbRemoveCategory", err);
         throw { err };
     }
 };
@@ -334,8 +335,8 @@ const dbAddSecLanguageToTenant = async (tenant: string, language: string) => {
     };
     try {
         const tenant = await ddbDocClient.send(new UpdateCommand(params));
-        console.log("Success - GET", tenant);
-        return "Language successfully added to tenant";
+        console.log("Success - GET", tenant.Attributes);
+        return tenant.Attributes;
     } catch (err) {
         console.log("Error", err.stack);
         throw { "Error:": err.stack };
@@ -366,8 +367,8 @@ const dbRemoveSecLanguageFromTenant = async (tenant: string, language: string) =
     };
     try {
         const tenant = await ddbDocClient.send(new UpdateCommand(params));
-        console.log("Success - GET", tenant);
-        return tenant;
+        console.log("Success - GET", tenant.Attributes);
+        return tenant.Attributes;
     } catch (err) {
         console.log("Error", err.stack);
         throw { "Error:": err.stack };

@@ -28,7 +28,7 @@ const removeCategory: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     let tenant = await dbRemoveCategoryFromTenant(event.pathParameters.TenantId, event.pathParameters.Category.toString());
     return formatJSONResponse({tenant}, 200);
   } catch (error) {
-    console.log(error);
+    console.log("uscita da removeCategory con errore", error);
     return formatJSONResponse(
       {
         "error": error.message,
