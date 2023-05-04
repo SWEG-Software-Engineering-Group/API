@@ -58,8 +58,8 @@ const deleteLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
 
         //execute the delete
         await dbdeleteLanguageTexts(tenant, language);
-        await dbRemoveSecLanguageFromTenant(tenant, language);
-
+        let out =  await dbRemoveSecLanguageFromTenant(tenant, language);
+        return formatJSONResponse({ out }, 200);
     }
     catch (error) {
         //if request to fails do stuff

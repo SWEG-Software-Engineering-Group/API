@@ -281,26 +281,28 @@ const dbRemoveCategoryFromTenant = async (tenant: string, category: string) => {
     //UPDATE the category name of one category inside the list in a Tenant. if it is not present then add it
     //input: tenant(String), category(string)
     //output: true / Error
+    console.log(tenant, category);
     let categories = (await dbgetTenantinfo(tenant)).categories;
     let index = categories.findIndex(element => element.id === category);
     if (index === -1)
         throw { "error": "error" };
-    else
-        categories.splice(index, 1);
     const params: UpdateCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
         Key: {
-            idTenant: tenant,
+            id: tenant,
         },
-        UpdateExpression: "set categories = :c",
-        ExpressionAttributeValues: {
-            ":c": categories,
+        UpdateExpression: "REMOVE #categories["+index+"]",
+        ExpressionAttributeNames: {
+            "#categories": "categories",
         },
+        ReturnValues: "UPDATED_NEW",
     };
     try {
-        await ddbDocClient.send(new UpdateCommand(params));
-        return true;
+        const tenant = await ddbDocClient.send(new UpdateCommand(params));
+        console.log("Success - GET", tenant);
+        return tenant;
     } catch (err) {
+        console.log(err);
         throw { err };
     }
 };
@@ -328,7 +330,7 @@ const dbAddSecLanguageToTenant = async (tenant: string, language: string) => {
         ExpressionAttributeValues: {
             ":language": [language],
         },
-        ReturnValues: "UPDATED_NEW"
+        ReturnValues: "ALL_NEW"
     };
     try {
         const tenant = await ddbDocClient.send(new UpdateCommand(params));
@@ -360,12 +362,12 @@ const dbRemoveSecLanguageFromTenant = async (tenant: string, language: string) =
         ExpressionAttributeNames: {
             "#languages": "languages",
         },
-        ReturnValues: "UPDATED_NEW"
+        ReturnValues: "ALL_NEW"
     };
     try {
         const tenant = await ddbDocClient.send(new UpdateCommand(params));
         console.log("Success - GET", tenant);
-        return "Remove language from tenant success";
+        return tenant;
     } catch (err) {
         console.log("Error", err.stack);
         throw { "Error:": err.stack };

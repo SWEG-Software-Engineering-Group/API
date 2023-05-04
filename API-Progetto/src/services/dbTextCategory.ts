@@ -1,4 +1,4 @@
-import { GetCommand, GetCommandInput, BatchWriteCommand, BatchWriteCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput, QueryCommand, QueryCommandInput } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, GetCommandInput, BatchWriteCommand, BatchWriteCommandInput, ScanCommand, ScanCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput, QueryCommand, QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import { environment } from 'src/environment/environment';
 import { Text } from "src/types/Text";
 
@@ -700,25 +700,62 @@ const dbdeleteLanguageTexts = async (tenant: string, language: string) => {
         const txt = await (await ddbDocClient.send(new QueryCommand(param1))).Items as TextCategory[];
         const meta = await (await ddbDocClient.send(new QueryCommand(param2))).Items as TextCategoryInfo[];
 
+        //if there is nothing skip
+        if (txt.length === 0 && meta.length === 0)
+            return true;
+
         //prepare the DeleteRequest with all the Keys needed
-        let text = [];
-        txt.forEach(item => {
-            text.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: item.language_category_title } } });
-        });
-        let info = [];
-        meta.forEach(item => {
-            info.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: item.language_category_title } } });
-        });
 
-        //delete the texts with the old category
-        let paramBatch: BatchWriteCommandInput = {
-            RequestItems: {
-                [environment.dynamo.TextCategoryTable.tableName]: text,
-                [environment.dynamo.TextCategoryInfoTable.tableName]: info
+        let array = [];
+        let request = [];
+
+        //split all the texts in batches of 25
+        while (txt.length !== 0) {
+            let temp = txt.pop();
+            request.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: temp.language_category_title } } });
+            if (request.length === 25) {
+                array.push({
+                    RequestItems: {
+                        [environment.dynamo.TextCategoryTable.tableName]: request.splice(0, request.length),
+                    }
+                } as BatchWriteCommandInput);
             }
-        };
-        await ddbDocClient.send(new BatchWriteCommand(paramBatch));
+        }
+        //case where there is leftover
+        if (request.length !== 0) {
+            array.push({
+                RequestItems: {
+                    [environment.dynamo.TextCategoryTable.tableName]: request.splice(0, request.length),
+                }
+            } as BatchWriteCommandInput);
+        }
+        //request = request.splice(0, request.length);
 
+        //split all the infos in batches of 25
+        while (meta.length !== 0) {
+            let temp = meta.pop();
+            request.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: temp.language_category_title } } });
+            if (request.length === 25) {
+                array.push({
+                    RequestItems: {
+                        [environment.dynamo.TextCategoryInfoTable.tableName]: request.splice(0, request.length),
+                    }
+                } as BatchWriteCommandInput);
+            }
+        }
+        //case where there is leftover
+        if (request.length !== 0) {
+            array.push({
+                RequestItems: {
+                    [environment.dynamo.TextCategoryInfoTable.tableName]: request.splice(0, request.length),
+                }
+            } as BatchWriteCommandInput);
+        }
+        console.log(array);
+        //mapp all the calls and send them in parallel
+        await Promise.all(array.map(async (element) => {
+            await ddbDocClient.send(new BatchWriteCommand(element));
+        }));
         return true;
     } catch (err) {
         throw { err };
@@ -729,55 +766,93 @@ const dbdeleteCategoryTexts = async (tenant: string, category: string) => {
     //DELETE all texts that are inside a category.
     //input: tenant(String), category(String)
     //output: true / Error
+    console.log(tenant, category);
     try {
-        const param1: QueryCommandInput = {
+        const param1: ScanCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            KeyConditionExpression: "#idTenant = :t",
-            FilterExpression: "contains(#language_category_title, : ct)",
+            FilterExpression: "#idTenant = :t and contains(#language_category_title, :c)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":ct": "&" + category + "'",
+                ":c": "&" + category + "'",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
                 "#language_category_title": "language_category_title",
             },
         };
-        const param2: QueryCommandInput = {
+        const param2: ScanCommandInput = {
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
-            KeyConditionExpression: "#idTenant = :t",
-            FilterExpression: "contains(#language_category_title, : ct)",
+            FilterExpression: "#idTenant = :t and contains(#language_category_title, :c)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":ct": "&" + category + "'",
+                ":c": "&" + category + "'",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
                 "#language_category_title": "language_category_title",
             },
         };
-        const txt = await (await ddbDocClient.send(new QueryCommand(param1))).Items as TextCategory[];
-        const meta = await (await ddbDocClient.send(new QueryCommand(param2))).Items as TextCategoryInfo[];
+        const txt = await (await ddbDocClient.send(new ScanCommand(param1))).Items as TextCategory[];
+        const meta = await (await ddbDocClient.send(new ScanCommand(param2))).Items as TextCategoryInfo[];
+
+        console.log(txt, meta);
+
+        //if there is nothing skip
+        if (txt.length === 0 && meta.length === 0)
+            return true;
 
         //prepare the DeleteRequest with all the Keys needed
-        let text = [];
-        txt.forEach(item => {
-            text.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: item.language_category_title } } });
-        });
-        let info = [];
-        meta.forEach(item => {
-            info.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: item.language_category_title } } });
-        });
 
-        //delete the texts with the old category
-        let paramBatch: BatchWriteCommandInput = {
-            RequestItems: {
-                [environment.dynamo.TextCategoryTable.tableName]: text,
-                [environment.dynamo.TextCategoryInfoTable.tableName]: info
+        let array = [];
+        let request = [];
+
+        //split all the texts in batches of 25
+        while (txt.length !== 0) {
+            let temp = txt.pop();
+            request.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: temp.language_category_title } } });
+            if (request.length === 25) {
+                array.push({
+                    RequestItems: {
+                        [environment.dynamo.TextCategoryTable.tableName]: request.splice(0, request.length),
+                    }
+                } as BatchWriteCommandInput);
             }
-        };
-        await ddbDocClient.send(new BatchWriteCommand(paramBatch));
+        }
+        //case where there is leftover
+        if (request.length !== 0) {
+            array.push({
+                RequestItems: {
+                    [environment.dynamo.TextCategoryTable.tableName]: request.splice(0, request.length),
+                }
+            } as BatchWriteCommandInput);
+        }
+        //request = request.splice(0, request.length);
 
+        //split all the infos in batches of 25
+        while (meta.length !== 0) {
+            let temp = meta.pop();
+            request.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: temp.language_category_title } } });
+            if (request.length === 25) {
+                array.push({
+                    RequestItems: {
+                        [environment.dynamo.TextCategoryInfoTable.tableName]: request.splice(0, request.length),
+                    }
+                } as BatchWriteCommandInput);
+            }
+        }
+        //case where there is leftover
+        if (request.length !== 0) {
+            array.push({
+                RequestItems: {
+                    [environment.dynamo.TextCategoryInfoTable.tableName]: request.splice(0, request.length),
+                }
+            } as BatchWriteCommandInput);
+        }
+        console.log(array);
+        //mapp all the calls and send them in parallel
+        await Promise.all(array.map(async (element) => {
+            await ddbDocClient.send(new BatchWriteCommand(element));
+        }));
         return true;
     } catch (err) {
         throw { err };
@@ -811,6 +886,10 @@ const dbdeleteAllTexts = async (tenant: string) => {
         };
         const txt = await (await ddbDocClient.send(new QueryCommand(param1))).Items as TextCategory[];
         const meta = await (await ddbDocClient.send(new QueryCommand(param2))).Items as TextCategoryInfo[];
+
+        //if there is nothing skip
+        if (txt.length === 0 && meta.length === 0)
+            return true;
 
         //prepare the DeleteRequest with all the Keys needed
 
@@ -871,7 +950,7 @@ const dbdeleteAllTexts = async (tenant: string) => {
 };
 
 //__________PUT__________
-const dbpostOriginalText = async (tenant: string, title: string, category: string, text: string, comment: string, link: string) => {
+const dbpostOriginalText = async (tenant: string, title: string, cat: string, text: string, comment: string, link: string) => {
     //PUT new Text in original language with its metadata inside a Tenant
     //input: tenant(String), title(String), category(String), text(String), comment(String), link(String)
     //output: true / Error
@@ -880,9 +959,13 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
     const tenantinfo = await (dbgetTenantinfo(tenant)) as Tenant;
     if (tenantinfo == null)
         throw { "error": "tenant does not exist" };
+    const category = tenantinfo.categories.find(item => { return item.id === cat });
+    if (category === undefined) {
+        throw { "error": "categoria non esiste" };
+    }
 
     //check if this text already exists
-    const original: Text = await (dbgetSingleText(tenant, tenantinfo.defaultLanguage, category, title)) as Text
+    const original: Text = await (dbgetSingleText(tenant, tenantinfo.defaultLanguage, category.id, title)) as Text
     if (original != null) {
         throw { "error": "text already present" };
     }
@@ -896,7 +979,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: "<" + tenantinfo.defaultLanguage + "&" + category + "'" + title + ">",
+            language_category_title: "<" + tenantinfo.defaultLanguage + "&" + category.id + "'" + title + ">",
             comment: comment,
             link: link,
             feedback: null,
@@ -906,7 +989,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
         TableName: environment.dynamo.TextCategoryTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: "<" + tenantinfo.defaultLanguage + "&" + category + "'" + title + ">",
+            language_category_title: "<" + tenantinfo.defaultLanguage + "&" + category.id + "'" + title + ">",
             text: text,
             state: state.testoOriginale,
         },
@@ -927,12 +1010,12 @@ const dbpostTranslation = async (tenant: string, title: string, cat: string, lan
     const tenantinfo: Tenant = await (dbgetTenantinfo(tenant));
     if (tenantinfo == null)
         throw { "error": "Tenant doesn't exists" };
-    const category = tenantinfo.categories.find(item => { return item.name === cat }).id;
+    const category = tenantinfo.categories.find(item => { return item.id === cat });
     if ( category === undefined) {
         throw { "error": "categoria non esiste" };
     }
     //check if this text already exists
-    const translation: Text = await (dbgetSingleText(tenant, language, category, title)) as Text;
+    const translation: Text = await (dbgetSingleText(tenant, language, category.id, title)) as Text;
     if (translation != null) {
         throw { "error": "text already present" };
     }
@@ -945,7 +1028,7 @@ const dbpostTranslation = async (tenant: string, title: string, cat: string, lan
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: "<" + language + "&" + category + "'" + title + ">",
+            language_category_title: "<" + language + "&" + category.id + "'" + title + ">",
             comment: comment,
             link: link,
             feedback: null,
@@ -955,7 +1038,7 @@ const dbpostTranslation = async (tenant: string, title: string, cat: string, lan
         TableName: environment.dynamo.TextCategoryTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: "<" + language + "&" + category + "'" + title + ">",
+            language_category_title: "<" + language + "&" + category.id + "'" + title + ">",
             text: null,
             state: state.daTradurre,
         },
@@ -1030,24 +1113,57 @@ const dbputTextCategory = async (tenant: string, category: string, title: string
         await ddbDocClient.send(new BatchWriteCommand(paramBatch));
 
         //prepare the DeleteRequest with all the Keys needed
-        text = [];
-        txt.forEach(item => {
-            text.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: item.language_category_title } } });
-        });
-        info = [];
-        meta.forEach(item => {
-            info.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: item.language_category_title } } });
-        });
 
-        //delete the texts with the old category
-        paramBatch = {
-            RequestItems: {
-                [environment.dynamo.TextCategoryTable.tableName]: text,
-                [environment.dynamo.TextCategoryInfoTable.tableName]: info
+        let array = [];
+        let request = [];
+
+        //split all the texts in batches of 25
+        while (txt.length !== 0) {
+            let temp = txt.pop();
+            request.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: temp.language_category_title } } });
+            if (request.length === 25) {
+                array.push({
+                    RequestItems: {
+                        [environment.dynamo.TextCategoryTable.tableName]: request.splice(0, request.length),
+                    }
+                } as BatchWriteCommandInput);
             }
-        };
-        await ddbDocClient.send(new BatchWriteCommand(paramBatch));
+        }
+        //case where there is leftover
+        if (request.length !== 0) {
+            array.push({
+                RequestItems: {
+                    [environment.dynamo.TextCategoryTable.tableName]: request.splice(0, request.length),
+                }
+            } as BatchWriteCommandInput);
+        }
+        //request = request.splice(0, request.length);
 
+        //split all the infos in batches of 25
+        while (meta.length !== 0) {
+            let temp = meta.pop();
+            request.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: temp.language_category_title } } });
+            if (request.length === 25) {
+                array.push({
+                    RequestItems: {
+                        [environment.dynamo.TextCategoryInfoTable.tableName]: request.splice(0, request.length),
+                    }
+                } as BatchWriteCommandInput);
+            }
+        }
+        //case where there is leftover
+        if (request.length !== 0) {
+            array.push({
+                RequestItems: {
+                    [environment.dynamo.TextCategoryInfoTable.tableName]: request.splice(0, request.length),
+                }
+            } as BatchWriteCommandInput);
+        }
+        console.log(array);
+        //mapp all the calls and send them in parallel
+        await Promise.all(array.map(async (element) => {
+            await ddbDocClient.send(new BatchWriteCommand(element));
+        }));
         return true;
     } catch (err) {
         throw { err };
