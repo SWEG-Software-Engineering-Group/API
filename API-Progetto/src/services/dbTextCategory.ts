@@ -32,6 +32,7 @@ const utilMergeMeta = (text: TextCategory, info: TextCategoryInfo[], categories:
         let title = text.language_category_title.split(">")[0].split("'")[1];
         //seach the meta by textId
         let meta = info.find(element => element.language_category_title === text.language_category_title);
+        console.log("meta: ", meta);
         //construct the object merging records from the two tables
         return ({
             idTenant: text.idTenant,
@@ -40,7 +41,7 @@ const utilMergeMeta = (text: TextCategory, info: TextCategoryInfo[], categories:
             category: categories.find(element => element.id === category),
             title: title,
             text: text.text,
-            stato: text.stato,
+            state: text.state,
             comment: meta.comment,
             link: meta.link,
             feedback: meta.feedback,
@@ -137,7 +138,7 @@ const dbgetAllTexts = async (tenant: string) => {
         }
         //merge the data together between texts and infos
         var result = [];
-
+        
         txt.forEach(function (text) {
             //iterate over every row of Text table
             let data = utilMergeMeta(text, info, categories);
@@ -368,7 +369,7 @@ const dbgetSingleText = async (tenant: string, language: string, category: strin
                 category: categories.find(element => element.id === category),
                 title: title,
                 text: text.text,
-                stato: text.stato,
+                state: text.state,
                 comment: info.comment,
                 link: info.link,
                 feedback: info.feedback,
@@ -573,16 +574,16 @@ const textsOfState = async (tenantID: string, language: string, state: state) =>
         var params: QueryCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
             KeyConditionExpression: "#idTenant = :tenant and begins_with(#language_category_title, :begin)",
-            FilterExpression: "#stato=:stato",
+            FilterExpression: "#state=:state",
             ExpressionAttributeNames: {
                 "#language_category_title": "language_category_title",
                 '#idTenant': 'idTenant',
-                '#stato': 'stato',
+                '#state': 'state',
             },
             ExpressionAttributeValues: {
                 ':begin': "<" + language + "&",
                 ':tenant': tenantID,
-                ':stato': state,
+                ':state': state,
             }
         };
         var paramsinfo: QueryCommandInput = {
@@ -907,7 +908,7 @@ const dbpostOriginalText = async (tenant: string, title: string, category: strin
             idTenant: tenant,
             language_category_title: "<" + tenantinfo.defaultLanguage + "&" + category + "'" + title + ">",
             text: text,
-            stato: state.testoOriginale,
+            state: state.testoOriginale,
         },
     };
     try {
@@ -956,7 +957,7 @@ const dbpostTranslation = async (tenant: string, title: string, cat: string, lan
             idTenant: tenant,
             language_category_title: "<" + language + "&" + category + "'" + title + ">",
             text: null,
-            stato: state.daTradurre,
+            state: state.daTradurre,
         },
     };
     try {
@@ -1157,7 +1158,7 @@ const dbputOriginalText = async (tenant: string, category: string, title: string
     }
 };
 
-const dbputTranslation = async (tenant: string, title: string, category: string, language: string, text: Text, stato: state, feedback: string) => {
+const dbputTranslation = async (tenant: string, title: string, category: string, language: string, text: Text, state: state, feedback: string) => {
     //UPDATE the data (text, state, feedback) of a translation inside a Tenant
     //input: tenant(string), title(string), category(string), language(string), Text(string), state(string), feedback(string).
     //output: true / Error
@@ -1169,14 +1170,14 @@ const dbputTranslation = async (tenant: string, title: string, category: string,
                 idTenant: tenant,
                 language_category_title: "<" + language + "&" + category + "'" + title + ">",
             },
-            UpdateExpression: "set #text = :t and set #stato = :s",
+            UpdateExpression: "set #text = :t and set #state = :s",
             ExpressionAttributeValues: {
                 ":t": text,
-                ":s": stato,
+                ":s": state,
             },
             ExpressionAttributeNames: {
                 "#text": "text",
-                "#stato": "state",
+                "#state": "state",
             },
         };
         const paramsinfo: UpdateCommandInput = {
