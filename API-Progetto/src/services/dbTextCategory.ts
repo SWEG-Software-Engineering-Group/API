@@ -353,14 +353,14 @@ const dbgetSingleText = async (tenant: string, language: string, category: strin
             TableName: environment.dynamo.TextCategoryTable.tableName,
             Key: {
                 idTenant: tenant,
-                language_category_title: "<" + language + "&" + category + "'" + title + " >",
+                language_category_title: "<" + language + "&" + category + "'" + title + ">",
             }
         };
         const getparamI: GetCommandInput = {
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
             Key: {
                 idTenant: tenant,
-                language_category_title: "<" + language + "&" + category + "'" + title + " >",
+                language_category_title: "<" + language + "&" + category + "'" + title + ">",
             }
         };
         const text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
