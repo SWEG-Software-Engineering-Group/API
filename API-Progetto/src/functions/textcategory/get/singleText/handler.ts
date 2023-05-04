@@ -13,9 +13,11 @@ const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
     if (event.pathParameters.Language == null)
       return formatJSONResponse({ "error": "Missing Language" }, 400);
     res = await dbgetSingleText(event.pathParameters.TenantId, event.pathParameters.Language, event.pathParameters.Category, event.pathParameters.Title);
+    if (res == false)
+      return formatJSONResponse({ "error": "Text not found" }, 400);
     return formatJSONResponse({ "Text": res });
-  } catch {
-    return formatJSONResponse({ "error": "error" }, 403);
+  } catch (error) {
+    return formatJSONResponse({ "error": error }, 403);
   }
 };
 export const main = middyfy(getText);

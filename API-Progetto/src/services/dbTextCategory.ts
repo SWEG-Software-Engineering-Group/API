@@ -342,7 +342,7 @@ const dbgetSingleText = async (tenant: string, language: string, category: strin
     //input: tenant(String), language(String), category(String)
     //output: Text[] / Error
     console.log("inside dbgetSingleText");
-    console.log("<" + language + "&" + category + "'" + title + " >");
+    console.log("<" + language + "&" + category + "'" + title + ">");
 
     try {
         const categories: Category[] = await (dbgetCategories(tenant));
@@ -381,7 +381,7 @@ const dbgetSingleText = async (tenant: string, language: string, category: strin
             } as Text);
         } else {
             console.log("failed to retrieve text")
-            throw {"error": "couldn't retrieve the text"};
+            return false;
         }
 
     } catch (err) {
