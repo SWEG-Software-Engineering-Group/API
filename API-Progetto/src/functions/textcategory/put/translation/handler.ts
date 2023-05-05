@@ -34,7 +34,7 @@ const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null || event.pathParameters.Language == null || event.pathParameters.Category == null || event.pathParameters.Title == null)
         return formatJSONResponse({ "error": "no valid input" });
-    if (event.body.Text == null )
+    if (event.body.Text == null)
         return formatJSONResponse({ "error": "body request missing parameters" });
 
     let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
@@ -55,7 +55,7 @@ const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
 
     try {
         //collect the data from db
-        await dbputTranslation(tenant, title, category, language, text, state.daTradurre, feedback);
+        await dbputTranslation(tenant, title, category, language, text, state.daVerificare, feedback);
     }
     catch (error) {
         //if connection fails do stuff

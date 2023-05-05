@@ -1028,7 +1028,7 @@ const dbpostTranslation = async (tenant: string, title: string, cat: string, lan
         throw { "error": "categoria non esiste" };
     }
     //check if this text already exists
-    const translation = await (dbgetSingleText(tenant, language, category.id, title));
+    const translation = await (dbgetSingleText(tenant, language, cat, title));
     if (translation != false) {
         console.log("text already present");
         throw { "error": "text already present" };
@@ -1042,7 +1042,7 @@ const dbpostTranslation = async (tenant: string, title: string, cat: string, lan
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
         Item: {
             idTenant: tenant,
-            language_category_title: "<" + language + "&" + category.id + "'" + title + ">",
+            language_category_title: "<" + language + "&" + cat + "'" + title + ">",
             comment: comment,
             link: link,
             feedback: null,

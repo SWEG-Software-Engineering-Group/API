@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8a4702ac-9121-4ac2-a315-2a778fc173cc",
+		"_postman_id": "9967d783-9f75-4d1a-b5e4-ae1a7875f2e5",
 		"name": "SWEG_NEW",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -633,7 +633,7 @@
 					"response": []
 				},
 				{
-					"name": "getUntranslatedTexts",
+					"name": "ToBeTranslated",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -644,7 +644,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/untranslatedTexts",
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/state/toBeTranslated",
 							"host": [
 								"{{ENDPOINT}}dev"
 							],
@@ -652,14 +652,15 @@
 								"text",
 								"{{TenantId}}",
 								"{{Language}}",
-								"untranslatedTexts"
+								"state",
+								"toBeTranslated"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "getRejectedTexts",
+					"name": "RejectedTexts",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -670,7 +671,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/rejectedTexts",
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/state/rejectedTexts",
 							"host": [
 								"{{ENDPOINT}}dev"
 							],
@@ -678,7 +679,62 @@
 								"text",
 								"{{TenantId}}",
 								"{{Language}}",
+								"state",
 								"rejectedTexts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verified",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/state/verified",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"{{Language}}",
+								"state",
+								"verified"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "toBeVerified",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/state/toBeVerified",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"{{Language}}",
+								"state",
+								"toBeVerified"
 							]
 						}
 					},
@@ -725,7 +781,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Title\":\"The test text2\",\r\n    \"Category\":\"18834fc7-88bb-463f-99b5-467e5fb77689\",\r\n    \"Text\":\"Un bel text di test\",\r\n    \"Comment\":\"123stella\",\r\n    \"Link\":\"url.com\"\r\n}",
+							"raw": "{\r\n    \"Title\":\"Thetesttext4\",\r\n    \"Category\":\"05b1f88f-96f8-44f6-a167-78f308e4f466\",\r\n    \"Text\":\"Un bel text di test\",\r\n    \"Languages\": [\r\n            \"Kurdo\"\r\n        ],\r\n    \"Comment\":\"123stella\",\r\n    \"Link\":\"url.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -733,14 +789,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/writeOriginalText",
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/originalText",
 							"host": [
 								"{{ENDPOINT}}dev"
 							],
 							"path": [
 								"text",
 								"{{TenantId}}",
-								"writeOriginalText"
+								"originalText"
 							]
 						}
 					},
@@ -832,7 +888,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/{{Category}}/{{Title}}/rejectText",
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/{{Category}}/{{Title}}/rejectTranslation",
 							"host": [
 								"{{ENDPOINT}}dev"
 							],
@@ -842,7 +898,7 @@
 								"{{Language}}",
 								"{{Category}}",
 								"{{Title}}",
-								"rejectText"
+								"rejectTranslation"
 							]
 						}
 					},
