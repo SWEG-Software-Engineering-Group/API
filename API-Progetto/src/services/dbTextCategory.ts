@@ -7,6 +7,7 @@ import { Tenant, Category } from "src/types/Tenant";
 import { ddbDocClient } from "./dbConnection";
 import { dbgetTenantinfo, dbgetCategories, dbgetDefaultLanguage } from "./dbTenant";
 import { TextCategoryInfo } from "src/types/TextCategoryinfo";
+import singleText from "@functions/textcategory/get/singleText";
 
 
 
@@ -1028,7 +1029,7 @@ const dbpostTranslation = async (tenant: string, title: string, cat: string, lan
         throw { "error": "categoria non esiste" };
     }
     //check if this text already exists
-    const translation = await (dbgetSingleText(tenant, language, cat, title));
+    const translation = await (dbgetSingleText(tenant, language, z, title));
     if (translation != false) {
         console.log("text already present");
         throw { "error": "text already present" };
@@ -1333,7 +1334,7 @@ const dbputTranslation = async (tenant: string, title: string, category: string,
 };
 
 const updateText = async (tenantID: string, language: string, category: string, title: string, state: state) => {
-
+    await dbGetTexts(tenantID, language, category, title);
     var params: UpdateCommandInput = {
         TableName: environment.dynamo.TextCategoryTable.tableName,
         Key: {
