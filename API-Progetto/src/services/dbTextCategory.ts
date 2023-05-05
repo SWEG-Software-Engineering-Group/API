@@ -138,7 +138,7 @@ const dbgetAllTexts = async (tenant: string) => {
         }
         //merge the data together between texts and infos
         var result = [];
-        
+
         txt.forEach(function (text) {
             //iterate over every row of Text table
             let data = utilMergeMeta(text, info, categories);
@@ -975,8 +975,8 @@ const dbpostOriginalText = async (tenant: string, title: string, cat: string, te
     }
 
     //check if this text already exists
-    const original: Text = await (dbgetSingleText(tenant, tenantinfo.defaultLanguage, category.id, title)) as Text
-    if (original != null) {
+    const original = await (dbgetSingleText(tenant, tenantinfo.defaultLanguage, category.id, title))
+    if (original != false) {
         console.log("text already present");
         throw { "error": "text already present" };
     }
@@ -1024,12 +1024,12 @@ const dbpostTranslation = async (tenant: string, title: string, cat: string, lan
     if (tenantinfo == null)
         throw { "error": "Tenant doesn't exists" };
     const category = tenantinfo.categories.find(item => { return item.id === cat });
-    if ( category === undefined) {
+    if (category === undefined) {
         throw { "error": "categoria non esiste" };
     }
     //check if this text already exists
-    const translation: Text = await (dbgetSingleText(tenant, language, category.id, title)) as Text;
-    if (translation != null) {
+    const translation = await (dbgetSingleText(tenant, language, category.id, title));
+    if (translation != false) {
         console.log("text already present");
         throw { "error": "text already present" };
     }

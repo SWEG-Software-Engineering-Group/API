@@ -10,8 +10,11 @@ export { default as addTenant } from './tenant/post/create';
 export { default as signUpUser } from './user/post/create';
 //export { default as addUserToTenant } from './tenant/post/addUser';
 export { default as deleteUser } from './user/delete/deleteUser';
-export { default as getRejectedTexts } from './textcategory/get/rejectedText';
-export { default as getToBeTranslated } from './textcategory/get/toBeTranslated';
+export { default as textOfState } from './textcategory/get/textOfState'
+// export { default as getRejectedTexts } from './textcategory/get/rejectedText';
+// export { default as getToBeTranslated } from './textcategory/get/toBeTranslated';
+// export { default as getToBeVerified } from './textcategory/get/getTextsToVerify';
+// export { default as getVerified } from './textcategory/get/verifiedTranslations';
 export { default as getText } from './textcategory/get/singleText';
 export { default as putTranslation } from './textcategory/put/translation';
 export { default as getAllTexts } from './textcategory/get/allTexts';
@@ -23,8 +26,7 @@ export { default as deleteAllTexts } from './textcategory/delete/Alltexts';
 
 export { default as getOriginalTexts } from './textcategory/get/originalTexts';
 export { default as getTranslationLanguages } from './textcategory/get/translationLanguages';
-export { default as getToBeVerified } from './textcategory/get/getTextsToVerify';
-export { default as getVerified } from './textcategory/get/verifiedTranslations';
+
 export { default as putAcceptText } from './textcategory/put/approveText';
 export { default as putRejectText } from './textcategory/put/rejectText';
 export { default as getTenantLanguages } from './tenant/get/SecondaryLanguage';

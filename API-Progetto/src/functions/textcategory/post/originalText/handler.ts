@@ -54,7 +54,7 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
         return formatJSONResponse({ "error": "input is empty" }, 400);
 
 
-    //check user is admin inside this tenant
+    //TODO check user is admin inside this tenant
     if (false)
         if (dbcheckUserInTenant(tenant, "Username"))
             return formatJSONResponse({ "error": "user not in this tenant" }, 400);
@@ -70,7 +70,7 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
         //add category if it doesn't already exists get the id and use it
         let categoryId: string = await dbAddCategoryToTenant(tenant, category);
         //create the original text
-        if (await dbpostOriginalText(tenant, title, categoryId, text, comment, link))
+        if (!await dbpostOriginalText(tenant, title, categoryId, text, comment, link))
             return formatJSONResponse({ "error": "failed to create a new text in orgiginal language" }, 400);
         //iterate over all languages to create the new translation
         await Promise.all(languages.map(async (language) => {
