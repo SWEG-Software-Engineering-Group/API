@@ -460,21 +460,19 @@ const dbgetCategoryLanguages = async (tenant: string, category: string) => {
     console.log("inside dbgetCategoryLanguages",  "&" + category + "'" );
     try {
         //request all the data from the Text and metadata tables
-        const param: QueryCommandInput = {
-            TableName: environment.dynamo.TextCategoryInfoTable.tableName,
-            KeyConditionExpression: "#idTenant= :t",
-            FilterExpression: "contains(#language_category_title, : c)",
+        const param: ScanCommandInput = {
+            TableName: environment.dynamo.TextCategoryTable.tableName,
+            FilterExpression: "#idTenant = :t and contains(#language_category_title, : ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
-                ":c": "&" + category + "'",
+                ":ct": "&" + category + "'",
             },
             ExpressionAttributeNames: {
                 "#idTenant": "idTenant",
                 "#language_category_title": "language_category_title",
             },
-            ProjectionExpression: "language_category_title",
         };
-        const txt = await (await ddbDocClient.send(new QueryCommand(param))).Items as TextCategoryInfo[];
+        const txt = await (await ddbDocClient.send(new ScanCommand(param))).Items as TextCategoryInfo[];
         if (txt == null)
             throw { "error": "error reading texts from db" };
         let languages = [];
@@ -665,35 +663,96 @@ const dbdeleteText = async (tenant: string, title: string, category: string) => 
     //it is acceptable but not ideal that there is some metadata leftover without an actual text in any language.
     //it is not acceptable to have any texts leftover without its metadata counterpart.
     console.log("inside dbdeleteText", "&" + category + "'" + title + ">");
-    const param1: DeleteCommandInput = {
+
+    if (! await dbgetSingleText(tenant, await dbgetDefaultLanguage(tenant), category, title))
+        throw {"Error": "this text doesn't exist"};
+
+    const param1: ScanCommandInput = {
         TableName: environment.dynamo.TextCategoryTable.tableName,
-        Key: {
-            idTenant: tenant,
-        },
-        ConditionExpression: "contains(#language_category_title, :ct)",
+        FilterExpression: "#idTenant = :t and contains(#language_category_title, : ct)",
         ExpressionAttributeValues: {
+            ":t": tenant,
             ":ct": "&" + category + "'" + title + ">",
         },
         ExpressionAttributeNames: {
+            "#idTenant": "idTenant",
             "#language_category_title": "language_category_title",
         },
     };
-    const param2: DeleteCommandInput = {
+    const param2: ScanCommandInput = {
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
-        Key: {
-            idTenant: tenant,
-        },
-        ConditionExpression: "contains(#language_category_title, :ct)",
+        FilterExpression: "#idTenant = :t and contains(#language_category_title, : ct)",
         ExpressionAttributeValues: {
+            ":t": tenant,
             ":ct": "&" + category + "'" + title + ">",
         },
         ExpressionAttributeNames: {
+            "#idTenant": "idTenant",
             "#language_category_title": "language_category_title",
         },
     };
     try {
-        await ddbDocClient.send(new DeleteCommand(param1));
-        return await ddbDocClient.send(new DeleteCommand(param2));
+        const txt = await (await ddbDocClient.send(new QueryCommand(param1))).Items as TextCategory[];
+        const meta = await (await ddbDocClient.send(new QueryCommand(param2))).Items as TextCategoryInfo[];
+
+        //if there is nothing skip
+        if (txt.length === 0 && meta.length === 0)
+            return true;
+
+        //prepare the DeleteRequest with all the Keys needed
+
+        let array = [];
+        let request = [];
+
+        //split all the texts in batches of 25
+        while (txt.length !== 0) {
+            let temp = txt.pop();
+            request.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: temp.language_category_title } } });
+            if (request.length === 25) {
+                array.push({
+                    RequestItems: {
+                        [environment.dynamo.TextCategoryTable.tableName]: request.splice(0, request.length),
+                    }
+                } as BatchWriteCommandInput);
+            }
+        }
+        //case where there is leftover
+        if (request.length !== 0) {
+            array.push({
+                RequestItems: {
+                    [environment.dynamo.TextCategoryTable.tableName]: request.splice(0, request.length),
+                }
+            } as BatchWriteCommandInput);
+        }
+        //request = request.splice(0, request.length);
+
+        //split all the infos in batches of 25
+        while (meta.length !== 0) {
+            let temp = meta.pop();
+            request.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: temp.language_category_title } } });
+            if (request.length === 25) {
+                array.push({
+                    RequestItems: {
+                        [environment.dynamo.TextCategoryInfoTable.tableName]: request.splice(0, request.length),
+                    }
+                } as BatchWriteCommandInput);
+            }
+        }
+        //case where there is leftover
+        if (request.length !== 0) {
+            array.push({
+                RequestItems: {
+                    [environment.dynamo.TextCategoryInfoTable.tableName]: request.splice(0, request.length),
+                }
+            } as BatchWriteCommandInput);
+        }
+        console.log(array);
+        //mapp all the calls and send them in parallel
+        await Promise.all(array.map(async (element) => {
+            await ddbDocClient.send(new BatchWriteCommand(element));
+        }));
+        return true;
+
     } catch (err) {
         console.log("ERROR inside dbdeleteText", err.stack);
         throw { err };
@@ -1365,7 +1424,7 @@ const dbputOriginalText = async (tenant: string, category: string, title: string
                 await ddbDocClient.send(new UpdateCommand(paramsinfo));
             }));
         }
-        return true;
+        return dbgetSingleText(tenant, language, category, title);
 
     } catch (err) {
         console.log("ERROR inside dbputOriginalText", err.stack);
@@ -1397,7 +1456,7 @@ const dbputTranslation = async (tenant: string, title: string, category: string,
             },
         };
         await ddbDocClient.send(new UpdateCommand(params));
-        return true;
+        return dbgetSingleText(tenant, language, category, title);
     } catch (err) {
         console.log("ERROR inside dbputTranslation", err.stack);
         throw { err };

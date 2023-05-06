@@ -66,7 +66,7 @@ const putOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
             return formatJSONResponse({ "error": "this text does not exist"}, 400);
         languages.forEach(function (language) {
             if (!tenantinfo.languages.includes(language))
-                throw { "error": " one of the languages is not present inside the Tenant" };
+                return formatJSONResponse({ "error": " one of the languages is not present inside the Tenant" }, 400);
         });
         console.log("step 01");
         //get the id of current category (if not present creates it) and all translations languages 
@@ -96,15 +96,13 @@ const putOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
         console.log("step 04");
        
         //updating the data of the original text and translations
-        await dbputOriginalText(tenant, id, title, text, comment, link, languages);
+        let original = await dbputOriginalText(tenant, id, title, text, comment, link, languages);
+        return formatJSONResponse({ "result": original }, 200);
     }
     catch (error) {
         //if connection fails do stuff
         return formatJSONResponse({ "error": error }, 400);
     }
-
-    //return result
-    return formatJSONResponse({ "result": 'OK' }, 200);
 };
 
 export const main = middyfy(putOriginalText);

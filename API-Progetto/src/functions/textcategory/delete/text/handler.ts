@@ -2,9 +2,10 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbcheckAdminInTenant } from 'src/services/dbTenant';
-import { dbdeleteText } from 'src/services/dbTextCategory';
+import { dbdeleteText, dbgetSingleText } from 'src/services/dbTextCategory';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
+import language from '../../../tenant/delete/language';
 
 const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto

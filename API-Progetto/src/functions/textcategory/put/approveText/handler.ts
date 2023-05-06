@@ -14,11 +14,12 @@ const putAcceptText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
     if (event.pathParameters.Language == null)
       return formatJSONResponse({ "error": "Missing Language" }, 400);
     if (event.pathParameters.Category == null)
-      return formatJSONResponse({ "error": "Missing Category" }, 400);
+          return formatJSONResponse({ "error": "Missing Category" }, 400);
+      console.log("all fields are filled");
     await updateText(event.pathParameters.TenantId, event.pathParameters.Language, event.pathParameters.Category, event.pathParameters.Title.replaceAll("%20", " "), state.verificato);
     return formatJSONResponse({ "message": "success" });
-  } catch {
-    return formatJSONResponse({ "error": "error" }, 403);
+  } catch (err) {
+    return formatJSONResponse({ "error": err }, 403);
   }
 };
 

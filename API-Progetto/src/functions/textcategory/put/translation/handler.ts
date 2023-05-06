@@ -2,7 +2,7 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbputTranslation } from 'src/services/dbTextCategory';
-import { dbcheckUserInTenant } from 'src/services/dbTenant';
+import { dbcheckUserInTenant, dbgetDefaultLanguage } from 'src/services/dbTenant';
 import { state } from 'src/types/TextCategory';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
@@ -33,9 +33,9 @@ const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
 
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null || event.pathParameters.Language == null || event.pathParameters.Category == null || event.pathParameters.Title == null)
-        return formatJSONResponse({ "error": "no valid input" });
+        return formatJSONResponse({ "error": "no valid input" },400);
     if (event.body.Text == null)
-        return formatJSONResponse({ "error": "body request missing parameters" });
+        return formatJSONResponse({ "error": "body request missing parameters" },400);
 
     let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
     let title = sanitizeHtml(event.pathParameters.Title, { allowedTags: [], allowedAttributes: {} });
@@ -44,25 +44,27 @@ const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     let language = sanitizeHtml(event.pathParameters.Language, { allowedTags: [], allowedAttributes: {} });
     //let feedback = "Default feedback"
     if (tenant === '' || title === '' || text === '' || category === '' || language === '')
-        return formatJSONResponse({ "error": "input is empty" });
+        return formatJSONResponse({ "error": "input is empty" },400);
 
     //check user is admin inside this tenant
     if (false)
         if (dbcheckUserInTenant(tenant, "Username"))
-            return formatJSONResponse({ "error": "user not in this tenant" });
+            return formatJSONResponse({ "error": "user not in this tenant" },400);
     //TO DO
 
     try {
         //collect the data from db
-        await dbputTranslation(tenant, title, category, language, text, state.daVerificare);
+        if (await dbgetDefaultLanguage(tenant) === language)
+            return formatJSONResponse({ "error": "user not in this tenant" },400);
+        let translation = await dbputTranslation(tenant, title, category, language, text, state.daVerificare);
+        //return result
+        return formatJSONResponse({ "result": translation }, 200);
     }
     catch (error) {
         //if connection fails do stuff
-        return formatJSONResponse({ "error": error });
+        return formatJSONResponse({ "error": error },400);
     }
 
-    //return result
-    return formatJSONResponse({ "result": 'OK' });
 };
 
 export const main = middyfy(putTranslation);
