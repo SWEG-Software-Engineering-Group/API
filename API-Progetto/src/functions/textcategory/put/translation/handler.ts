@@ -9,7 +9,7 @@ import schema from './schema';
 
 const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
-     * INPUT:   Tenant (String) {body: Title(String), Language(String), Category(String), Text(String), Feedback(String)}
+     * INPUT:   Tenant (String) {body: Title(String), Language(String), Category(String), Text(String)}
      * OUTPUT:  {result: OK} / Error
      * 
      * DESCRIPTION: update the text of a specific translation, else return error.
@@ -42,7 +42,6 @@ const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     let text = sanitizeHtml(event.body.Text);
     let category = sanitizeHtml(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} });
     let language = sanitizeHtml(event.pathParameters.Language, { allowedTags: [], allowedAttributes: {} });
-    let feedback = sanitizeHtml(event.body.Feedback, { allowedTags: [], allowedAttributes: {} })
     //let feedback = "Default feedback"
     if (tenant === '' || title === '' || text === '' || category === '' || language === '')
         return formatJSONResponse({ "error": "input is empty" });
@@ -55,7 +54,7 @@ const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
 
     try {
         //collect the data from db
-        await dbputTranslation(tenant, title, category, language, text, state.daVerificare, feedback);
+        await dbputTranslation(tenant, title, category, language, text, state.daVerificare);
     }
     catch (error) {
         //if connection fails do stuff

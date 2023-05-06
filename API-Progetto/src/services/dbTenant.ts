@@ -342,8 +342,8 @@ const dbAddSecLanguageToTenant = async (tenant: string, language: string) => {
     };
     try {
         const tenant = await ddbDocClient.send(new UpdateCommand(params));
-        console.log("Success - GET", tenant.Attributes);
-        return tenant.Attributes;
+        console.log("Success - GET", tenant.Attributes["languages"]);
+        return tenant.Attributes["languages"];
     } catch (err) {
         console.log("Error", err.stack);
         throw { "Error:": err.stack };

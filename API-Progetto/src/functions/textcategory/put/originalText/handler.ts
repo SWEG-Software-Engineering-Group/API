@@ -1,8 +1,8 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbputOriginalText, dbputTextCategory } from 'src/services/dbTextCategory';
-import { dbcheckAdminInTenant, dbgetSecondaryLanguages, dbAddCategoryToTenant } from 'src/services/dbTenant';
+import { dbputOriginalText, dbputTextCategory, dbgetSingleText, dbgetTranslationsLanguages, dbpostTranslation, dbdeleteSingleText } from 'src/services/dbTextCategory';
+import { dbcheckAdminInTenant, dbAddCategoryToTenant, dbgetTenantinfo } from 'src/services/dbTenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
@@ -37,7 +37,7 @@ const putOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null || event.pathParameters.Category == null || event.pathParameters.Title == null)
         return formatJSONResponse({ "error": "no valid input" });
-    if (event.body.Title == null || event.body.Text == null || event.body.Category == null || event.body.Languages == null)
+    if (event.body.Text == null || event.body.Category == null || event.body.Languages == null)
         return formatJSONResponse({ "error": "body request is missing parameters" });
 
     let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
@@ -52,6 +52,7 @@ const putOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     if (tenant === '' || title === '' || text === '' || category === '' || newcategory === '' ) //|| languages.length === '-1') TO ADD IN SOME WAY
         return formatJSONResponse({ "error": "input is empty" });
 
+
     //check user is admin inside this tenant
     if (false)
         if (dbcheckAdminInTenant(tenant, "Username"))
@@ -60,26 +61,50 @@ const putOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
 
     try {
         //check if all the languages are inside the Tenant.
-        let lang = await dbgetSecondaryLanguages(tenant);
+        let tenantinfo = await dbgetTenantinfo(tenant);
+        if (await dbgetSingleText(tenant, tenantinfo.defaultLanguage, category, title) === false)
+            return formatJSONResponse({ "error": "this text does not exist"}, 400);
         languages.forEach(function (language) {
-            if (lang.include(language))
+            if (!tenantinfo.languages.includes(language))
                 throw { "error": " one of the languages is not present inside the Tenant" };
         });
+        console.log("step 01");
+        //get the id of current category (if not present creates it) and all translations languages 
+        let id = await dbAddCategoryToTenant(tenant, newcategory);
+        let translations = await dbgetTranslationsLanguages(tenant, category, title);
+        //if one of the languages of the current translations is not present in the new list, delete it
+        translations.forEach(function (language) {
+            if (!languages.includes(language)) {
+                console.log("deleting translation in:", language);
+                dbdeleteSingleText(tenant, "<" + language + "&" + category + "'" + title + ">");
+            }
+        });
+        console.log("step 02");
         //if category has been changed, transfer all texts to new category
-        if (category !== newcategory) {
-            await dbAddCategoryToTenant(tenant, newcategory);
-            await dbputTextCategory(tenant, category, title, newcategory);
+        if (id != category) {
+            console.log("category already present but different from current one", category, id);
+            await dbputTextCategory(tenant, category, title, id);
         }
-                //modify the data of the original text and translations
-        await dbputOriginalText(tenant, newcategory, title, text, comment, link);
+        console.log("step 03");
+        //check all languages if not present create new translation
+        languages.forEach(function (language) {
+            if (!translations.includes(language)) {
+                console.log("adding translation in:", language);
+                dbpostTranslation(tenant, title, id, language, null, null);
+            }
+        });
+        console.log("step 04");
+       
+        //updating the data of the original text and translations
+        await dbputOriginalText(tenant, id, title, text, comment, link, languages);
     }
     catch (error) {
         //if connection fails do stuff
-        return formatJSONResponse({ "error": error });
+        return formatJSONResponse({ "error": error }, 400);
     }
 
     //return result
-    return formatJSONResponse({ "result": 'OK' });
+    return formatJSONResponse({ "result": 'OK' }, 200);
 };
 
 export const main = middyfy(putOriginalText);
