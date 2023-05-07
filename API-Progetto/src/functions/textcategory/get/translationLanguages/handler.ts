@@ -26,39 +26,38 @@ const getTranslationLanguages: ValidatedEventAPIGatewayProxyEvent<typeof schema>
      *  -   request to db failed;
      */
 
-    //check user is allowed to use this function
-    //TO DO
+    const entities = require("entities");
 
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null || event.pathParameters.Category == null || event.pathParameters.Title == null)
-        return formatJSONResponse({ "error": "no valid input" });
+        return formatJSONResponse({ "error": "no valid input" },400);
 
     let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
     let category = sanitizeHtml(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} })
     let title = sanitizeHtml(event.pathParameters.Title, { allowedTags: [], allowedAttributes: {} })
 
     if (tenant === '' || category === '' || title === '')
-        return formatJSONResponse({ "error": "input is empty" });
+        return formatJSONResponse({ "error": "input is empty" },400);
 
     //check user is admin inside this tenant
     if (false)
         if (dbcheckUserInTenant(tenant, "Username"))
-            return formatJSONResponse({ "error": "user not in this tenant" });
+            return formatJSONResponse({ "error": "user not in this tenant" },400);
     //TO DO
 
     try {
         //collect the data from db
         var languages = await dbgetTranslationsLanguages(tenant, category, title);
         if (!languages || languages.length == 0)
-            return formatJSONResponse({ "error": "no texts found" });
+            return formatJSONResponse({ "error": "no texts found" },400);
     }
     catch (error) {
         //if connection fails do stuff
-        return formatJSONResponse({ "error": error });
+        return formatJSONResponse({ "error": error },400);
     }
 
     //return result
-    return formatJSONResponse({ "response": languages });
+    return formatJSONResponse({ "response": entities.decodeHTML(languages) },200);
 };
 
 export const main = middyfy(getTranslationLanguages);

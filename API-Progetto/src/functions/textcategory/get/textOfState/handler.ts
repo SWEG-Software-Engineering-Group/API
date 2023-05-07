@@ -9,6 +9,9 @@ import schema from './schema';
 import { dbcheckUserInTenant, dbgetTenantinfo } from 'src/services/dbTenant';
 
 const textOfState: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+
+    const entities = require("entities");
+
   let currentstate: state = null;
   let status = sanitizeHtml(event.pathParameters.status, { allowedTags: [], allowedAttributes: {} });
   switch (status) {
@@ -53,6 +56,6 @@ const textOfState: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
   } catch (e) {
     return formatJSONResponse({ "error": e }, 403);
   }
-  return formatJSONResponse({ "texts": result });
+  return formatJSONResponse({ "texts": entities.decodeHTML(result) },200);
 };
 export const main = middyfy(textOfState);

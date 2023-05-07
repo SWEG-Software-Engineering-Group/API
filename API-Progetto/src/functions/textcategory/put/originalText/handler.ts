@@ -31,8 +31,7 @@ const putOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
      */
 
 
-    //check user is allowed to use this function
-    //TO DO
+    const entities = require("entities");
 
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null || event.pathParameters.Category == null || event.pathParameters.Title == null)
@@ -97,7 +96,7 @@ const putOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
        
         //updating the data of the original text and translations
         let original = await dbputOriginalText(tenant, id, title, text, comment, link, languages);
-        return formatJSONResponse({ "result": original }, 200);
+        return formatJSONResponse({ "result": entities.decodeHTML(original) }, 200);
     }
     catch (error) {
         //if connection fails do stuff

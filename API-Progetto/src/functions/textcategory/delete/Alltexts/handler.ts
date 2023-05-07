@@ -26,10 +26,6 @@ const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
      *  -   request to db failed;
      */
 
-
-    //check user is allowed to use this function COGNITO
-    //TO DO
-
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null) {
         return formatJSONResponse({ "error": "no valid input" }, 400);
