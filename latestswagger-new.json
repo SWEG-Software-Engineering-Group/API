@@ -1,31 +1,24 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "version" : "2023-04-26T22:52:12Z",
+    "version" : "2023-05-06T15:44:53Z",
     "title" : "api-progetto-dev"
   },
-  "host" : "3rklhpon2g.execute-api.eu-west-2.amazonaws.com",
+  "host" : "iibte10n05.execute-api.eu-west-2.amazonaws.com",
   "basePath" : "/dev",
   "schemes" : [ "https" ],
   "paths" : {
     "/tenant/allTenants" : {
       "get" : {
-        "responses" : {
-          "200" : {
-            "description" : "Return all the tenants"
-          },
-          "400" : {
-            "description" : "Bad Request"
-          } 
-        },
+        "responses" : { },
         "security" : [ {
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getAllTenants/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -48,6 +41,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -62,8 +56,7 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
@@ -72,10 +65,10 @@
         "consumes" : [ "application/json" ],
         "parameters" : [ {
           "in" : "body",
-          "name" : "apiprApiGabIHtk27IRW1w",
+          "name" : "apiprApiGaoRugnV9AhqTA",
           "required" : true,
           "schema" : {
-            "$ref" : "#/definitions/apiprApiGabIHtk27IRW1w"
+            "$ref" : "#/definitions/apiprApiGaoRugnV9AhqTA"
           }
         } ],
         "responses" : { },
@@ -84,10 +77,10 @@
         } ],
         "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-addTenant/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -110,6 +103,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -124,8 +118,71 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
+        }
+      }
+    },
+    "/tenant/{TenantId}" : {
+      "delete" : {
+        "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : { },
+        "security" : [ {
+          "2_tleAXoqbb" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
+          "httpMethod" : "POST",
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-deleteTenant/invocations",
+          "passthroughBehavior" : "when_no_match"
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "type" : "mock",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,DELETE'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{statusCode:200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
@@ -139,10 +196,10 @@
           "type" : "string"
         }, {
           "in" : "body",
-          "name" : "apiprApiGajha7zLGXgE3k",
+          "name" : "apiprApiGaeP9ryMTVFo5r",
           "required" : true,
           "schema" : {
-            "$ref" : "#/definitions/apiprApiGajha7zLGXgE3k"
+            "$ref" : "#/definitions/apiprApiGaeP9ryMTVFo5r"
           }
         } ],
         "responses" : { },
@@ -151,10 +208,10 @@
         } ],
         "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-addLanguage/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -183,6 +240,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -197,37 +255,27 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/tenant/{TenantId}/addUser" : {
-      "post" : {
-        "consumes" : [ "application/json" ],
+    "/tenant/{TenantId}/admins" : {
+      "get" : {
         "parameters" : [ {
           "name" : "TenantId",
           "in" : "path",
           "required" : true,
           "type" : "string"
-        }, {
-          "in" : "body",
-          "name" : "apiprApiGa6AEIRAGdMeJJ",
-          "required" : true,
-          "schema" : {
-            "$ref" : "#/definitions/apiprApiGa6AEIRAGdMeJJ"
-          }
         } ],
         "responses" : { },
         "security" : [ {
           "2_tleAXoqbb" : [ ]
         } ],
-        "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-addUserToTenant/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getAdmins/invocations",
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -256,11 +304,12 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
               "responseParameters" : {
-                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,POST'",
+                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,GET'",
                 "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
                 "method.response.header.Access-Control-Allow-Origin" : "'*'"
               }
@@ -270,13 +319,12 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/tenant/{TenantId}/delete" : {
-      "delete" : {
+    "/tenant/{TenantId}/allCategories" : {
+      "get" : {
         "parameters" : [ {
           "name" : "TenantId",
           "in" : "path",
@@ -288,10 +336,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-deleteTenant/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getAllCategories/invocations",
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -320,11 +368,12 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
               "responseParameters" : {
-                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,DELETE'",
+                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,GET'",
                 "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
                 "method.response.header.Access-Control-Allow-Origin" : "'*'"
               }
@@ -334,12 +383,139 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/tenant/{TenantId}/language/{Language}/deleteLanguage" : {
+    "/tenant/{TenantId}/countTexts" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : { },
+        "security" : [ {
+          "2_tleAXoqbb" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
+          "httpMethod" : "POST",
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getCountLanguagesForCategory/invocations",
+          "passthroughBehavior" : "when_no_match"
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "type" : "mock",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,GET'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{statusCode:200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "contentHandling" : "CONVERT_TO_TEXT"
+        }
+      }
+    },
+    "/tenant/{TenantId}/info" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : { },
+        "security" : [ {
+          "2_tleAXoqbb" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
+          "httpMethod" : "POST",
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getTenant/invocations",
+          "passthroughBehavior" : "when_no_match"
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "type" : "mock",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,GET'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{statusCode:200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "contentHandling" : "CONVERT_TO_TEXT"
+        }
+      }
+    },
+    "/tenant/{TenantId}/language/{Language}" : {
       "delete" : {
         "parameters" : [ {
           "name" : "TenantId",
@@ -357,10 +533,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-removeLanguage/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -394,6 +570,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -408,8 +585,7 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
@@ -426,10 +602,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getTenantLanguages/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -458,6 +634,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -472,12 +649,11 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/tenant/{TenantId}/tenant" : {
+    "/tenant/{TenantId}/users" : {
       "get" : {
         "parameters" : [ {
           "name" : "TenantId",
@@ -490,10 +666,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getTenant/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-tenantGetUsers/invocations",
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -522,6 +698,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -536,12 +713,11 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/tenant/{TenantId}/{Category}/deleteCategory" : {
+    "/tenant/{TenantId}/{Category}/category" : {
       "delete" : {
         "parameters" : [ {
           "name" : "TenantId",
@@ -559,10 +735,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-removeCategory/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -596,6 +772,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -610,8 +787,7 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
@@ -628,10 +804,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getAllTexts/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -660,6 +836,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -674,12 +851,11 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/text/{TenantId}/category/{Category}/{Title}/editOriginalText" : {
+    "/text/{TenantId}/category/{Category}/{Title}/originalText" : {
       "put" : {
         "consumes" : [ "application/json" ],
         "parameters" : [ {
@@ -699,10 +875,10 @@
           "type" : "string"
         }, {
           "in" : "body",
-          "name" : "apiprApiGaHAtvvFiPWGal",
+          "name" : "apiprApiGauFVswKskZvl2",
           "required" : true,
           "schema" : {
-            "$ref" : "#/definitions/apiprApiGaHAtvvFiPWGal"
+            "$ref" : "#/definitions/apiprApiGauFVswKskZvl2"
           }
         } ],
         "responses" : { },
@@ -711,10 +887,38 @@
         } ],
         "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-putOriginalText/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
+        }
+      },
+      "delete" : {
+        "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Category",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Title",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : { },
+        "security" : [ {
+          "2_tleAXoqbb" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
+          "httpMethod" : "POST",
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-deleteText/invocations",
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -753,12 +957,13 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
               "responseParameters" : {
-                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,PUT'",
-                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods" : "'DELETE,OPTIONS,PUT'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
                 "method.response.header.Access-Control-Allow-Origin" : "'*'"
               }
             }
@@ -767,12 +972,11 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/text/{TenantId}/category/{Category}/{Title}/getOriginalTextLanguages" : {
+    "/text/{TenantId}/category/{Category}/{Title}/translationLanguages" : {
       "get" : {
         "parameters" : [ {
           "name" : "TenantId",
@@ -795,10 +999,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getTranslationLanguages/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -837,6 +1041,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -851,8 +1056,144 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
+        }
+      }
+    },
+    "/text/{TenantId}/deleteAllTexts" : {
+      "delete" : {
+        "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : { },
+        "security" : [ {
+          "2_tleAXoqbb" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
+          "httpMethod" : "POST",
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-deleteAllTexts/invocations",
+          "passthroughBehavior" : "when_no_match"
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "type" : "mock",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,DELETE'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{statusCode:200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "contentHandling" : "CONVERT_TO_TEXT"
+        }
+      }
+    },
+    "/text/{TenantId}/originalText" : {
+      "post" : {
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "apiprApiGaOqbd9ZLFFnlX",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/apiprApiGaOqbd9ZLFFnlX"
+          }
+        } ],
+        "responses" : { },
+        "security" : [ {
+          "2_tleAXoqbb" : [ ]
+        } ],
+        "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
+        "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
+          "httpMethod" : "POST",
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-postOriginalText/invocations",
+          "passthroughBehavior" : "when_no_match"
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "type" : "mock",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,POST'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{statusCode:200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
@@ -869,10 +1210,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getOriginalTexts/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -901,6 +1242,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -915,159 +1257,11 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/text/{TenantId}/title/{Title}/text" : {
-      "delete" : {
-        "parameters" : [ {
-          "name" : "TenantId",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "Title",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : { },
-        "security" : [ {
-          "2_tleAXoqbb" : [ ]
-        } ],
-        "x-amazon-apigateway-integration" : {
-          "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-deleteText/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
-        }
-      },
-      "options" : {
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "TenantId",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "Title",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200 response",
-            "headers" : {
-              "Access-Control-Allow-Origin" : {
-                "type" : "string"
-              },
-              "Access-Control-Allow-Methods" : {
-                "type" : "string"
-              },
-              "Access-Control-Allow-Headers" : {
-                "type" : "string"
-              }
-            }
-          }
-        },
-        "x-amazon-apigateway-integration" : {
-          "responses" : {
-            "default" : {
-              "statusCode" : "200",
-              "responseParameters" : {
-                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,DELETE'",
-                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                "method.response.header.Access-Control-Allow-Origin" : "'*'"
-              }
-            }
-          },
-          "requestTemplates" : {
-            "application/json" : "{statusCode:200}"
-          },
-          "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
-        }
-      }
-    },
-    "/text/{TenantId}/writeOriginalText" : {
-      "post" : {
-        "consumes" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "TenantId",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "in" : "body",
-          "name" : "apiprApiGa5RR88UUT59p5",
-          "required" : true,
-          "schema" : {
-            "$ref" : "#/definitions/apiprApiGa5RR88UUT59p5"
-          }
-        } ],
-        "responses" : { },
-        "security" : [ {
-          "2_tleAXoqbb" : [ ]
-        } ],
-        "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
-        "x-amazon-apigateway-integration" : {
-          "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-postOriginalText/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
-        }
-      },
-      "options" : {
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "TenantId",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200 response",
-            "headers" : {
-              "Access-Control-Allow-Origin" : {
-                "type" : "string"
-              },
-              "Access-Control-Allow-Methods" : {
-                "type" : "string"
-              },
-              "Access-Control-Allow-Headers" : {
-                "type" : "string"
-              }
-            }
-          }
-        },
-        "x-amazon-apigateway-integration" : {
-          "responses" : {
-            "default" : {
-              "statusCode" : "200",
-              "responseParameters" : {
-                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,POST'",
-                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                "method.response.header.Access-Control-Allow-Origin" : "'*'"
-              }
-            }
-          },
-          "requestTemplates" : {
-            "application/json" : "{statusCode:200}"
-          },
-          "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
-        }
-      }
-    },
-    "/text/{TenantId}/{Language}/pendingTranslations" : {
+    "/text/{TenantId}/{Language}/state/{status}" : {
       "get" : {
         "parameters" : [ {
           "name" : "TenantId",
@@ -1079,16 +1273,21 @@
           "in" : "path",
           "required" : true,
           "type" : "string"
+        }, {
+          "name" : "status",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
         } ],
         "responses" : { },
         "security" : [ {
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getTextToVerify/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-textOfState/invocations",
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -1101,6 +1300,11 @@
           "type" : "string"
         }, {
           "name" : "Language",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "status",
           "in" : "path",
           "required" : true,
           "type" : "string"
@@ -1122,6 +1326,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -1136,86 +1341,11 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/text/{TenantId}/{Language}/untranslatedTexts" : {
-      "get" : {
-        "parameters" : [ {
-          "name" : "TenantId",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "Language",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : { },
-        "security" : [ {
-          "2_tleAXoqbb" : [ ]
-        } ],
-        "x-amazon-apigateway-integration" : {
-          "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getUntranslatedTexts/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
-        }
-      },
-      "options" : {
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "TenantId",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "Language",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200 response",
-            "headers" : {
-              "Access-Control-Allow-Origin" : {
-                "type" : "string"
-              },
-              "Access-Control-Allow-Methods" : {
-                "type" : "string"
-              },
-              "Access-Control-Allow-Headers" : {
-                "type" : "string"
-              }
-            }
-          }
-        },
-        "x-amazon-apigateway-integration" : {
-          "responses" : {
-            "default" : {
-              "statusCode" : "200",
-              "responseParameters" : {
-                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,GET'",
-                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                "method.response.header.Access-Control-Allow-Origin" : "'*'"
-              }
-            }
-          },
-          "requestTemplates" : {
-            "application/json" : "{statusCode:200}"
-          },
-          "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
-        }
-      }
-    },
-    "/text/{TenantId}/{Language}/{Category}/{Title}/approveText" : {
+    "/text/{TenantId}/{Language}/{Category}/{Title}/approveTranslation" : {
       "put" : {
         "parameters" : [ {
           "name" : "TenantId",
@@ -1243,10 +1373,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-putAcceptText/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -1290,6 +1420,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -1304,12 +1435,11 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/text/{TenantId}/{Language}/{Category}/{Title}/rejectText" : {
+    "/text/{TenantId}/{Language}/{Category}/{Title}/rejectTranslation" : {
       "put" : {
         "consumes" : [ "application/json" ],
         "parameters" : [ {
@@ -1334,10 +1464,10 @@
           "type" : "string"
         }, {
           "in" : "body",
-          "name" : "apiprApiGasDpOdFUSJlRV",
+          "name" : "apiprApiGak57qGrdisdf3",
           "required" : true,
           "schema" : {
-            "$ref" : "#/definitions/apiprApiGasDpOdFUSJlRV"
+            "$ref" : "#/definitions/apiprApiGak57qGrdisdf3"
           }
         } ],
         "responses" : { },
@@ -1346,10 +1476,10 @@
         } ],
         "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-putRejectText/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -1393,6 +1523,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -1407,8 +1538,7 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
@@ -1440,10 +1570,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getText/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -1487,6 +1617,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -1501,12 +1632,11 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/text/{TenantId}/{Language}/{Category}/{Title}/updateTranslation" : {
+    "/text/{TenantId}/{Language}/{Category}/{Title}/translation" : {
       "put" : {
         "consumes" : [ "application/json" ],
         "parameters" : [ {
@@ -1531,10 +1661,10 @@
           "type" : "string"
         }, {
           "in" : "body",
-          "name" : "apiprApiGavHoQJVUE4oiy",
+          "name" : "apiprApiGahqbeFWHsKugN",
           "required" : true,
           "schema" : {
-            "$ref" : "#/definitions/apiprApiGavHoQJVUE4oiy"
+            "$ref" : "#/definitions/apiprApiGahqbeFWHsKugN"
           }
         } ],
         "responses" : { },
@@ -1543,10 +1673,10 @@
         } ],
         "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-putTranslation/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -1590,6 +1720,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -1604,20 +1735,24 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/user/create" : {
+    "/user/create/{TenantId}" : {
       "post" : {
         "consumes" : [ "application/json" ],
         "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
           "in" : "body",
-          "name" : "apiprApiGaLnVHS4VbE2yq",
+          "name" : "apiprApiGah4zl0JChy5pp",
           "required" : true,
           "schema" : {
-            "$ref" : "#/definitions/apiprApiGaLnVHS4VbE2yq"
+            "$ref" : "#/definitions/apiprApiGah4zl0JChy5pp"
           }
         } ],
         "responses" : { },
@@ -1626,15 +1761,21 @@
         } ],
         "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-signUpUser/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "TenantId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
         "responses" : {
           "200" : {
             "description" : "200 response",
@@ -1652,6 +1793,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -1666,22 +1808,28 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
-    "/user/getUsers" : {
-      "get" : {
-        "responses" : { },
-        "security" : [ {
-          "2_tleAXoqbb" : [ ]
+    "/user/resetPassword" : {
+      "post" : {
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "apiprApiGarQFQ5LlWlDSm",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/apiprApiGarQFQ5LlWlDSm"
+          }
         } ],
+        "responses" : { },
+        "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getUsers/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-resetPassword/invocations",
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -1704,6 +1852,59 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,POST'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{statusCode:200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "contentHandling" : "CONVERT_TO_TEXT"
+        }
+      }
+    },
+    "/user/users" : {
+      "get" : {
+        "responses" : { },
+        "security" : [ {
+          "2_tleAXoqbb" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
+          "httpMethod" : "POST",
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getUsers/invocations",
+          "passthroughBehavior" : "when_no_match"
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -1718,8 +1919,7 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
@@ -1736,10 +1936,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getUser/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -1768,6 +1968,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -1782,81 +1983,7 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
-        }
-      }
-    },
-    "/user/{Username}/addRole" : {
-      "post" : {
-        "consumes" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "Username",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "in" : "body",
-          "name" : "apiprApiGaZIlstrBrPEmB",
-          "required" : true,
-          "schema" : {
-            "$ref" : "#/definitions/apiprApiGaZIlstrBrPEmB"
-          }
-        } ],
-        "responses" : { },
-        "security" : [ {
-          "2_tleAXoqbb" : [ ]
-        } ],
-        "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
-        "x-amazon-apigateway-integration" : {
-          "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-addRole/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
-        }
-      },
-      "options" : {
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "Username",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200 response",
-            "headers" : {
-              "Access-Control-Allow-Origin" : {
-                "type" : "string"
-              },
-              "Access-Control-Allow-Methods" : {
-                "type" : "string"
-              },
-              "Access-Control-Allow-Headers" : {
-                "type" : "string"
-              }
-            }
-          }
-        },
-        "x-amazon-apigateway-integration" : {
-          "responses" : {
-            "default" : {
-              "statusCode" : "200",
-              "responseParameters" : {
-                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,POST'",
-                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                "method.response.header.Access-Control-Allow-Origin" : "'*'"
-              }
-            }
-          },
-          "requestTemplates" : {
-            "application/json" : "{statusCode:200}"
-          },
-          "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
@@ -1873,10 +2000,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-admGetUser/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -1905,6 +2032,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -1919,8 +2047,7 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
@@ -1937,10 +2064,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-deleteUser/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -1969,6 +2096,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -1983,8 +2111,68 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
+        }
+      }
+    },
+    "/user/{Username}/getResetCode" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "Username",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : { },
+        "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
+          "httpMethod" : "POST",
+          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getResetCode/invocations",
+          "passthroughBehavior" : "when_no_match"
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Username",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "type" : "mock",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,GET'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{statusCode:200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
@@ -2001,10 +2189,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getUserGroups/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -2033,6 +2221,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -2047,81 +2236,7 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
-        }
-      }
-    },
-    "/user/{Username}/removeRole" : {
-      "post" : {
-        "consumes" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "Username",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "in" : "body",
-          "name" : "apiprApiGasGBi5DfAGtkm",
-          "required" : true,
-          "schema" : {
-            "$ref" : "#/definitions/apiprApiGasGBi5DfAGtkm"
-          }
-        } ],
-        "responses" : { },
-        "security" : [ {
-          "2_tleAXoqbb" : [ ]
-        } ],
-        "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
-        "x-amazon-apigateway-integration" : {
-          "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-removeRole/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
-        }
-      },
-      "options" : {
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "Username",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200 response",
-            "headers" : {
-              "Access-Control-Allow-Origin" : {
-                "type" : "string"
-              },
-              "Access-Control-Allow-Methods" : {
-                "type" : "string"
-              },
-              "Access-Control-Allow-Headers" : {
-                "type" : "string"
-              }
-            }
-          }
-        },
-        "x-amazon-apigateway-integration" : {
-          "responses" : {
-            "default" : {
-              "statusCode" : "200",
-              "responseParameters" : {
-                "method.response.header.Access-Control-Allow-Methods" : "'OPTIONS,POST'",
-                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                "method.response.header.Access-Control-Allow-Origin" : "'*'"
-              }
-            }
-          },
-          "requestTemplates" : {
-            "application/json" : "{statusCode:200}"
-          },
-          "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
@@ -2135,10 +2250,10 @@
           "type" : "string"
         }, {
           "in" : "body",
-          "name" : "apiprApiGaRxSmLZ58kYkb",
+          "name" : "apiprApiGaVvAOe28tDsQ8",
           "required" : true,
           "schema" : {
-            "$ref" : "#/definitions/apiprApiGaRxSmLZ58kYkb"
+            "$ref" : "#/definitions/apiprApiGaVvAOe28tDsQ8"
           }
         } ],
         "responses" : { },
@@ -2147,10 +2262,10 @@
         } ],
         "x-amazon-apigateway-request-validator" : "api-progetto-dev | Validate request body and querystring parameters",
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-setRole/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -2179,6 +2294,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -2193,8 +2309,7 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     },
@@ -2211,10 +2326,10 @@
           "2_tleAXoqbb" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getUserTenant/invocations",
-          "passthroughBehavior" : "when_no_match",
-          "type" : "aws_proxy"
+          "passthroughBehavior" : "when_no_match"
         }
       },
       "options" : {
@@ -2243,6 +2358,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -2257,8 +2373,7 @@
             "application/json" : "{statusCode:200}"
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "mock"
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       }
     }
@@ -2270,67 +2385,28 @@
       "in" : "header",
       "x-amazon-apigateway-authtype" : "cognito_user_pools",
       "x-amazon-apigateway-authorizer" : {
-        "providerARNs" : [ "arn:aws:cognito-idp:eu-west-2:574522373582:userpool/eu-west-2_tleAXoqbb" ],
-        "type" : "cognito_user_pools"
+        "type" : "cognito_user_pools",
+        "providerARNs" : [ "arn:aws:cognito-idp:eu-west-2:574522373582:userpool/eu-west-2_tleAXoqbb" ]
       }
     }
   },
   "definitions" : {
-    "apiprApiGa5RR88UUT59p5" : {
+    "apiprApiGarQFQ5LlWlDSm" : {
       "type" : "object",
-      "required" : [ "Category", "Languages", "Text", "Title" ],
+      "required" : [ "Code", "Password", "Username" ],
       "properties" : {
-        "Comment" : {
+        "Username" : {
           "type" : "string"
         },
-        "Category" : {
+        "Code" : {
           "type" : "string"
         },
-        "Title" : {
-          "type" : "string"
-        },
-        "Text" : {
-          "type" : "string"
-        },
-        "Languages" : {
-          "type" : "array",
-          "items" : {
-            "type" : "string"
-          }
-        },
-        "Link" : {
+        "Password" : {
           "type" : "string"
         }
       }
     },
-    "apiprApiGa6AEIRAGdMeJJ" : {
-      "type" : "object",
-      "required" : [ "User" ],
-      "properties" : {
-        "User" : {
-          "type" : "string"
-        }
-      }
-    },
-    "apiprApiGaZIlstrBrPEmB" : {
-      "type" : "object",
-      "required" : [ "Group" ],
-      "properties" : {
-        "Group" : {
-          "type" : "string"
-        }
-      }
-    },
-    "apiprApiGasGBi5DfAGtkm" : {
-      "type" : "object",
-      "required" : [ "Group" ],
-      "properties" : {
-        "Group" : {
-          "type" : "string"
-        }
-      }
-    },
-    "apiprApiGavHoQJVUE4oiy" : {
+    "apiprApiGahqbeFWHsKugN" : {
       "type" : "object",
       "required" : [ "Text" ],
       "properties" : {
@@ -2339,63 +2415,7 @@
         }
       }
     },
-    "apiprApiGaLnVHS4VbE2yq" : {
-      "type" : "object",
-      "required" : [ "Email", "Group", "Name", "Password", "Surname" ],
-      "properties" : {
-        "Group" : {
-          "type" : "string"
-        },
-        "Email" : {
-          "type" : "string"
-        },
-        "Surname" : {
-          "type" : "string"
-        },
-        "Password" : {
-          "type" : "string"
-        },
-        "Name" : {
-          "type" : "string"
-        }
-      }
-    },
-    "apiprApiGasDpOdFUSJlRV" : {
-      "type" : "object",
-      "properties" : {
-        "Feedback" : {
-          "type" : "string"
-        }
-      }
-    },
-    "apiprApiGaRxSmLZ58kYkb" : {
-      "type" : "object",
-      "required" : [ "Group" ],
-      "properties" : {
-        "Group" : {
-          "type" : "string"
-        }
-      }
-    },
-    "apiprApiGaHAtvvFiPWGal" : {
-      "type" : "object",
-      "required" : [ "Category", "Text" ],
-      "properties" : {
-        "Comment" : {
-          "type" : "string"
-        },
-        "Category" : {
-          "type" : "string"
-        },
-        "Text" : {
-          "type" : "string"
-        },
-        "Link" : {
-          "type" : "string"
-        }
-      }
-    },
-    "apiprApiGabIHtk27IRW1w" : {
+    "apiprApiGaoRugnV9AhqTA" : {
       "type" : "object",
       "required" : [ "admins", "creationDate", "defaultLanguage", "languages", "tenantName", "users" ],
       "properties" : {
@@ -2434,7 +2454,96 @@
         }
       }
     },
-    "apiprApiGajha7zLGXgE3k" : {
+    "apiprApiGauFVswKskZvl2" : {
+      "type" : "object",
+      "required" : [ "Category", "Languages", "Text" ],
+      "properties" : {
+        "Comment" : {
+          "type" : "string"
+        },
+        "Category" : {
+          "type" : "string"
+        },
+        "Text" : {
+          "type" : "string"
+        },
+        "Languages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Link" : {
+          "type" : "string"
+        }
+      }
+    },
+    "apiprApiGaVvAOe28tDsQ8" : {
+      "type" : "object",
+      "required" : [ "Group" ],
+      "properties" : {
+        "Group" : {
+          "type" : "string"
+        }
+      }
+    },
+    "apiprApiGaOqbd9ZLFFnlX" : {
+      "type" : "object",
+      "required" : [ "Category", "Languages", "Text", "Title" ],
+      "properties" : {
+        "Comment" : {
+          "type" : "string"
+        },
+        "Category" : {
+          "type" : "string"
+        },
+        "Title" : {
+          "type" : "string"
+        },
+        "Text" : {
+          "type" : "string"
+        },
+        "Languages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Link" : {
+          "type" : "string"
+        }
+      }
+    },
+    "apiprApiGah4zl0JChy5pp" : {
+      "type" : "object",
+      "required" : [ "Email", "Group", "Name", "Password", "Surname" ],
+      "properties" : {
+        "Group" : {
+          "type" : "string"
+        },
+        "Email" : {
+          "type" : "string"
+        },
+        "Surname" : {
+          "type" : "string"
+        },
+        "Password" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "apiprApiGak57qGrdisdf3" : {
+      "type" : "object",
+      "properties" : {
+        "Feedback" : {
+          "type" : "string"
+        }
+      }
+    },
+    "apiprApiGaeP9ryMTVFo5r" : {
       "type" : "object",
       "required" : [ "Language" ],
       "properties" : {

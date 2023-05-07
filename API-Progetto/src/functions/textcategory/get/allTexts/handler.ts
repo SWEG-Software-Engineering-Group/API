@@ -59,7 +59,7 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     }
 
     //return result
-    return formatJSONResponse({ "response": entities.decodeHTML(texts) }, 200);
+    return formatJSONResponse({ "Texts": entities.decodeHTML(texts) }, 200);
 };
 
 export const main = middyfy(getAllTexts);

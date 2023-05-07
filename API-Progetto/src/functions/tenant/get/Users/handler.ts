@@ -14,8 +14,8 @@ const tenantGetUsers: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
         400
       );
     }
-    let Admins=await dbgetTenantUsers(event.pathParameters.TenantId.toString(), "content");
-    return formatJSONResponse({Admins}, 200);
+    let Users=await dbgetTenantUsers(event.pathParameters.TenantId.toString(), "content");
+    return formatJSONResponse({Users}, 200);
   } catch(error){
     console.log(error);
     return formatJSONResponse(
