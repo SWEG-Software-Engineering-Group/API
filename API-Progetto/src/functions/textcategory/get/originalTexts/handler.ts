@@ -2,25 +2,18 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbGetTexts } from 'src/services/dbTextCategory';
-import sanitizeHtml from 'sanitize-html';
+
 import schema from './schema';
+import { Text } from 'src/types/Text';
 
 const getOriginalTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-
-    const entities = require("entities");
-
-    if (event.pathParameters.TenantId == null)
-        return formatJSONResponse({ "error": "Missing TenantId" }, 400);
-    let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} });
-    if (tenant === '')
-        return formatJSONResponse({ "error": "TenantId input is empty" });
+  var res: Text[] = null;
   try {
-      let res = await dbGetTexts(tenant);
-      return formatJSONResponse({ "texts": entities.decodeHTML(res) },200);
+    res = await dbGetTexts(event.pathParameters.TenantId);
   } catch {
     return formatJSONResponse({ "error": "error" }, 403);
   }
-  
+  return formatJSONResponse({ "texts": res });
 };
 
 export const main = middyfy(getOriginalTexts);

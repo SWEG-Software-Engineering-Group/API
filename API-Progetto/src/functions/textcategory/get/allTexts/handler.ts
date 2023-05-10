@@ -29,37 +29,38 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
      */
 
 
-    const entities = require("entities");
+    //check user is allowed to use this function with COGNITO
+    //TO DO
 
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null)
-        return formatJSONResponse({ "error": "no valid input" }, 400);
+        return formatJSONResponse({ "error": "no valid input" });
 
     //var sanitizer = require('sanitize-html')();
 
     let tenant = sanitizeHtml(event.pathParameters.TenantId, { allowedTags: [], allowedAttributes: {} })
     if (tenant === '')
-        return formatJSONResponse({ "error": "input is empty" }, 400);
+        return formatJSONResponse({ "error": "input is empty" });
 
     //check user is admin inside this tenant
     if (false)
         if (dbcheckUserInTenant(tenant, "Username"))
-            return formatJSONResponse({ "error": "user not in this tenant" }, 400);
+            return formatJSONResponse({ "error": "user not in this tenant" });
     //TO DO
     try {
         //collect the data from db
         var texts: Text[] = await (dbgetAllTexts(tenant));
         if (!texts || texts.length==0)
-            return formatJSONResponse({ "error": "no texts found" }, 400);
+            return formatJSONResponse({ "error": "no texts found" });
     }
     catch (error) {
         //if connection fails do stuff
         console.log(error)
-        return formatJSONResponse({ "error": error },200);
+        return formatJSONResponse({ "amtra": error });
     }
 
     //return result
-    return formatJSONResponse({ "Texts": entities.decodeHTML(texts) }, 200);
+    return formatJSONResponse({ "response": texts });
 };
 
 export const main = middyfy(getAllTexts);

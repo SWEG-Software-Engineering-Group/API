@@ -366,18 +366,24 @@ const dbgetSingleText = async (tenant: string, language: string, category: strin
         if (categories == null)
             throw { "error": "couldn't collect the categories" };
 
+        let stringT = "<" + language + "&" + category + "'" + title + ">"
+        let decodeUri = decodeURI(stringT)
+        stringT = stringT.replace(/%20/g, " ");
+        console.log(stringT);
+        console.log(decodeUri)
+        console.log(tenant);
         const getparamT: GetCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
             Key: {
                 idTenant: tenant,
-                language_category_title: "<" + language + "&" + category + "'" + title + ">",
+                language_category_title: stringT,
             }
         };
         const getparamI: GetCommandInput = {
             TableName: environment.dynamo.TextCategoryInfoTable.tableName,
             Key: {
                 idTenant: tenant,
-                language_category_title: "<" + language + "&" + category + "'" + title + ">",
+                language_category_title: stringT,
             }
         };
         const text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
@@ -1465,7 +1471,12 @@ const dbputTranslation = async (tenant: string, title: string, category: string,
 
 const updateText = async (tenantID: string, language: string, category: string, title: string, state: state) => {
     console.log("inside updateText", "<" + language + "&" + category + "'" + title + ">");
-    await dbGetTexts(tenantID, language, category, title);
+    try{
+        await dbGetTexts(tenantID, language, category, title);
+    } catch (err) {
+        console.log("ERROR inside updateText", err.stack);
+        throw { err };
+    }
     var params: UpdateCommandInput = {
         TableName: environment.dynamo.TextCategoryTable.tableName,
         Key: {

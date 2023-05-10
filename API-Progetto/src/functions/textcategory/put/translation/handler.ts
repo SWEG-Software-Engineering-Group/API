@@ -28,7 +28,8 @@ const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
      */
 
 
-    const entities = require("entities");
+    //check user is allowed to use this function
+    //TO DO
 
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null || event.pathParameters.Language == null || event.pathParameters.Category == null || event.pathParameters.Title == null)
@@ -57,7 +58,7 @@ const putTranslation: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
             return formatJSONResponse({ "error": "user not in this tenant" },400);
         let translation = await dbputTranslation(tenant, title, category, language, text, state.daVerificare);
         //return result
-        return formatJSONResponse({ "result": entities.decodeHTML(translation) }, 200);
+        return formatJSONResponse({ "result": translation }, 200);
     }
     catch (error) {
         //if connection fails do stuff

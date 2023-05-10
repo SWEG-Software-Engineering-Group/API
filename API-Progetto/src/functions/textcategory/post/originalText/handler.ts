@@ -33,7 +33,8 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
      */
 
 
-    const entities = require("entities");
+    //check user is allowed to use this function
+    //TO DO
 
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null)
@@ -69,21 +70,21 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
         //add category if it doesn't already exists get the id and use it
         let categoryId: string = await dbAddCategoryToTenant(tenant, category);
         //create the original text
-        let result = await dbpostOriginalText(tenant, title, categoryId, text, comment, link);
-        if (result == null)
+        if (!await dbpostOriginalText(tenant, title, categoryId, text, comment, link))
             return formatJSONResponse({ "error": "failed to create a new text in orgiginal language" }, 400);
         //iterate over all languages to create the new translation
         await Promise.all(languages.map(async (language) => {
             await dbpostTranslation(tenant, title, categoryId, language, comment, link);
         }));
-        //return result
-        return formatJSONResponse({ "result": entities.decodeHTML(result) },200);
     }
     catch (error) {
         console.log(error);
         //if connection fails do stuff
         return formatJSONResponse({ "error": error }, 400);
     }
+
+    //return result
+    return formatJSONResponse({ "result": 'OK' });
 };
 
 export const main = middyfy(postOriginalText);
