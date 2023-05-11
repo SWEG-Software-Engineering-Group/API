@@ -6,7 +6,7 @@ import { dbdeleteAllTexts } from 'src/services/dbTextCategory';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
-const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const deleteAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
     /*@by Milo Spadotto
      * INPUT:   Tenant (String)
      * OUTPUT:  {result: OK} / Error
@@ -59,4 +59,4 @@ const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
     return formatJSONResponse({ "result": "OK" },200);
 };
 
-export const main = middyfy(deleteText);
+export const main = middyfy(deleteAllTexts);

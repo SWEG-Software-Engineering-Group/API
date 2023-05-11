@@ -64,7 +64,7 @@ const utilChangeStateTranslations = async (tenant: string, defaultlanguage: stri
     try {
         const params: ScanCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            FilterExpression: "#idTenant = :t and contains(#language_category_title, : ct)",
+            FilterExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":ct": "&" + category + "'" + title + ">",
@@ -468,7 +468,7 @@ const dbgetCategoryLanguages = async (tenant: string, category: string) => {
         //request all the data from the Text and metadata tables
         const param: ScanCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            FilterExpression: "#idTenant = :t and contains(#language_category_title, : ct)",
+            FilterExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
             ExpressionAttributeValues: {
                 ":t": tenant,
                 ":ct": "&" + category + "'",
@@ -1494,6 +1494,26 @@ const updateText = async (tenantID: string, language: string, category: string, 
     {
         ":newState": state,
     };
+    if (comment != undefined) {
+        var paramsInfo: UpdateCommandInput = {
+            TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+            Key: {
+                idTenant: tenantID,
+                language_category_title: "<" + language + "&" + category + "'" + title + ">"
+            }
+        };
+        paramsInfo["UpdateExpression"] = "SET #comment = :newComment";
+        paramsInfo["ExpressionAttributeNames"] =
+        {
+            "#comment": "comment",
+        };
+        paramsInfo["ExpressionAttributeValues"] =
+        {
+            ":newComment": comment,
+        };
+        try {
+            const data = await ddbDocClient.send(new UpdateCommand(paramsInfo));
+            console.log("Success - GET", data);
 
     let paramsinfo: UpdateCommandInput = {
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
@@ -1510,9 +1530,9 @@ const updateText = async (tenantID: string, language: string, category: string, 
         },
     };
     try {
-
-        await ddbDocClient.send(new UpdateCommand(paramsinfo));
         await ddbDocClient.send(new UpdateCommand(params));
+        if(feedback!==null)
+        await ddbDocClient.send(new UpdateCommand(paramsinfo));
         console.log("Success - GET", await dbgetSingleText(tenantID, language, category, title));
 
     } catch (err) {
@@ -1521,4 +1541,4 @@ const updateText = async (tenantID: string, language: string, category: string, 
     }
 }
 
-export { dbgetAllTexts, dbgetTexts, dbgetSingleText, dbgetTranslationsLanguages, dbgetCategoryLanguages, dbGetTexts, textsOfState, dbdeleteText, dbdeleteSingleText, dbdeleteLanguageTexts, dbdeleteCategoryTexts, dbdeleteAllTexts, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation, updateText };
+export { dbgetAllTexts, dbgetTexts, dbgetSingleText, dbgetTranslationsLanguages, dbgetCategoryLanguages, dbGetTexts, textsOfState, dbdeleteText, dbdeleteAllTexts, dbdeleteSingleText, dbdeleteLanguageTexts, dbdeleteCategoryTexts, dbdeleteAllTexts, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation, updateText };
