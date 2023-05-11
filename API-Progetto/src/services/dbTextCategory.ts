@@ -675,7 +675,7 @@ const dbdeleteText = async (tenant: string, title: string, category: string) => 
 
     const param1: ScanCommandInput = {
         TableName: environment.dynamo.TextCategoryTable.tableName,
-        FilterExpression: "#idTenant = :t and contains(#language_category_title, : ct)",
+        FilterExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
         ExpressionAttributeValues: {
             ":t": tenant,
             ":ct": "&" + category + "'" + title + ">",
@@ -687,7 +687,7 @@ const dbdeleteText = async (tenant: string, title: string, category: string) => 
     };
     const param2: ScanCommandInput = {
         TableName: environment.dynamo.TextCategoryInfoTable.tableName,
-        FilterExpression: "#idTenant = :t and contains(#language_category_title, : ct)",
+        FilterExpression: "#idTenant = :t and contains(#language_category_title, :ct)",
         ExpressionAttributeValues: {
             ":t": tenant,
             ":ct": "&" + category + "'" + title + ">",
@@ -698,8 +698,8 @@ const dbdeleteText = async (tenant: string, title: string, category: string) => 
         },
     };
     try {
-        const txt = await (await ddbDocClient.send(new QueryCommand(param1))).Items as TextCategory[];
-        const meta = await (await ddbDocClient.send(new QueryCommand(param2))).Items as TextCategoryInfo[];
+        const txt = await (await ddbDocClient.send(new ScanCommand(param1))).Items as TextCategory[];
+        const meta = await (await ddbDocClient.send(new ScanCommand(param2))).Items as TextCategoryInfo[];
 
         //if there is nothing skip
         if (txt.length === 0 && meta.length === 0)
@@ -1469,9 +1469,10 @@ const dbputTranslation = async (tenant: string, title: string, category: string,
     }
 };
 
-const updateText = async (tenantID: string, language: string, category: string, title: string, state: state) => {
+const updateText = async (tenantID: string, language: string, category: string, title: string, state: state, feedback: string | null) => {
     console.log("inside updateText", "<" + language + "&" + category + "'" + title + ">");
-    try{
+    
+    try {
         await dbGetTexts(tenantID, language, category, title);
     } catch (err) {
         console.log("ERROR inside updateText", err.stack);
@@ -1494,9 +1495,25 @@ const updateText = async (tenantID: string, language: string, category: string, 
         ":newState": state,
     };
 
+    let paramsinfo: UpdateCommandInput = {
+        TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+        Key: {
+            idTenant: tenantID,
+            language_category_title: "<" + language + "&" + category + "'" + title + ">",
+        },
+        UpdateExpression: "set #feedback = :f",
+        ExpressionAttributeValues: {
+            ":f": feedback,
+        },
+        ExpressionAttributeNames: {
+            "#feedback": "feedback",
+        },
+    };
     try {
-        const data = await ddbDocClient.send(new UpdateCommand(params));
-        console.log("Success - GET", data);
+
+        await ddbDocClient.send(new UpdateCommand(paramsinfo));
+        await ddbDocClient.send(new UpdateCommand(params));
+        console.log("Success - GET", await dbgetSingleText(tenantID, language, category, title));
 
     } catch (err) {
         console.log("ERROR inside updateText", err.stack);

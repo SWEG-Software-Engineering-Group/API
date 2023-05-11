@@ -14,7 +14,7 @@ const putRejectText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
       return formatJSONResponse({ "error": "Missing Language" }, 400);
     if (event.pathParameters.Category == null)
       return formatJSONResponse({ "error": "Missing Category" }, 400);
-    await updateText(event.pathParameters.TenantId, event.pathParameters.Language, event.pathParameters.Category, decodeURI(event.pathParameters.Title), state.rifiutato);
+      await updateText(event.pathParameters.TenantId, event.pathParameters.Language, event.pathParameters.Category, decodeURI(event.pathParameters.Title), state.rifiutato, event.pathParameters.Feedback);
     return formatJSONResponse({ "message": "success" });
   } catch {
     return formatJSONResponse({ "error": "error" }, 403);
