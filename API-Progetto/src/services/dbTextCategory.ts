@@ -1469,8 +1469,9 @@ const dbputTranslation = async (tenant: string, title: string, category: string,
     }
 };
 
-const updateText = async (tenantID: string, language: string, category: string, title: string, state: state) => {
+const updateText = async (tenantID: string, language: string, category: string, title: string, state: state, comment? : string) => {
     console.log("inside updateText", "<" + language + "&" + category + "'" + title + ">");
+    console.log("Comment: ", comment);
     try{
         await dbGetTexts(tenantID, language, category, title);
     } catch (err) {
@@ -1493,7 +1494,32 @@ const updateText = async (tenantID: string, language: string, category: string, 
     {
         ":newState": state,
     };
+    if (comment != undefined) {
+        var paramsInfo: UpdateCommandInput = {
+            TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+            Key: {
+                idTenant: tenantID,
+                language_category_title: "<" + language + "&" + category + "'" + title + ">"
+            }
+        };
+        paramsInfo["UpdateExpression"] = "SET #comment = :newComment";
+        paramsInfo["ExpressionAttributeNames"] =
+        {
+            "#comment": "comment",
+        };
+        paramsInfo["ExpressionAttributeValues"] =
+        {
+            ":newComment": comment,
+        };
+        try {
+            const data = await ddbDocClient.send(new UpdateCommand(paramsInfo));
+            console.log("Success - GET", data);
 
+        } catch (err) {
+            console.log("ERROR inside updateText", err.stack);
+            throw { err };
+        }
+    }
     try {
         const data = await ddbDocClient.send(new UpdateCommand(params));
         console.log("Success - GET", data);
