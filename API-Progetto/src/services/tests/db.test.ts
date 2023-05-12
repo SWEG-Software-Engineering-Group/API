@@ -271,16 +271,18 @@ describe('dbTenant file', function () {
         //TODO control side effects on cgdelete
         it('wrong tenant', async () => {
             // const { Item } = 
-            ddbMock.on(PutCommand).callsFakeOnce(async () => {
-                tenantdata1.tenantName = "putTest";
+            ddbMock.on(PutCommand).callsFakeOnce(async (params) => {
+                tenantdata1 = params.Item;
                 await ddb.put({ TableName: 'TenantTable', Item: tenantdata1 }).promise()
             });
 
-            let changedtenant1 = await ddb.get({ TableName: 'TenantTable', Key: { id: tenantdata1.id } }).promise()
-            expect(changedtenant1.Item.toString()).toBe(tenantdata1);
-            await dbputTenant(tenantdata1.id);
-            let changedtenant = await ddb.get({ TableName: 'TenantTable', Key: { id: tenantdata1.id } }).promise()
-            expect(changedtenant.Item.toString()).toBe(tenantdata1);
+
+            tenantdata1.id = "testchange";
+            await dbputTenant(tenantdata1);
+
+            const { Item } = await ddb.get({ TableName: 'TenantTable', Key: { id: tenantdata1.id } }).promise();
+            console.log(Item);
+            expect(Item).toMatchObject(tenantdata1);
 
         });
     });

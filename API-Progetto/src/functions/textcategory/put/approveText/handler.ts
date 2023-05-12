@@ -17,8 +17,8 @@ const putAcceptText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
       return formatJSONResponse({ "error": "Missing Category" }, 400);
     console.log("all fields are filled");
     console.log(event.pathParameters.Title)
-    await updateText(event.pathParameters.TenantId, event.pathParameters.Language, event.pathParameters.Category, decodeURI(event.pathParameters.Title), state.verificato);
-    return formatJSONResponse({ "message": "success" });
+    let result = await updateText(event.pathParameters.TenantId, event.pathParameters.Language, event.pathParameters.Category, decodeURI(event.pathParameters.Title), state.verificato, null);
+    return formatJSONResponse({ "result": result });
   } catch (err) {
     console.log(err);
     return formatJSONResponse({ "error": err }, 403);
