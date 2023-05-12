@@ -393,14 +393,14 @@ const dbgetSingleText = async (tenant: string, language: string, category: strin
         if (text != null) {
             return ({
                 idTenant: text.idTenant,
-                language: language,
+                language: decodeURI(language),
                 category: categories.find(element => element.id === category),
-                title: title,
-                text: text.text,
+                title: decodeURI(title),
+                text: decodeURI(text.text),
                 state: text.state,
-                comment: info.comment,
-                link: info.link,
-                feedback: info.feedback,
+                comment: decodeURI(info.comment),
+                link: decodeURI(info.link),
+                feedback: decodeURI(info.feedback),
             } as Text);
         } else {
             console.log("failed to retrieve text")
