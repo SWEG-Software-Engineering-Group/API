@@ -1,7 +1,7 @@
 import { User } from "src/types/User";
 import { CognitoISP } from "./cognito";
-import { environment } from 'src/environment/environment';
-import { dbgetUserTenant, dbRemoveUserFromTenant} from "./dbTenant";
+import { environment } from "../../src/environment/environment";
+import { dbgetUserTenant, dbRemoveUserFromTenant } from "./dbTenant";
 
 
 const cgcreateUser = async (User: User) => {
@@ -23,7 +23,7 @@ const cgcreateUser = async (User: User) => {
     };
     try {
         await CognitoISP.signUp(params).promise();
-        
+
         await CognitoISP.adminConfirmSignUp({
             UserPoolId: environment.cognito.userPoolId,
             Username: params.Username
@@ -32,7 +32,7 @@ const cgcreateUser = async (User: User) => {
         return cgAdminGetUser(params.Username);
     } catch (err) {
         console.log(err);
-        throw {"Create User:": err};
+        throw { "Create User:": err };
     }
 }
 const cgaddUserRole = async (username: string, role: string) => {
@@ -44,7 +44,7 @@ const cgaddUserRole = async (username: string, role: string) => {
         }).promise();
     } catch (error) {
         console.log(error);
-        throw{"Add User:": error};
+        throw { "Add User:": error };
     }
 }
 const cgremoveUserRole = async (username: string, role: string) => {
@@ -56,11 +56,11 @@ const cgremoveUserRole = async (username: string, role: string) => {
         }).promise();
     } catch (error) {
         console.log(error);
-        throw{"Remove User:": error};
+        throw { "Remove User:": error };
     }
 
 }
-const cggetUserFromToken   = async (token: string) => {
+const cggetUserFromToken = async (token: string) => {
     return await CognitoISP.getUser({
         AccessToken: token
     }).promise();
@@ -120,7 +120,7 @@ const cggetAllUserCognito = async (params) => {
     }
 };
 
-const cggetListUserGroups = async (username : string) => {
+const cggetListUserGroups = async (username: string) => {
     try {
         const params = {
             UserPoolId: environment.cognito.userPoolId,
@@ -135,7 +135,7 @@ const cggetListUserGroups = async (username : string) => {
 
         return listGroupsResp.Groups;
     } catch (error) {
-        throw{"List User groups:": error};
+        throw { "List User groups:": error };
     }
 };
 
@@ -168,7 +168,7 @@ const cggetAllUserGroups = async (params) => {
             JSON.stringify(err, null, 2)
         );
     }
-};        
+};
 
 const cgdeleteUser = async (username: string) => {
     try {
@@ -179,11 +179,11 @@ const cgdeleteUser = async (username: string) => {
         await CognitoISP.adminDeleteUser(params).promise();
         // REMOVE FROM TENANT
         const tenant = await dbgetUserTenant(username);
-        if(tenant){
+        if (tenant) {
             await dbRemoveUserFromTenant(tenant[0].id, username);
         }
     } catch (error) {
-        throw {"Delete user": error};
+        throw { "Delete user": error };
     }
 }
 const cgsendResetCode = async (username: string) => {
@@ -195,7 +195,7 @@ const cgsendResetCode = async (username: string) => {
         await CognitoISP.forgotPassword(params).promise();
         return "Reset code sent"
     } catch (error) {
-        throw {"Send reset code": error};
+        throw { "Send reset code": error };
     }
 }
 const cgresetPassword = async (username: string, code: string, newPassword: string) => {
@@ -210,8 +210,8 @@ const cgresetPassword = async (username: string, code: string, newPassword: stri
         return "Password resetted"
     } catch (error) {
         console.log(error);
-        throw {"Reset password": error};
+        throw { "Reset password": error };
     }
 }
 
-export { cgsendResetCode,cgresetPassword,cgcreateUser, cggetListUserCognito, cggetUserFromToken, cgAdminGetUser, cgdeleteUser, cgaddUserRole, cgremoveUserRole, cggetListUserGroups};
+export { cgsendResetCode, cgresetPassword, cgcreateUser, cggetListUserCognito, cggetUserFromToken, cgAdminGetUser, cgdeleteUser, cgaddUserRole, cgremoveUserRole, cggetListUserGroups };

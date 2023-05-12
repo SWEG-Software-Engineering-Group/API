@@ -1,7 +1,6 @@
 import { PutCommand, PutCommandInput, ScanCommand, ScanCommandInput, GetCommand, GetCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
-import { environment } from "src/environment/environment";
-import { Tenant, Category } from "src/types/Tenant";
-import { v4 as uuidv4 } from "uuid";
+import { environment } from "../../src/environment/environment";
+import { Tenant, Category } from "../../src/types/Tenant";
 import { cgAdminGetUser, cgdeleteUser } from "./userManager";
 var crypto = require('crypto');
 import { ddbDocClient } from "./dbConnection";
@@ -94,7 +93,7 @@ const dbgetUserTenant = async (username: string) => {
     try {
         const tenant = await ddbDocClient.send(new ScanCommand(params));
 
-        console.log("Success - GET", tenant);
+        // console.log("Success - GET", tenant);
         return tenant.Items as Tenant[];
     } catch (err) {
         console.log("Error", err.stack);
@@ -299,7 +298,7 @@ const dbRemoveCategoryFromTenant = async (tenant: string, category: string) => {
         Key: {
             id: tenant,
         },
-        UpdateExpression: "REMOVE #categories["+index+"]",
+        UpdateExpression: "REMOVE #categories[" + index + "]",
         ExpressionAttributeNames: {
             "#categories": "categories",
         },

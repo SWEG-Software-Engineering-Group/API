@@ -1,0 +1,21 @@
+{
+    "id": "mustgenerate",
+    "tenantName": "Test2",
+    "defaultLanguage": "francese",
+    "creationDate": 100000,
+    "languages": [
+        "Italiano",
+        "Inglese"
+    ],
+    "admins": [
+        "pluto"
+    ],
+    "users": [
+        "pippo"
+    ],
+    "categories": [
+        "Header",
+        "Footer",
+        "Altro"
+    ]
+}

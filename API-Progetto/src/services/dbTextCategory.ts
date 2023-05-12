@@ -1,12 +1,12 @@
 import { GetCommand, GetCommandInput, BatchWriteCommand, BatchWriteCommandInput, ScanCommand, ScanCommandInput, DeleteCommand, DeleteCommandInput, UpdateCommand, UpdateCommandInput, PutCommand, PutCommandInput, QueryCommand, QueryCommandInput } from "@aws-sdk/lib-dynamodb";
-import { environment } from 'src/environment/environment';
-import { Text } from "src/types/Text";
+import { environment } from "../../src/environment/environment";
+import { Text } from "../../src/types/Text";
 
-import { TextCategory, state } from "src/types/TextCategory";
-import { Tenant, Category } from "src/types/Tenant";
+import { TextCategory, state } from "../../src/types/TextCategory";
+import { Tenant, Category } from "../../src/types/Tenant";
 import { ddbDocClient } from "./dbConnection";
 import { dbgetTenantinfo, dbgetCategories, dbgetDefaultLanguage } from "./dbTenant";
-import { TextCategoryInfo } from "src/types/TextCategoryinfo";
+import { TextCategoryInfo } from "../../src/types/TextCategoryinfo";
 
 
 
@@ -156,7 +156,7 @@ const dbgetAllTexts = async (tenant: string) => {
         });
         info.forEach(function (text) {
             //check if there are any leftovers
-            if (txt.findIndex(t => t.language_category_title===text.language_category_title) === -1) {
+            if (txt.findIndex(t => t.language_category_title === text.language_category_title) === -1) {
                 dbdeleteSingleText(tenant, text.language_category_title);
             }
         });
@@ -298,7 +298,7 @@ const dbgetTexts = async (tenant: string, language: string, category: string) =>
     //QUERY and return all Texts from a Category within a language of one Tenant
     //input: tenant(String), language(String), category(String)
     //output: Text[] / Error
-    console.log("inside dbgetTexts", tenant, language+"&"+category);
+    console.log("inside dbgetTexts", tenant, language + "&" + category);
     try {
         //get categories of the tenant
         const categories: Category[] = await (dbgetCategories(tenant));
@@ -463,7 +463,7 @@ const dbgetCategoryLanguages = async (tenant: string, category: string) => {
     //GET all the text count for each languages inside a category.
     //input: tenant(String), category:(String)
     //output: languages[] / Error
-    console.log("inside dbgetCategoryLanguages",  "&" + category + "'" );
+    console.log("inside dbgetCategoryLanguages", "&" + category + "'");
     try {
         //request all the data from the Text and metadata tables
         const param: ScanCommandInput = {
@@ -671,7 +671,7 @@ const dbdeleteText = async (tenant: string, title: string, category: string) => 
     console.log("inside dbdeleteText", "&" + category + "'" + title + ">");
 
     if (! await dbgetSingleText(tenant, await dbgetDefaultLanguage(tenant), category, title))
-        throw {"Error": "this text doesn't exist"};
+        throw { "Error": "this text doesn't exist" };
 
     const param1: ScanCommandInput = {
         TableName: environment.dynamo.TextCategoryTable.tableName,
@@ -1242,7 +1242,7 @@ const dbputTextCategory = async (tenant: string, category: string, title: string
         while (txt.length !== 0) {
             let temp = txt.pop();
             tempB.push({ DeleteRequest: { Key: { idTenant: tenant, language_category_title: temp.language_category_title } } });
-            temp.language_category_title = "<"+ temp.language_category_title.split("&")[0].split("<")[1] + "&" + newcategory + "'" + temp.language_category_title.split(">")[0].split("'")[1] + ">";
+            temp.language_category_title = "<" + temp.language_category_title.split("&")[0].split("<")[1] + "&" + newcategory + "'" + temp.language_category_title.split(">")[0].split("'")[1] + ">";
             tempA.push({ PutRequest: { Item: temp } });
             if (tempB.length === 25) {
                 cancel.push({
@@ -1367,7 +1367,7 @@ const dbputOriginalText = async (tenant: string, category: string, title: string
         //it text is modified than all translation return to be retranslated
         if (currtext.text !== text) {
             //change original text
-            console.log("text has changed", currtext.text , text);
+            console.log("text has changed", currtext.text, text);
             const paramstext: UpdateCommandInput = {
                 TableName: environment.dynamo.TextCategoryTable.tableName,
                 Key: {
@@ -1389,7 +1389,7 @@ const dbputOriginalText = async (tenant: string, category: string, title: string
 
         //comment and link are replicated on every translation and needs to keep consistency
         if (currinfo.comment !== comment || currinfo.link !== link) {
-            console.log("comment or link has changed", currinfo.comment , comment , currinfo.link , link);
+            console.log("comment or link has changed", currinfo.comment, comment, currinfo.link, link);
             //change original text
             let paramsinfo: UpdateCommandInput = {
                 TableName: environment.dynamo.TextCategoryInfoTable.tableName,
@@ -1444,7 +1444,7 @@ const dbputTranslation = async (tenant: string, title: string, category: string,
     //output: true / Error
 
     try {
-        console.log("inside putTranslation", language+ "&" +category+"'"+title);
+        console.log("inside putTranslation", language + "&" + category + "'" + title);
         const params: UpdateCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
             Key: {
@@ -1471,7 +1471,7 @@ const dbputTranslation = async (tenant: string, title: string, category: string,
 
 const updateText = async (tenantID: string, language: string, category: string, title: string, state: state) => {
     console.log("inside updateText", "<" + language + "&" + category + "'" + title + ">");
-    try{
+    try {
         await dbGetTexts(tenantID, language, category, title);
     } catch (err) {
         console.log("ERROR inside updateText", err.stack);

@@ -2,27 +2,27 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
     DynamoDBDocumentClient,
 } from "@aws-sdk/lib-dynamodb";
-import { environment } from "src/environment/environment";
+import { environment } from "../../src/environment/environment";
 //per eseguire in offline
 //let options = { region: environment.awsRegion }
-let options;
-if (process.env.IS_OFFLINE) {
-    options = {
-        region: "localhost",
-        endpoint: "http://localhost:8000",
-        accessKeyId: 'DEFAULT_ACCESS_KEY',  // needed if you don't have aws credentials at all in env
-        secretAccessKey: 'DEFAULT_SECRET' // needed if you don't have aws credentials at all in env
-    }
-} else {
-    options = {
-        region: "localhost",
-        endpoint: "http://localhost:8000",
-        accessKeyId: 'DEFAULT_ACCESS_KEY',
-        secretAccessKey: 'DEFAULT_SECRET'
-    }
-}
+// let options;
+// if (process.env.IS_OFFLINE) {
+//     options = {
+//         region: "localhost",
+//         endpoint: "http://localhost:8000",
+//         accessKeyId: 'DEFAULT_ACCESS_KEY',  // needed if you don't have aws credentials at all in env
+//         secretAccessKey: 'DEFAULT_SECRET' // needed if you don't have aws credentials at all in env
+//     }
+// } else {
+//     options = {
+//         region: "localhost",
+//         endpoint: "http://localhost:8000",
+//         accessKeyId: 'DEFAULT_ACCESS_KEY',
+//         secretAccessKey: 'DEFAULT_SECRET'
+//     }
+// }
 // Create an Amazon DynamoDB service client object.
-export const ddbClient = new DynamoDBClient({region: environment.awsRegion});
+export const ddbClient = new DynamoDBClient({ region: environment.awsRegion });
 
 const marshallOptions = {
     // Whether to automatically convert empty strings, blobs, and sets to `null`.
