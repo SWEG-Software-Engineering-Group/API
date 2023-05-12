@@ -8,7 +8,7 @@ export default {
     {
       http: {
         method: 'post',
-        path: 'user/create',
+        path: 'user/create/{TenantId}',
         request: {
           schemas: {
             'application/json': schema,
@@ -16,7 +16,8 @@ export default {
         },
         authorizer: {
           arn: environment.cognito.userPoolArn,
-        }
+        },
+        cors: true,
       },
     },
   ],

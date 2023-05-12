@@ -1,22 +1,22 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetCategories, dbGetTexts } from 'src/services/dbTextCategory';
+import { dbgetCategories } from 'src/services/dbTenant';
 import { TextCategory } from 'src/types/TextCategory';
 
 import schema from './schema';
 
-const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const getCategories: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   var res = null;
 
   try {
-    res = await dbgetCategories(event.pathParameters.TenantID);
+    if (event.pathParameters.TenantId == null)
+      return formatJSONResponse({ "error": "Missing TenantID" }, 400);
+    res = await dbgetCategories(event.pathParameters.TenantId);
+    return formatJSONResponse({ "categories": res as TextCategory[] });
   } catch (e) {
     return formatJSONResponse({ "error": e }, 403);
   }
-
-  return formatJSONResponse({ "categories": res });
-
 };
 
-export const main = middyfy(getText);
+export const main = middyfy(getCategories);

@@ -1,5 +1,6 @@
 import schema from './schema';
 import { handlerPath } from '@libs/handler-resolver';
+import { environment } from 'src/environment/environment';
 
 export default {
   handler: `${handlerPath(__dirname)}/handler.main`,
@@ -7,12 +8,16 @@ export default {
     {
       http: {
         method: 'put',
-        path: '{TenantID}/{language}/{category}/{id}/rejectText',
+        path: 'text/{TenantId}/{Language}/{Category}/{Title}/rejectTranslation',
         request: {
           schemas: {
             'application/json': schema,
           },
         },
+        authorizer: {
+          arn: environment.cognito.userPoolArn,
+        },
+        cors: true,
       },
     },
   ],

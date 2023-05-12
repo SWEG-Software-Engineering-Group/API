@@ -1,8 +1,8 @@
 interface TextCategory {
   idTenant: string;
-  languageidCategorytextId: string;
-  txt: string;
-  stato: number;
+  language_category_title: string;
+  text: string;
+  state: number;
 }
 enum state {
   testoOriginale, daTradurre, daVerificare, verificato, rifiutato

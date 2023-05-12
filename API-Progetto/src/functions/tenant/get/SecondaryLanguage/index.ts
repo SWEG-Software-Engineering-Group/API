@@ -7,10 +7,11 @@ export default {
     {
       http: {
         method: 'get',
-        path: 'tenant/{tenantid}/secondaryLanguage',
+        path: 'tenant/{TenantId}/secondaryLanguages',
         authorizer: {
           arn: environment.cognito.userPoolArn,
         },
+        cors: true,
       },
     },
   ],

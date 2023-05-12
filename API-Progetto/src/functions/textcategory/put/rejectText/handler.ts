@@ -6,15 +6,19 @@ import { updateText } from 'src/services/dbTextCategory';
 import schema from './schema';
 import { state } from 'src/types/TextCategory';
 
-const getText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const putRejectText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
-    await updateText(event.pathParameters.TenantID, event.pathParameters.language, event.pathParameters.category, event.pathParameters.id, state.rifiutato);
-
-    return formatJSONResponse({ "message": "success" });
-
+    if (event.pathParameters.TenantId == null)
+      return formatJSONResponse({ "error": "Missing TenantId" }, 400);
+    if (event.pathParameters.Language == null)
+      return formatJSONResponse({ "error": "Missing Language" }, 400);
+    if (event.pathParameters.Category == null)
+      return formatJSONResponse({ "error": "Missing Category" }, 400);
+      let result = await updateText(event.pathParameters.TenantId, event.pathParameters.Language, event.pathParameters.Category, decodeURI(event.pathParameters.Title), state.rifiutato, event.body.Feedback);
+    return formatJSONResponse({ "result": result }, 200);
   } catch {
     return formatJSONResponse({ "error": "error" }, 403);
   }
 };
 
-export const main = middyfy(getText);
+export const main = middyfy(putRejectText);
