@@ -1,8 +1,59 @@
 import type { AWS } from '@serverless/typescript';
-import { environment } from 'src/environement/environement';
-import hello from '@functions/hello';
-import { putTenant } from '@functions/index';
+import { environment } from 'src/environment/environment';
 
+// IMPORT USER FUNC
+import {
+  signUpUser,
+  deleteUser,
+  getUser,
+  getUsers,
+  getUserGroups,
+  admGetUser,
+  getUserTenant,
+  //addRole,
+  //removeRole,
+  setRole,
+  getResetCode,
+  resetPassword
+} from '@functions/index';
+
+// IMPORT TENANT FUNC
+import {
+  addLanguage,
+  //addUserToTenant,
+  addTenant,
+  removeCategory,
+  removeLanguage,
+  getAllTenants,
+  getTenantLanguages,
+  getTenant,
+  deleteTenant,
+  getAdmins,
+  tenantGetUsers,
+  getAllCategories,
+  getCountLanguagesForCategory
+} from '@functions/index';
+
+// IMPORT TEXTCATEGORY FUNC
+import {
+  deleteText,
+  deleteAllTexts,
+  getAllTexts,
+  getOriginalTexts,
+  textOfState,
+  // getToBeVerified,
+  // getVerified,
+  // getToBeTranslated,
+  // getRejectedTexts,
+  getText,
+  getTranslationLanguages,
+  postOriginalText,
+  putAcceptText,
+  putRejectText,
+  putOriginalText,
+  putTranslation,
+
+} from '@functions/index';
 const serverlessConfiguration: AWS = {
   service: 'api-progetto',
   frameworkVersion: '3',
@@ -19,28 +70,43 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: "Allow",
+            Action: [
+              "dynamodb:BatchGetItem",
+              "dynamodb:GetItem",
+              "dynamodb:DeleteItem",
+              "dynamodb:Query",
+              "dynamodb:Scan",
+              "dynamodb:BatchWriteItem",
+              "dynamodb:PutItem",
+              "dynamodb:UpdateItem",
+              "dynamodb:Scan",
+              "cognito-idp:ListUsers",
+              "cognito-idp:AdminConfirmSignUp",
+              "cognito-idp:AdminAddUserToGroup",
+              "cognito-idp:AdminRemoveUserFromGroup",
+              "cognito-idp:AdminGetUser",
+              "cognito-idp:AdminDeleteUser",
+              "cognito-idp:AdminListGroupsForUser"
+            ],
+            Resource: [
+              environment.dynamo.TenantTable.arn,
+              environment.dynamo.TokenTable.arn,
+              environment.dynamo.TextCategoryTable.arn,
+              environment.dynamo.TextCategoryInfoTable.arn,
+              environment.cognito.userPoolArn,
+            ],
+          },
+        ],
+      },
+    },
   },
   resources: {
     Resources: {
-      userTable: {
-        Type: 'AWS::DynamoDB::Table',
-        Properties: {
-          TableName: environment.dynamo.UserTable.tableName,
-          BillingMode: 'PAY_PER_REQUEST',
-          AttributeDefinitions: [
-            {
-              AttributeName: 'username',
-              AttributeType: 'S',
-            },
-          ],
-          KeySchema: [
-            {
-              AttributeName: 'username',
-              KeyType: 'HASH',
-            },
-          ],
-        },
-      },
       TokenTable: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
@@ -98,7 +164,7 @@ const serverlessConfiguration: AWS = {
               AttributeType: 'S',
             },
             {
-              AttributeName: 'languageidCategorytextId',
+              AttributeName: 'language_category_title',
               AttributeType: 'S',
             },
           ],
@@ -108,7 +174,34 @@ const serverlessConfiguration: AWS = {
               KeyType: 'HASH',
             },
             {
-              AttributeName: 'languageidCategorytextId',
+              AttributeName: 'language_category_title',
+              KeyType: 'RANGE',
+            },
+          ],
+        },
+      },
+      TextCategoryinfo: {
+        Type: 'AWS::DynamoDB::Table',
+        Properties: {
+          TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+          BillingMode: 'PAY_PER_REQUEST',
+          AttributeDefinitions: [
+            {
+              AttributeName: 'idTenant',
+              AttributeType: 'S',
+            },
+            {
+              AttributeName: 'language_category_title',
+              AttributeType: 'S',
+            },
+          ],
+          KeySchema: [
+            {
+              AttributeName: 'idTenant',
+              KeyType: 'HASH',
+            },
+            {
+              AttributeName: 'language_category_title',
               KeyType: 'RANGE',
             },
           ],
@@ -117,7 +210,51 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { hello, putTenant },
+  functions: {
+    signUpUser,
+    deleteUser,
+    getUser,
+    getUsers,
+    getUserGroups,
+    admGetUser,
+    getUserTenant,
+    //addRole,
+    //removeRole,
+    setRole,
+    getResetCode,
+    resetPassword,
+    ////
+    addLanguage,
+    //addUserToTenant,
+    addTenant,
+    removeCategory,
+    removeLanguage,
+    getAllTenants,
+    getTenantLanguages,
+    getTenant,
+    deleteTenant,
+    getAdmins,
+    tenantGetUsers,
+    getAllCategories,
+    getCountLanguagesForCategory,
+    ////
+    deleteText,
+    deleteAllTexts,
+    getAllTexts,
+    getOriginalTexts,
+    textOfState,
+    // getToBeVerified,
+    // getVerified,
+    // getToBeTranslated,
+    // getRejectedTexts,
+    getText,
+    getTranslationLanguages,
+    postOriginalText,
+    putAcceptText,
+    putRejectText,
+    putOriginalText,
+    putTranslation,
+  },
   package: { individually: true },
   custom: {
     esbuild: {
@@ -138,7 +275,10 @@ const serverlessConfiguration: AWS = {
         inmemory: true,
         migrate: true,
       }
-    }
+    },
+    webpack: {
+      keeoOutputDirectory: true,
+    },
   },
 };
 

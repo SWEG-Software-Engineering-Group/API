@@ -1,8 +1,10 @@
 interface TextCategory {
   idTenant: string;
-  languageidCategorytextId: string;
-  isDefault: boolean;
+  language_category_title: string;
   text: string;
+  state: number;
 }
-
-export { TextCategory };
+enum state {
+  testoOriginale, daTradurre, daVerificare, verificato, rifiutato
+}
+export { TextCategory, state };

@@ -10,6 +10,12 @@ export const formatJSONResponse = (
 ) => {
   return {
     statusCode,
+    // ADD CORS SUPPORT TO YOUR API
+    headers: {
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*", // Allow from anywhere 
+      "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT" 
+    },
     body: JSON.stringify(response),
   };
 };
