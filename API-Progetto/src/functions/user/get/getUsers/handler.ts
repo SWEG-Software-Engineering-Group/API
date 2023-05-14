@@ -8,6 +8,7 @@ import schema from './schema';
 const getUsers: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async () => {
   try
   {
+    ////
     let users = await cggetListUserCognito();
     return formatJSONResponse({users});
   }

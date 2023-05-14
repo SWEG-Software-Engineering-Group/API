@@ -154,6 +154,16 @@ const dbgetSecondaryLanguages = async (tenant: string) => {
     return ten.languages;
 
 };
+const dbgetAllLanguages = async (tenant: string) => {
+    // Set the parameters.
+    let ten: Tenant = await dbgetTenantinfo(tenant);
+    if (ten == null) {
+        return { err: "Tenant not found" };
+    }
+    let languages = ten.languages;
+    languages.push(ten.defaultLanguage);
+    return languages;
+};
 const dbgetCategories = async (tenant: string) => {
     //GET the categories list inside a Tenant
     //input: tenant(String)
@@ -521,4 +531,4 @@ const dbresetTenant = async (tenant: string) => {
     }
 };
 
-export { dbgetTenantinfo, dbcheckAdminInTenant, dbcheckUserInTenant, dbgetTenants, dbgetUserTenant, dbgetTenantUsers, dbputTenant, dbgetCategories, dbgetCountLanguagesForCategory, dbdeleteTenant, dbresetTenant, dbAddUserToTenant, dbRemoveUserFromTenant, dbAddAdminToTenant, dbgetDefaultLanguage, dbgetSecondaryLanguages, dbAddCategoryToTenant, dbRemoveCategoryFromTenant, dbAddSecLanguageToTenant, dbRemoveSecLanguageFromTenant };
+export { dbgetAllLanguages,dbgetTenantinfo, dbcheckAdminInTenant, dbcheckUserInTenant, dbgetTenants, dbgetUserTenant, dbgetTenantUsers, dbputTenant, dbgetCategories, dbgetCountLanguagesForCategory, dbdeleteTenant, dbresetTenant, dbAddUserToTenant, dbRemoveUserFromTenant, dbAddAdminToTenant, dbgetDefaultLanguage, dbgetSecondaryLanguages, dbAddCategoryToTenant, dbRemoveCategoryFromTenant, dbAddSecLanguageToTenant, dbRemoveSecLanguageFromTenant };

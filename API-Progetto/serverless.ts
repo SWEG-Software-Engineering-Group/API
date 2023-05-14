@@ -31,7 +31,8 @@ import {
   getAdmins,
   tenantGetUsers,
   getAllCategories,
-  getCountLanguagesForCategory
+  getCountLanguagesForCategory,
+  getAllLanguages
 } from '@functions/index';
 
 // IMPORT TEXTCATEGORY FUNC
@@ -52,6 +53,7 @@ import {
   putRejectText,
   putOriginalText,
   putTranslation,
+  getTextFromCatLang
 
 } from '@functions/index';
 const serverlessConfiguration: AWS = {
@@ -254,6 +256,8 @@ const serverlessConfiguration: AWS = {
     putRejectText,
     putOriginalText,
     putTranslation,
+    getAllLanguages,
+    getTextFromCatLang
   },
   package: { individually: true },
   custom: {

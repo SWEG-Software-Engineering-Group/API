@@ -168,69 +168,93 @@ const dbgetAllTexts = async (tenant: string) => {
     }
 };
 
-/*
-const dbgetByCategory = async (tenant: string, category: string) => {
-    //SCAN and return all Texts from a Category of one Tenant
-    //input: tenant(String), category(String)
+
+const dbgetByCategory = async (tenant: string, category: string, language: string, title: string) => {
+    //QUERY and return all Texts from a Category within a language of one Tenant
+    //input: tenant(String), language(String), category(String)
     //output: Text[] / Error
+    console.log("inside dbgetSingleText", "<" + language + "&" + category + "'" + title + ">");
     try {
-        //get categories of the tenant
+        let dbTenant = await (dbgetTenantinfo(tenant)) as Tenant;
+        if (dbTenant == null)
+            throw { "error": "Tenant not found" };
         const categories: Category[] = await (dbgetCategories(tenant));
         if (categories == null)
-            throw { "error": "error" };
-
-        //request all the data from the Text and metadata tables
-        const param1: ScanCommandInput = {
-            TableName: environment.dynamo.TextCategoryInfoTable.tableName,
-            FilterExpression: "#idTenant = :t and contains(#language_category_title, :c)",
-            ExpressionAttributeValues: {
-                ":t": tenant,
-                ":c": "&" + category + "'",
-            },
-            ExpressionAttributeNames: {
-                "#idTenant": "idTenant",
-                "#language_category_title": "language_category_title",
-            },
-
-        };
-        const param2: ScanCommandInput = {
+            throw { "error": "couldn't collect the categories" };
+        // IF Category is not in categories
+        if (categories.findIndex(c => c.id === category) === -1)
+            throw { "error": "Category not found" };
+        let stringT = "<" + language + "&" + category + "'" + title + ">"
+        let decodeUri = decodeURI(stringT)
+        stringT = stringT.replace(/%20/g, " ");
+        console.log(stringT);
+        console.log(decodeUri)
+        console.log(tenant);
+        const getparamT: GetCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
-            FilterExpression: "#idTenant = :t and contains(#language_category_title, :c)",
-            ExpressionAttributeValues: {
-                ":t": tenant,
-                ":c": "&" + category + "'",
-            },
-            ExpressionAttributeNames: {
-                "#idTenant": "idTenant",
-                "#language_category_title": "language_category_title",
-            },
+            Key: {
+                idTenant: tenant,
+                language_category_title: stringT,
+            }
         };
-        const info = await (await ddbDocClient.send(new ScanCommand(param1))).Items as TextCategoryInfo[];
-        //------------------NOTE!!!!
-        //this function gets all texts from a tenant. in case all the data goes over 1MB in size
-        //the call could fail, throttle or take quite a lot of time.
-        //this is a case that migth brake this function!
-        const txt = await (await ddbDocClient.send(new ScanCommand(param2))).Items as TextCategory[];
-        if (info == null || txt == null)
-            throw { "error": "error reading texts from db" };
+        const getparamI: GetCommandInput = {
+            TableName: environment.dynamo.TextCategoryInfoTable.tableName,
+            Key: {
+                idTenant: tenant,
+                language_category_title: stringT,
+            }
+        };
+        const text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
+        const info = (await ddbDocClient.send(new GetCommand(getparamI))).Item as TextCategoryInfo;
+        console.log(text);
+        console.log(info);
+        if (text != null) {
+            if (text.state === state.verificato){
+                return ({
+                    idTenant: text.idTenant,
+                    language: decodeURI(language),
+                    category: categories.find(element => element.id === category),
+                    title: decodeURI(title),
+                    text: decodeURI(text.text),
+                    state: text.state,
+                    comment: decodeURI(info.comment),
+                    link: decodeURI(info.link),
+                    feedback: decodeURI(info.feedback),
+                } as Text);
+            } else {
+                console.log("text not verified")
+                let mainlang = dbTenant.defaultLanguage;
+                stringT = "<" + mainlang + "&" + category + "'" + title + ">"
+                const text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
+                const info = (await ddbDocClient.send(new GetCommand(getparamI))).Item as TextCategoryInfo;
+                if (text != null) {
+                    return ({
+                        idTenant: text.idTenant,
+                        language: decodeURI(mainlang),
+                        category: categories.find(element => element.id === category),
+                        title: decodeURI(title),
+                        text: decodeURI(text.text),
+                        state: text.state,
+                        comment: decodeURI(info.comment),
+                        link: decodeURI(info.link),
+                        feedback: decodeURI(info.feedback),
+                    } as Text);
+                } else {
+                    console.log("failed to retrieve text")
+                    return "";
+                }
+            }
+        } else {
+            console.log("failed to retrieve text")
+            return false;
+        }
 
-        //merge the data together between texts and infos
-        var result = [];
-
-        txt.forEach(function (text) {
-            //iterate over every row of Text table
-            let data = utilMergeMeta(text, info, categories);
-            if (data == null)
-                throw { "error": "error mergind metadata" };
-            result.push(data);
-        });
-        //return all the data
-        return result;
     } catch (err) {
+        console.log("ERROR inside dbgetSingleText", err);
         throw { err };
     }
 };
-
+/*
 const dbgetByLanguage = async (tenant: string, language: string, state: state) => {
     //SCAN and return all Texts from a Language of one Tenant
     //input: tenant(String), language(String), state(State)
@@ -1522,4 +1546,4 @@ const updateText = async (tenantID: string, language: string, category: string, 
     }
 }
 
-export { dbgetAllTexts, dbgetTexts, dbgetSingleText, dbgetTranslationsLanguages, dbgetCategoryLanguages, dbGetTexts, textsOfState, dbdeleteText, dbdeleteSingleText, dbdeleteLanguageTexts, dbdeleteCategoryTexts, dbdeleteAllTexts, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation, updateText };
+export { dbgetByCategory,dbgetAllTexts, dbgetTexts, dbgetSingleText, dbgetTranslationsLanguages, dbgetCategoryLanguages, dbGetTexts, textsOfState, dbdeleteText, dbdeleteSingleText, dbdeleteLanguageTexts, dbdeleteCategoryTexts, dbdeleteAllTexts, dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputOriginalText, dbputTranslation, updateText };

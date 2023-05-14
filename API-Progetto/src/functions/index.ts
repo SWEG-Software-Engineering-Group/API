@@ -7,10 +7,12 @@ export { default as getTenant } from './tenant/get/Tenant';
 export { default as getUser } from './user/get/getUser';
 export { default as deleteTenant } from './tenant/delete/Tenant';
 export { default as addTenant } from './tenant/post/create';
+export { default as getAllLanguages } from './tenant/get/Languages';
 export { default as signUpUser } from './user/post/create';
 //export { default as addUserToTenant } from './tenant/post/addUser';
 export { default as deleteUser } from './user/delete/deleteUser';
 export { default as textOfState } from './textcategory/get/textOfState'
+export { default as getTextFromCatLang } from './textcategory/get/textFromCategoryAndLang';
 // export { default as getRejectedTexts } from './textcategory/get/rejectedText';
 // export { default as getToBeTranslated } from './textcategory/get/toBeTranslated';
 // export { default as getToBeVerified } from './textcategory/get/getTextsToVerify';
