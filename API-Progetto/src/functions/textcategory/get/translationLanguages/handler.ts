@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetTranslationsLanguages } from 'src/services/dbTextCategory';
+import { dbgetTranslationsLanguages } from 'src/services/dbTextCategoryGet';
 import { dbcheckUserInTenant } from 'src/services/dbTenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';

@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetAllTexts } from 'src/services/dbTextCategory';
+import { dbgetAllTexts } from 'src/services/dbTextCategoryGet';
 import { dbcheckUserInTenant } from 'src/services/dbTenant';
 import { Text } from 'src/types/Text';
 import sanitizeHtml from 'sanitize-html';
@@ -50,7 +50,7 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     try {
         //collect the data from db
         var texts: Text[] = await (dbgetAllTexts(tenant));
-        if (!texts || texts.length==0)
+        if (!texts || texts.length == 0)
             return formatJSONResponse({ "error": "no texts found" });
     }
     catch (error) {

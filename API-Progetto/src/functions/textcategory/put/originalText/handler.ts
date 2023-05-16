@@ -1,7 +1,8 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbputOriginalText, dbputTextCategory, dbgetSingleText, dbgetTranslationsLanguages, dbpostTranslation, dbdeleteSingleText } from 'src/services/dbTextCategory';
+import { dbputOriginalText, dbputTextCategory, dbpostTranslation, dbdeleteSingleText } from 'src/services/dbTextCategory';
+import { dbgetSingleText, dbgetTranslationsLanguages } from "src/services/dbTextCategoryGet";
 import { dbcheckAdminInTenant, dbAddCategoryToTenant, dbgetTenantinfo } from 'src/services/dbTenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
@@ -49,7 +50,7 @@ const putOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     let link = sanitizeHtml(event.body.Link, { allowedTags: [], allowedAttributes: {} });
     //need to sanitize this event.body.Languages
     let languages = event.body.Languages;
-    if (tenant === '' || title === '' || text === '' || category === '' || newcategory === '' ) //|| languages.length === '-1') TO ADD IN SOME WAY
+    if (tenant === '' || title === '' || text === '' || category === '' || newcategory === '') //|| languages.length === '-1') TO ADD IN SOME WAY
         return formatJSONResponse({ "error": "input is empty" });
 
 
@@ -63,7 +64,7 @@ const putOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
         //check if all the languages are inside the Tenant.
         let tenantinfo = await dbgetTenantinfo(tenant);
         if (await dbgetSingleText(tenant, tenantinfo.defaultLanguage, category, title) === false)
-            return formatJSONResponse({ "error": "this text does not exist"}, 400);
+            return formatJSONResponse({ "error": "this text does not exist" }, 400);
         languages.forEach(function (language) {
             if (!tenantinfo.languages.includes(language))
                 return formatJSONResponse({ "error": " one of the languages is not present inside the Tenant" }, 400);
@@ -94,7 +95,7 @@ const putOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
             }
         });
         console.log("step 04");
-       
+
         //updating the data of the original text and translations
         let original = await dbputOriginalText(tenant, id, title, text, comment, link, languages);
         return formatJSONResponse({ "result": original }, 200);

@@ -4,7 +4,7 @@ import { Tenant, Category } from "../../src/types/Tenant";
 import { cgAdminGetUser, cgdeleteUser } from "./userManager";
 var crypto = require('crypto');
 import { ddbDocClient } from "./dbConnection";
-import { dbgetCategoryLanguages } from "./dbTextCategory";
+import { dbgetCategoryLanguages } from "./dbTextCategoryGet";
 
 //UTIL
 const dbcheckUserInTenant = async (tenant: string, user: string) => {
@@ -174,19 +174,7 @@ const dbgetCategories = async (tenant: string) => {
 };
 
 const dbgetCountLanguagesForCategory = async (tenant: string) => {
-    //GET the categories stats of a Tenant
-    //input: tenant(String)
-    //output: [] / Error
-    //{  example
-    //    footer: {
-    //        id: nasjdhua8sda
-    //        languages: {
-    //            english: 20,
-    //            french: 15,
-    //            italian: 7,
-    //        }
-    //    }
-    //}
+
     const params: GetCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
         Key: { id: tenant },
