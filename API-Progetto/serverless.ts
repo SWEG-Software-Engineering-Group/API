@@ -20,7 +20,6 @@ import {
 // IMPORT TENANT FUNC
 import {
   addLanguage,
-  //addUserToTenant,
   addTenant,
   removeCategory,
   removeLanguage,
@@ -227,7 +226,6 @@ const serverlessConfiguration: AWS = {
     resetPassword,
     ////
     addLanguage,
-    //addUserToTenant,
     addTenant,
     removeCategory,
     removeLanguage,

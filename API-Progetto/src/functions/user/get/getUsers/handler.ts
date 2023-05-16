@@ -6,11 +6,9 @@ import { cggetListUserCognito } from 'src/services/userManager';
 import schema from './schema';
 
 const getUsers: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async () => {
-  try
-  {
-    ////
+  try {
     let users = await cggetListUserCognito();
-    return formatJSONResponse({users});
+    return formatJSONResponse({ users });
   }
   catch (error) {
     return formatJSONResponse(

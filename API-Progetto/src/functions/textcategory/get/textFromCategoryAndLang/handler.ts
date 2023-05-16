@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-
+import { dbgetByCategory } from 'src/services/dbTextCategoryGet';
 
 import schema from './schema';
 
@@ -12,7 +12,8 @@ const getTextFromCatLang: ValidatedEventAPIGatewayProxyEvent<typeof schema> = as
       return formatJSONResponse({ "error": "Missing TenantId" }, 400);
     if (event.pathParameters.Language == null)
       return formatJSONResponse({ "error": "Missing Language" }, 400);
-    res = await dbgetByCategory(event.pathParameters.TenantId, event.pathParameters.Category, event.pathParameters.Language, event.pathParameters.Title);
+    res = await dbgetByCategory(event.pathParameters.TenantId,  event.pathParameters.Category, event.pathParameters.Language, event.pathParameters.Title);
+    console.log(res);
     if (res == false)
       return formatJSONResponse({ "error": "Text not found" }, 400);
     return formatJSONResponse({ "Text": res });

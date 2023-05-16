@@ -270,48 +270,6 @@
                 }
             }
         },
-        "/tenant/{TenantId}/countTexts":{
-            "get": {
-                "description": "Get the number of the texts of a tenant for each language.",
-                "parameters": [
-                    {
-                        "name": "TenantId",
-                        "in": "path",
-                        "required": true,
-                        "type": "string",
-                        "description": "Id of the tenant where to get the categories"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Return the number of texts of the tenant for each language"
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/GenericError"
-                        }
-                    },
-                    "401":{
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/Unauthorized"
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "2_tleAXoqbb": []
-                    }
-                ],
-                "x-amazon-apigateway-integration": {
-                    "httpMethod": "POST",
-                    "uri": "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getTenantLanguages/invocations",
-                    "passthroughBehavior": "when_no_match",
-                    "type": "aws_proxy"
-                }
-            }
-        },
         "/tenant/create": {
             "post": {
                 "consumes": [
@@ -565,51 +523,6 @@
                 }
             }
         },
-        "/text/{TenantId}/allTexts": {
-            "get": {
-                "description": "Get all the texts of a tenant",
-                "parameters": [
-                    {
-                        "name": "TenantId",
-                        "in": "path",
-                        "required": true,
-                        "type": "string",
-                        "description": "Id of the tenant where to get the texts"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Return the list of texts of the tenant",
-                        "schema": {
-                            "$ref": "#/definitions/TextArray"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/GenericError"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/Unauthorized"
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "2_tleAXoqbb": []
-                    }
-                ],
-                "x-amazon-apigateway-integration": {
-                    "httpMethod": "POST",
-                    "uri": "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getAllTexts/invocations",
-                    "passthroughBehavior": "when_no_match",
-                    "type": "aws_proxy"
-                }
-            }
-        },
         "/text/{TenantId}/category/{Category}/{Title}/originalText": {
             "put": {
                 "consumes": [
@@ -725,6 +638,259 @@
                 "x-amazon-apigateway-integration": {
                     "httpMethod": "POST",
                     "uri": "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-removeCategory/invocations",
+                    "passthroughBehavior": "when_no_match",
+                    "type": "aws_proxy"
+                }
+            }
+        },
+        "/text/{TenantId}/{Language}/state/rejectedTexts":{
+            "get": {
+                "description": "Get all the rejected texts of the tenant",
+                "parameters": [
+                    {
+                        "name": "TenantId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Id of the tenant where to get the texts"
+                    },
+                    {
+                        "name": "Language",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Language of the texts to get"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return the list of texts of the tenant",
+                        "schema": {
+                            "$ref": "#/definitions/TextArray"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/GenericError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "2_tleAXoqbb": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "httpMethod": "POST",
+                    "uri": "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getAllTexts/invocations",
+                    "passthroughBehavior": "when_no_match",
+                    "type": "aws_proxy"
+                }
+            }
+        },
+        "/text/{TenantId}/{Language}/state/toBeTranslated":{
+            "get": {
+                "description": "Get all the texts to be translated of the tenant",
+                "parameters": [
+                    {
+                        "name": "TenantId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Id of the tenant where to get the texts"
+                    },
+                    {
+                        "name": "Language",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Language of the texts to get"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return the list of texts of the tenant",
+                        "schema": {
+                            "$ref": "#/definitions/TextArray"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/GenericError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "2_tleAXoqbb": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "httpMethod": "POST",
+                    "uri": "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getAllTexts/invocations",
+                    "passthroughBehavior": "when_no_match",
+                    "type": "aws_proxy"
+                }
+            }
+        },
+        "/text/{TenantId}/{Language}/state/verified":{
+            "get": {
+                "description": "Get all the verified texts of the tenant",
+                "parameters": [
+                    {
+                        "name": "TenantId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Id of the tenant where to get the texts"
+                    },
+                    {
+                        "name": "Language",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Language of the texts to get"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return the list of texts of the tenant",
+                        "schema": {
+                            "$ref": "#/definitions/TextArray"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/GenericError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "2_tleAXoqbb": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "httpMethod": "POST",
+                    "uri": "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getAllTexts/invocations",
+                    "passthroughBehavior": "when_no_match",
+                    "type": "aws_proxy"
+                }
+            }
+        },
+        "/text/{TenantId}/{Language}/state/toBeVerified":{
+            "get": {
+                "description": "Get all the texts to be verified of the tenant",
+                "parameters": [
+                    {
+                        "name": "TenantId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Id of the tenant where to get the texts"
+                    },
+                    {
+                        "name": "Language",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Language of the texts to get"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return the list of texts of the tenant",
+                        "schema": {
+                            "$ref": "#/definitions/TextArray"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/GenericError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "2_tleAXoqbb": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "httpMethod": "POST",
+                    "uri": "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getAllTexts/invocations",
+                    "passthroughBehavior": "when_no_match",
+                    "type": "aws_proxy"
+                }
+            }
+        },
+        "/text/{TenantId}/allTexts": {
+            "get": {
+                "description": "Get all the texts of a tenant",
+                "parameters": [
+                    {
+                        "name": "TenantId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Id of the tenant where to get the texts"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return the list of texts of the tenant",
+                        "schema": {
+                            "$ref": "#/definitions/TextArray"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/GenericError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "2_tleAXoqbb": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "httpMethod": "POST",
+                    "uri": "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getAllTexts/invocations",
                     "passthroughBehavior": "when_no_match",
                     "type": "aws_proxy"
                 }
@@ -1393,7 +1559,118 @@
                     "type": "aws_proxy"
                 }
             }
-        }
+        },
+        "/tenant/{TenantId}/Languages": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "TenantId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Id of the tenant where to get all the languages"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return the list of all the languages of the tenant",
+                        "schema": {
+                            "$ref": "#/definitions/AddLanguagesResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/GenericError"
+                        }
+                    },
+                    "401":{
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Unauthorized"
+                        }
+                    }
+                },
+                "security":
+                    [
+                        {
+                            "ApiKeyAuth": []
+                        }
+                    ],
+                "x-amazon-apigateway-integration": {
+                    "httpMethod": "POST",
+                    "uri": "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getTenantLanguages/invocations",
+                    "passthroughBehavior": "when_no_match",
+                    "type": "aws_proxy"
+                },
+                "description": "Get the list of languages of a tenant."
+            }
+        },
+        "/text/{TenantId}/{Language}/{Category}/{Title}":{
+            "get":{
+              "parameters":[
+                {
+                  "name":"TenantId",
+                  "in":"path",
+                  "required":true,
+                  "type":"string",
+                  "description":"Id of the tenant where to get the texts"
+                },
+                {
+                  "name":"Language",
+                  "in":"path",
+                  "required":true,
+                  "type":"string",
+                  "description":"Language of the text to get"
+                },
+                {
+                  "name":"Category",
+                  "in":"path",
+                  "required":true,
+                  "type":"string",
+                  "description":"Category of the text to get"
+                },
+                {
+                  "name":"Title",
+                  "in":"path",
+                  "required":true,
+                  "type":"string",
+                  "description":"Title of the text to get"
+                }
+              ],
+              "responses":{
+                "200":{
+                  "description":"Return the text of the tenant",
+                  "schema":{
+                    "$ref": "#/definitions/SingleText"
+                  }
+                },
+                "400":{
+                  "description":"Bad Request",
+                  "schema":{
+                    "$ref":"#/definitions/GenericError"
+                  }
+                },
+                "401":{
+                  "description":"Unauthorized",
+                  "schema":{
+                    "$ref":"#/definitions/Unauthorized"
+                  }
+                }
+              },
+              "security":[
+                {
+                  "ApiKeyAuth":[]
+                }
+              ],
+              "x-amazon-apigateway-integration":{
+                "httpMethod":"POST",
+                "uri":"arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:574522373582:function:api-progetto-dev-getText/invocations",
+                "passthroughBehavior":"when_no_match",
+                "type":"aws_proxy"
+              }
+            }  
+          }
     },
     "securityDefinitions": {
         "2_tleAXoqbb": {
@@ -1407,6 +1684,11 @@
                 ],
                 "type": "cognito_user_pools"
             }
+        },
+        "ApiKeyAuth":{
+            "type": "apiKey",
+            "name": "x-api-key",
+            "in": "header"
         }
     },
     "definitions": {

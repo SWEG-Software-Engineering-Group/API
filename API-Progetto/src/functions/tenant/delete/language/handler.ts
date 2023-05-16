@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbcheckAdminInTenant, dbgetDefaultLanguage, dbRemoveSecLanguageFromTenant } from 'src/services/dbTenant';
+import { dbgetDefaultLanguage, dbRemoveSecLanguageFromTenant } from 'src/services/dbTenant';
 import { dbdeleteLanguageTexts } from 'src/services/dbTextCategory';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
@@ -29,10 +29,6 @@ const deleteLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
      * 
      */
 
-
-    //check user is allowed to use this function
-    //TO DO///
-
     //sanitize input and check if is empty
     if (event.pathParameters.TenantId == null || event.pathParameters.Language == null)
         return formatJSONResponse({ "error": "no valid input" });
@@ -41,12 +37,6 @@ const deleteLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     let language = sanitizeHtml(event.pathParameters.Language, { allowedTags: [], allowedAttributes: {} });
     if (language === '' || tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
-
-    //check user is admin inside this tenant
-    if (false)
-        if (dbcheckAdminInTenant(tenant, "Username"))
-            return formatJSONResponse({ "error": "user not in this tenant" });
-    //TO DO
 
     try {
         //check language is not default

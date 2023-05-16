@@ -2,7 +2,7 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { dbpostOriginalText, dbpostTranslation } from 'src/services/dbTextCategory';
-import { dbAddCategoryToTenant, dbcheckUserInTenant, dbgetSecondaryLanguages, } from 'src/services/dbTenant';
+import { dbAddCategoryToTenant, dbgetSecondaryLanguages, } from 'src/services/dbTenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
@@ -52,13 +52,6 @@ const postOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
     let languages = event.body.Languages;
     if (tenant === '' || title === '' || text === '' || category === '' || event.body.Languages == null)
         return formatJSONResponse({ "error": "input is empty" }, 400);
-
-
-    //TODO check user is admin inside this tenant
-    if (false)
-        if (dbcheckUserInTenant(tenant, "Username"))
-            return formatJSONResponse({ "error": "user not in this tenant" }, 400);
-    //TO DO
 
     try {
         //check if all the languages are inside the Tenant.

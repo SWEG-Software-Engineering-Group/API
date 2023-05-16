@@ -17,7 +17,7 @@ const resetPassword: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
       );
     }
     let user = await cgresetPassword(event.body.Username, event.body.Code, event.body.Password);
-    return formatJSONResponse({user});
+    return formatJSONResponse({ user });
   } catch (error) {
     console.log(error);
     return formatJSONResponse(

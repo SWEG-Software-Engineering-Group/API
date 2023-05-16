@@ -29,7 +29,7 @@ const signUpUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
     } else {
       await dbAddUserToTenant(event.pathParameters.TenantId, user.Username);
     }
-    return formatJSONResponse({user});
+    return formatJSONResponse({ user });
   } catch (error) {
     return formatJSONResponse(
       {

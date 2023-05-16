@@ -7,7 +7,7 @@ import { dbgetTenantinfo } from 'src/services/dbTenant';
 import schema from './schema';
 
 const getTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  try{
+  try {
     if (event.pathParameters.TenantId == null) {
       return formatJSONResponse(
         {
@@ -17,8 +17,8 @@ const getTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (even
       );
     }
     let tenant = await dbgetTenantinfo(event.pathParameters.TenantId.toString());
-    return formatJSONResponse({tenant}, 200);
-  } catch(error){
+    return formatJSONResponse({ tenant }, 200);
+  } catch (error) {
     console.log(error);
     return formatJSONResponse(
       {
@@ -26,7 +26,7 @@ const getTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (even
       },
       400
     );
-  }  
+  }
 };
 
 export const main = middyfy(getTenant);

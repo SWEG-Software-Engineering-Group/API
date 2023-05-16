@@ -24,7 +24,7 @@ const removeRole: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
       );
     }
     let role = await cgremoveUserRole(event.pathParameters.Username, event.body.Group.toString());
-    return formatJSONResponse({role}, 200);
+    return formatJSONResponse({ role }, 200);
   } catch (error) {
     console.log(error);
     return formatJSONResponse(

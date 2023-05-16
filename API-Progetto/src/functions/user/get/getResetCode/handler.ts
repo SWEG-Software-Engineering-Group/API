@@ -6,10 +6,8 @@ import { cgsendResetCode } from 'src/services/userManager';
 import schema from './schema';
 
 const getResetCode: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  try 
-  {
-    if (event.pathParameters.Username == null) 
-    {
+  try {
+    if (event.pathParameters.Username == null) {
       return formatJSONResponse(
         {
           "error": "Missing Username",
@@ -18,7 +16,7 @@ const getResetCode: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (e
       );
     }
     let user = await cgsendResetCode(event.pathParameters.Username);
-    return formatJSONResponse({user});
+    return formatJSONResponse({ user });
   } catch (error) {
     console.log(error);
     return formatJSONResponse(

@@ -1,9 +1,8 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbputOriginalText, dbputTextCategory, dbpostTranslation, dbdeleteSingleText } from 'src/services/dbTextCategory';
-import { dbgetSingleText, dbgetTranslationsLanguages } from "src/services/dbTextCategoryGet";
-import { dbcheckAdminInTenant, dbAddCategoryToTenant, dbgetTenantinfo } from 'src/services/dbTenant';
+import { dbputOriginalText, dbputTextCategory, dbgetSingleText, dbgetTranslationsLanguages, dbpostTranslation, dbdeleteSingleText } from 'src/services/dbTextCategoryPut';
+import { dbAddCategoryToTenant, dbgetTenantinfo } from 'src/services/dbTenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
@@ -52,13 +51,6 @@ const putOriginalText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     let languages = event.body.Languages;
     if (tenant === '' || title === '' || text === '' || category === '' || newcategory === '') //|| languages.length === '-1') TO ADD IN SOME WAY
         return formatJSONResponse({ "error": "input is empty" });
-
-
-    //check user is admin inside this tenant
-    if (false)
-        if (dbcheckAdminInTenant(tenant, "Username"))
-            return formatJSONResponse({ "error": "user not in this tenant" });
-    //TO DO
 
     try {
         //check if all the languages are inside the Tenant.

@@ -1,7 +1,6 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbcheckAdminInTenant } from 'src/services/dbTenant';
 import { dbdeleteText } from 'src/services/dbTextCategory';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
@@ -39,12 +38,6 @@ const deleteText: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
     let category = sanitizeHtml(event.pathParameters.Category, { allowedTags: [], allowedAttributes: {} })
     if (title === '' || tenant === '' || category === '')
         return formatJSONResponse({ "error": "input is empty" });
-
-    //check user is admin inside this tenant
-    if (false)
-        if (dbcheckAdminInTenant(tenant, "Username"))
-            return formatJSONResponse({ "error": "user not in this tenant" });
-    //TO DO
 
     try {
         //execute the delete

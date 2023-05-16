@@ -16,7 +16,7 @@ const admGetUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
       );
     }
     let users = await cgAdminGetUser(event.pathParameters.Username);
-    return formatJSONResponse({users}, 200);
+    return formatJSONResponse({ users }, 200);
   } catch (error) {
     return formatJSONResponse(
       {
