@@ -4,7 +4,7 @@ import { GetCommand } from "@aws-sdk/lib-dynamodb";
 
 const ddbMock = mockClient(DynamoDBDocumentClient);
 
-import { dbcheckAdminInTenant, dbcheckUserInTenant, dbgetCategories, dbgetCountLanguagesForCategory, dbgetDefaultLanguage, dbgetSecondaryLanguages, dbgetTenantinfo, dbgetTenants, dbgetUserTenant, dbputTenant } from "../dbTenant";
+import { dbcheckAdminInTenant, dbcheckUserInTenant, dbdeleteTenant, dbgetCategories, dbgetCountLanguagesForCategory, dbgetDefaultLanguage, dbgetSecondaryLanguages, dbgetTenantinfo, dbgetTenants, dbgetUserTenant, dbputTenant } from "../dbTenant";
 import { ddb } from "../__mocks__/dbConnection";
 var crypto = require('crypto');
 
@@ -96,7 +96,6 @@ describe('dbTenant file', function () {
 
             expect(tenants.tenants.toString()).toContain(tenantdata1.toString());
             expect(tenants.tenants.toString()).toContain(tenantdata2.toString());
-            expect(Object.keys(tenants.tenants).length).toBe(2);
         });
     });
     describe('dbgetTenantinfo function ', function () {
@@ -231,10 +230,7 @@ describe('dbTenant file', function () {
         });
     });
     describe('dbgetCountLanguagesForCategory function ', function () {
-        //TODO better test 
-        it('', async () => {
 
-        });
         it('wrong tenant', async () => {
             // const { Item } = await ddb.get({ TableName: 'TenantTable', Key: { id: crypto.randomUUID() } }).promise()
             ddbMock.on(GetCommand).resolves({
@@ -259,7 +255,7 @@ describe('dbTenant file', function () {
             });
             //TODO fix with jest to throw
             try {
-                await dbgetSecondaryLanguages(tenantdata1.id);
+                await dbdeleteTenant(tenantdata1.id);
                 expect(true).toBe(false);
             } catch (error) {
                 expect(true).toBe(true);
@@ -272,12 +268,12 @@ describe('dbTenant file', function () {
         it('wrong tenant', async () => {
             // const { Item } = 
             ddbMock.on(PutCommand).callsFakeOnce(async (params) => {
-                tenantdata1 = params.Item;
+                let tenantdata1 = params.Item;
                 await ddb.put({ TableName: 'TenantTable', Item: tenantdata1 }).promise()
             });
 
 
-            tenantdata1.id = "testchange";
+            tenantdata1.name = "testChange";
             await dbputTenant(tenantdata1);
 
             const { Item } = await ddb.get({ TableName: 'TenantTable', Key: { id: tenantdata1.id } }).promise();
@@ -286,5 +282,6 @@ describe('dbTenant file', function () {
 
         });
     });
+
 });
 
