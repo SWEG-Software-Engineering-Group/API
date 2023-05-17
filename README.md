@@ -1,18 +1,22 @@
 # API
-### Backend
-Dentro la cartella API
-```
-- cd SWEG-Traduzioni-api\API\API-Progetto
-- npm i -g serverless 
-- serverless dynamodb install (Per Linux - sls dynamodb install)
-- npm i (per installare tutto)
-- npm audit fix
-```
-- Scaricare AWS CLI se non installato: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
-(Per Linux - sudo apt install awscli)
 
-- ```aws configure```
-AWS Access Key ID [****************MHOV]: ```DEFAULT_ACCESS_KEY``` (da inserire)
-AWS Secret Access Key [****************2t63]: ```DEFAULT_SECRET``` (da inserire)
-Default region name [us-east-1]: ```us-east-1``` (da inserire)
-Default output format [None]: (dare Invio)
+## First start
+
+- Clone the repository
+- Install dependencies with `npm install`
+- Install globally serverless with `npm i -g serverless`
+- Install dynamodb local with `serverless dynamodb install`
+- Download AWS CLI if not installed: <https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html>
+- Configure AWS CLI with `aws configure`
+- Assure to insert the following parameters (press Enter four times)
+  - AWS Access Key ID [****************MHOV]: ```DEFAULT_ACCESS_KEY```
+  - AWS Secret Access Key [****************2t63]: ```DEFAULT_SECRET```
+  - Default region name [us-east-1]: ```us-east-1```
+  - Default output format [None]
+- Run dynamodb local with `serverless dynamodb start`
+
+## Getting started
+
+- Clone the repository
+- Install dependencies with `npm install`
+- Run dynamodb local with `serverless dynamodb start`
