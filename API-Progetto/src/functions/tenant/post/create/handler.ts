@@ -7,9 +7,9 @@ import schema from './schema';
 var crypto = require('crypto');
 
 const addTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  try{
+  try {
 
-  
+
     if (event.body.tenantName === undefined || event.body.defaultLanguage === undefined || event.body.creationDate === undefined || event.body.languages === undefined || event.body.admins === undefined || event.body.users === undefined || event.body.categories === undefined) {
       return formatJSONResponse(
         {
@@ -33,7 +33,7 @@ const addTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (even
       tenantName: event.body.tenantName,
       admins: event.body.admins,
       users: event.body.users,
-      creationDate: new Date().getTime()/1000,
+      creationDate: new Date().getTime() / 1000,
       languages: event.body.languages,
       defaultLanguage: event.body.defaultLanguage,
       categories: []//TODO//event.body.categories.map((val) => { return { id: crypto.randomUUID(), name: val } })//TODO map with created id//
@@ -41,7 +41,7 @@ const addTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (even
     return formatJSONResponse({
       Tenant: await dbgetTenantinfo(randid)
     });
-  }catch(error){
+  } catch (error) {
     console.log(error);
     return formatJSONResponse(
       {

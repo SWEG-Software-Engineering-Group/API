@@ -6,8 +6,7 @@ import { dbgetUserTenant } from 'src/services/dbTenant';
 import schema from './schema';
 
 const getUserTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  try
-  {
+  try {
     if (event.pathParameters.Username == null) {
       return formatJSONResponse(
         {
@@ -26,7 +25,7 @@ const getUserTenant: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
         400
       );
     }
-    return formatJSONResponse({tenants},200);
+    return formatJSONResponse({ tenants }, 200);
   } catch (error) {
     return formatJSONResponse(
       {

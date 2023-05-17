@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "9967d783-9f75-4d1a-b5e4-ae1a7875f2e5",
+		"_postman_id": "8a4702ac-9121-4ac2-a315-2a778fc173cc",
 		"name": "SWEG_NEW",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -452,7 +452,32 @@
 					"response": []
 				},
 				{
-					"name": "secondaryLanguage",
+					"name": "languages",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/secondaryLanguages",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"tenant",
+								"{{TenantId}}",
+								"secondaryLanguages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "languages",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -538,14 +563,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/{{Category}}/countTexts",
+							"raw": "{{ENDPOINT}}dev/tenant/{{TenantId}}/countTexts",
 							"host": [
 								"{{ENDPOINT}}dev"
 							],
 							"path": [
 								"tenant",
 								"{{TenantId}}",
-								"{{Category}}",
 								"countTexts"
 							]
 						}
@@ -633,7 +657,7 @@
 					"response": []
 				},
 				{
-					"name": "ToBeTranslated",
+					"name": "getUntranslatedTexts",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -644,7 +668,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/state/toBeTranslated",
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/toBeTranslated",
 							"host": [
 								"{{ENDPOINT}}dev"
 							],
@@ -652,7 +676,6 @@
 								"text",
 								"{{TenantId}}",
 								"{{Language}}",
-								"state",
 								"toBeTranslated"
 							]
 						}
@@ -660,7 +683,7 @@
 					"response": []
 				},
 				{
-					"name": "RejectedTexts",
+					"name": "getRejectedTexts",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -671,7 +694,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/state/rejectedTexts",
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/rejectedTexts",
 							"host": [
 								"{{ENDPOINT}}dev"
 							],
@@ -679,7 +702,6 @@
 								"text",
 								"{{TenantId}}",
 								"{{Language}}",
-								"state",
 								"rejectedTexts"
 							]
 						}
@@ -687,7 +709,7 @@
 					"response": []
 				},
 				{
-					"name": "verified",
+					"name": "getTextFromCatANDLANG",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -698,43 +720,22 @@
 							}
 						],
 						"url": {
-							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/state/verified",
+							"raw": "https://iibte10n05.execute-api.eu-west-2.amazonaws.com/dev/text/02d34632-83db-4ab6-b00a-56d3f224bb62/Italian/9a4ccccb-7eec-46ce-ae58-f29b666896bc/SoloItaliano",
+							"protocol": "https",
 							"host": [
-								"{{ENDPOINT}}dev"
+								"iibte10n05",
+								"execute-api",
+								"eu-west-2",
+								"amazonaws",
+								"com"
 							],
 							"path": [
+								"dev",
 								"text",
-								"{{TenantId}}",
-								"{{Language}}",
-								"state",
-								"verified"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "toBeVerified",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{AWSToken}}",
-								"type": "default"
-							}
-						],
-						"url": {
-							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/state/toBeVerified",
-							"host": [
-								"{{ENDPOINT}}dev"
-							],
-							"path": [
-								"text",
-								"{{TenantId}}",
-								"{{Language}}",
-								"state",
-								"toBeVerified"
+								"02d34632-83db-4ab6-b00a-56d3f224bb62",
+								"Italian",
+								"9a4ccccb-7eec-46ce-ae58-f29b666896bc",
+								"SoloItaliano"
 							]
 						}
 					},
@@ -752,7 +753,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/{{Category}}/{{Title}}/text",
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/ciao/ciao/text",
 							"host": [
 								"{{ENDPOINT}}dev"
 							],
@@ -760,8 +761,8 @@
 								"text",
 								"{{TenantId}}",
 								"{{Language}}",
-								"{{Category}}",
-								"{{Title}}",
+								"ciao",
+								"ciao",
 								"text"
 							]
 						}
@@ -781,7 +782,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Title\":\"Thetesttext4\",\r\n    \"Category\":\"05b1f88f-96f8-44f6-a167-78f308e4f466\",\r\n    \"Text\":\"Un bel text di test\",\r\n    \"Languages\": [\r\n            \"Kurdo\"\r\n        ],\r\n    \"Comment\":\"123stella\",\r\n    \"Link\":\"url.com\"\r\n}",
+							"raw": "{\r\n    \"Title\":\"The test text2\",\r\n    \"Category\":\"assadas\",\r\n    \"Text\":\"Un bel text di test\",\r\n    \"Comment\":\"123stella\",\r\n    \"Link\":\"url.com\",\r\n    \"Languages\":[\"Sardo\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -850,8 +851,17 @@
 								"type": "default"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/{{Category}}/{{Title}}/approveText",
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/{{Language}}/{{Category}}/{{Title}}/approveTranslation",
 							"host": [
 								"{{ENDPOINT}}dev"
 							],
@@ -861,7 +871,7 @@
 								"{{Language}}",
 								"{{Category}}",
 								"{{Title}}",
-								"approveText"
+								"approveTranslation"
 							]
 						}
 					},
@@ -880,7 +890,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Feedback\":\"\"\r\n}",
+							"raw": "{\r\n    \"Feedback\":\"Gnome hunting bro\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -899,6 +909,71 @@
 								"{{Category}}",
 								"{{Title}}",
 								"rejectTranslation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editOriginalText",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Category\":\"{{Category}}\",\r\n    \"Text\":\"ALLAHHHH\",\r\n    \"Comment\":\"Modificato\",\r\n    \"Link\":\"123.it\",\r\n    \"Languages\":[\"Italian\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/category/{{Category}}/{{Title}}/originalText",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"category",
+								"{{Category}}",
+								"{{Title}}",
+								"originalText"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AWSToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ENDPOINT}}dev/text/{{TenantId}}/category/{{Category}}/{{Title}}/originalText",
+							"host": [
+								"{{ENDPOINT}}dev"
+							],
+							"path": [
+								"text",
+								"{{TenantId}}",
+								"category",
+								"{{Category}}",
+								"{{Title}}",
+								"originalText"
 							]
 						}
 					},

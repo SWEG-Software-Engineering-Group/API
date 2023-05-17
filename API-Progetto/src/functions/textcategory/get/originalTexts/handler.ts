@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbGetTexts } from 'src/services/dbTextCategory';
+import { dbGetTexts } from 'src/services/dbTextCategoryGet';
 
 import schema from './schema';
 import { Text } from 'src/types/Text';

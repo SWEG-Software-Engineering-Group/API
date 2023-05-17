@@ -1,7 +1,6 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbcheckAdminInTenant } from 'src/services/dbTenant';
 import { dbdeleteAllTexts } from 'src/services/dbTextCategory';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
@@ -39,12 +38,6 @@ const deleteAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     if (tenant === '')
         return formatJSONResponse({ "error": "input is empty" }, 400);
 
-    //check user is admin inside this tenant
-    if (false)
-        if (dbcheckAdminInTenant(tenant, "Username"))
-            return formatJSONResponse({ "error": "user not in this tenant" },400);
-    //TO DO
-
     try {
         //execute the delete
         let result = await dbdeleteAllTexts(tenant);
@@ -52,11 +45,11 @@ const deleteAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     }
     catch (error) {
         //request to db failed
-        return formatJSONResponse({ "error": error },400);
+        return formatJSONResponse({ "error": error }, 400);
     }
 
     //return result
-    return formatJSONResponse({ "result": "OK" },200);
+    return formatJSONResponse({ "result": "OK" }, 200);
 };
 
 export const main = middyfy(deleteAllTexts);

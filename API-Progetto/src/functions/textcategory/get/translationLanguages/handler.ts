@@ -1,8 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetTranslationsLanguages } from 'src/services/dbTextCategory';
-import { dbcheckUserInTenant } from 'src/services/dbTenant';
+import { dbgetTranslationsLanguages } from 'src/services/dbTextCategoryGet';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
 
@@ -39,12 +38,6 @@ const getTranslationLanguages: ValidatedEventAPIGatewayProxyEvent<typeof schema>
 
     if (tenant === '' || category === '' || title === '')
         return formatJSONResponse({ "error": "input is empty" });
-
-    //check user is admin inside this tenant
-    if (false)
-        if (dbcheckUserInTenant(tenant, "Username"))
-            return formatJSONResponse({ "error": "user not in this tenant" });
-    //TO DO
 
     try {
         //collect the data from db

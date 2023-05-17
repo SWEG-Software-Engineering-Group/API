@@ -4,7 +4,7 @@ import { Tenant, Category } from "../../src/types/Tenant";
 import { cgAdminGetUser, cgdeleteUser } from "./userManager";
 var crypto = require('crypto');
 import { ddbDocClient } from "./dbConnection";
-import { dbgetCategoryLanguages } from "./dbTextCategory";
+import { dbgetCategoryLanguages } from "./dbTextCategoryGet";
 
 //UTIL
 const dbcheckUserInTenant = async (tenant: string, user: string) => {
@@ -154,6 +154,16 @@ const dbgetSecondaryLanguages = async (tenant: string) => {
     return ten.languages;
 
 };
+const dbgetAllLanguages = async (tenant: string) => {
+    // Set the parameters.
+    let ten: Tenant = await dbgetTenantinfo(tenant);
+    if (ten == null) {
+        return { err: "Tenant not found" };
+    }
+    let languages = ten.languages;
+    languages.push(ten.defaultLanguage);
+    return languages;
+};
 const dbgetCategories = async (tenant: string) => {
     //GET the categories list inside a Tenant
     //input: tenant(String)
@@ -174,19 +184,7 @@ const dbgetCategories = async (tenant: string) => {
 };
 
 const dbgetCountLanguagesForCategory = async (tenant: string) => {
-    //GET the categories stats of a Tenant
-    //input: tenant(String)
-    //output: [] / Error
-    //{  example
-    //    footer: {
-    //        id: nasjdhua8sda
-    //        languages: {
-    //            english: 20,
-    //            french: 15,
-    //            italian: 7,
-    //        }
-    //    }
-    //}
+
     const params: GetCommandInput = {
         TableName: environment.dynamo.TenantTable.tableName,
         Key: { id: tenant },
@@ -521,4 +519,4 @@ const dbresetTenant = async (tenant: string) => {
     }
 };
 
-export { dbgetTenantinfo, dbcheckAdminInTenant, dbcheckUserInTenant, dbgetTenants, dbgetUserTenant, dbgetTenantUsers, dbputTenant, dbgetCategories, dbgetCountLanguagesForCategory, dbdeleteTenant, dbresetTenant, dbAddUserToTenant, dbRemoveUserFromTenant, dbAddAdminToTenant, dbgetDefaultLanguage, dbgetSecondaryLanguages, dbAddCategoryToTenant, dbRemoveCategoryFromTenant, dbAddSecLanguageToTenant, dbRemoveSecLanguageFromTenant };
+export { dbgetAllLanguages,dbgetTenantinfo, dbcheckAdminInTenant, dbcheckUserInTenant, dbgetTenants, dbgetUserTenant, dbgetTenantUsers, dbputTenant, dbgetCategories, dbgetCountLanguagesForCategory, dbdeleteTenant, dbresetTenant, dbAddUserToTenant, dbRemoveUserFromTenant, dbAddAdminToTenant, dbgetDefaultLanguage, dbgetSecondaryLanguages, dbAddCategoryToTenant, dbRemoveCategoryFromTenant, dbAddSecLanguageToTenant, dbRemoveSecLanguageFromTenant };

@@ -1,8 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbgetAllTexts } from 'src/services/dbTextCategory';
-import { dbcheckUserInTenant } from 'src/services/dbTenant';
+import { dbgetAllTexts } from 'src/services/dbTextCategoryGet';
 import { Text } from 'src/types/Text';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';
@@ -42,15 +41,10 @@ const getAllTexts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
     if (tenant === '')
         return formatJSONResponse({ "error": "input is empty" });
 
-    //check user is admin inside this tenant
-    if (false)
-        if (dbcheckUserInTenant(tenant, "Username"))
-            return formatJSONResponse({ "error": "user not in this tenant" });
-    //TO DO
     try {
         //collect the data from db
         var texts: Text[] = await (dbgetAllTexts(tenant));
-        if (!texts || texts.length==0)
+        if (!texts || texts.length == 0)
             return formatJSONResponse({ "error": "no texts found" });
     }
     catch (error) {

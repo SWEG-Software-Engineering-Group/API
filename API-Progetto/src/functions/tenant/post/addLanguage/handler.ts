@@ -24,7 +24,7 @@ const addLanguage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (ev
       );
     }
     let tenant = await dbAddSecLanguageToTenant(event.pathParameters.TenantId, event.body.Language.toString());
-    return formatJSONResponse({tenant}, 200);
+    return formatJSONResponse({ tenant }, 200);
   } catch (error) {
     console.log(error);
     return formatJSONResponse(

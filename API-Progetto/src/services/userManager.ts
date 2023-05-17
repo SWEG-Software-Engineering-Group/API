@@ -24,10 +24,10 @@ const cgcreateUser = async (User: User) => {
     try {
         await CognitoISP.signUp(params).promise();
 
-        await CognitoISP.adminConfirmSignUp({
-            UserPoolId: environment.cognito.userPoolId,
-            Username: params.Username
-        }).promise();
+        //await CognitoISP.adminConfirmSignUp({
+        //    UserPoolId: environment.cognito.userPoolId,
+        //    Username: params.Username
+        //}).promise();
         cgaddUserRole(params.Username, User.role);
         return cgAdminGetUser(params.Username);
     } catch (err) {

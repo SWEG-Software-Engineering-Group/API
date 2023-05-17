@@ -6,10 +6,8 @@ import { cggetListUserGroups } from 'src/services/userManager';
 import schema from './schema';
 
 const getUserGroups: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  try
-  {
-    if (event.pathParameters.Username == null) 
-    {
+  try {
+    if (event.pathParameters.Username == null) {
       return formatJSONResponse(
         {
           "error": "Missing Username",
@@ -18,7 +16,7 @@ const getUserGroups: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
       );
     }
     let groups = await cggetListUserGroups(event.pathParameters.Username.toString());
-    return formatJSONResponse({groups});
+    return formatJSONResponse({ groups });
   }
   catch (error) {
     return formatJSONResponse(

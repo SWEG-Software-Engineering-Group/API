@@ -5,7 +5,7 @@ import { dbgetSecondaryLanguages } from 'src/services/dbTenant';
 import schema from './schema';
 
 const getTenantLanguages: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  try{
+  try {
     if (event.pathParameters.TenantId == null) {
       return formatJSONResponse(
         {
@@ -14,9 +14,9 @@ const getTenantLanguages: ValidatedEventAPIGatewayProxyEvent<typeof schema> = as
         400
       );
     }
-    let languages=await dbgetSecondaryLanguages(event.pathParameters.TenantId.toString());
-    return formatJSONResponse({languages}, 200);
-  } catch(error){
+    let languages = await dbgetSecondaryLanguages(event.pathParameters.TenantId.toString());
+    return formatJSONResponse({ languages }, 200);
+  } catch (error) {
     console.log(error);
     return formatJSONResponse(
       {
