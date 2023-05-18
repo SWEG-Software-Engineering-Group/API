@@ -1,3 +1,4 @@
+<a name="readme-top"></a>
 # Translatify API
 
 Translatify is a MultiTenant based Web Application used to help organize, manage and translate all kind of Texts in different languages.
@@ -64,7 +65,7 @@ _Below is an example of how you can instruct your audience on installing and set
 
 ### Prerequisites
 
-Make sure you have the latest version of [npm](npm-url).
+Make sure you have the latest version of [npm][npm-url].
 * npm
   ```sh
   npm install npm@latest -g
@@ -72,7 +73,7 @@ Make sure you have the latest version of [npm](npm-url).
 
 ### Installation
 
-1. Download and install [AWS CLI](aws-cli-url)
+1. Download and install [AWS CLI][aws-cli-url]
 2. Clone the repo
    ```sh
    git clone https://github.com/SWEG-Software-Engineering-Group/API.git
