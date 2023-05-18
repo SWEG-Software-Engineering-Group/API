@@ -5,7 +5,7 @@ import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
 const ddbMock = mockClient(DynamoDBDocumentClient);
 //setup of the test environement
 import { ddb } from "../__mocks__/dbConnection";
-import { dbpostOriginalText, utilMergeMeta } from "../dbTextCategory";
+import { dbpostOriginalText, dbpostTranslation, utilMergeMeta } from "../dbTextCategory";
 
 
 var crypto = require('crypto');
@@ -30,7 +30,7 @@ beforeAll(async () => {
             id: categoryID,
             name: tenantdata.categories[0]
         }
-    ]
+    ];
     await ddb
         .put({ TableName: 'TenantTable', Item: tenantdata })
         .promise();
@@ -64,12 +64,38 @@ describe('dbTextCategory file', function () {
             }).resolves({
                 Item: null,
             });
-            try {
-                await dbpostOriginalText(tenantdata.id, title, categoryID, "new Text", "comment", "");
-                expect(true).toBe(false);
-            } catch (error) {
-                expect(true).toBe(true);
-            }
+            await expect(async () => {
+                await dbpostOriginalText(tenantdata.id, title, categoryID, "new Text", "comment", "")
+            })
+                .rejects.toMatchObject({
+                    "error": "tenant does not exist",
+                });
+        });
+    });
+    describe('dbpostTranslation function ', function () {
+        it('tenant doesnt exist', async () => {
+            ddbMock.on(GetCommand).resolves({
+                Item: tenantdata,
+            }).resolvesOnce({
+                Item: null,
+            });
+            await expect(async () => {
+                await dbpostTranslation(tenantdata.id, title, categoryID, "new Text", "comment", "")
+            }).rejects.toMatchObject({
+                "error": "Tenant doesn't exists",
+            });
+        });
+        it('tenant doesnt exist', async () => {
+            ddbMock.on(GetCommand).resolves({
+                Item: tenantdata,
+            }).resolvesOnce({
+                Item: TextCategory,
+            }).resolvesOnce({
+                Item: TextCategoryinfo,
+            });
+            await expect(async () => {
+                await dbpostTranslation(tenantdata.id, title, categoryID, "new Text", "comment", "")
+            }).rejects.toThrow();
         });
     });
 });

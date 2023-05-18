@@ -7,8 +7,10 @@ const ddbMock = mockClient(DynamoDBDocumentClient);
 import { ddb } from "../__mocks__/dbConnection";
 
 import { state } from "../../types/TextCategory";
-import { dbgetAllTexts, dbgetTexts, textsOfState } from "../dbTextCategoryGet";
+import { dbgetAllTexts, dbgetSingleText, dbgetTexts, textsOfState } from "../dbTextCategoryGet";
 import { utilMergeMeta } from "../dbTextCategory";
+import { title } from "process";
+
 var crypto = require('crypto');
 //mock data for the db
 var tenantdata = require("./mockdata/mocktenant1.json");
@@ -94,6 +96,48 @@ describe('dbTextCategory file', function () {
             }
 
 
+        });
+    });
+
+    describe('tenant doesnt exist', function () {
+        it('text is not in tenant', async () => {
+            ddbMock.on(GetCommand).resolvesOnce({
+                Item: null,
+            });
+            await expect(async () => {
+                await dbgetSingleText(tenantdata.id, lang, categoryID, title);
+            }).rejects.toMatchObject({});
+            //let result = await dbgetSingleText(tenantdata.id, lang, categoryID, title);
+            //expect(result[0]).toStrictEqual(utilMergeMeta(TextCategory, [TextCategoryinfo], tenantdata.categories));
+        });
+    });
+    describe('category doesnt exist', function () {
+        it('text is not in tenant', async () => {
+            ddbMock.on(GetCommand).resolvesOnce({
+                Item: tenantdata,
+            }).resolvesOnce({
+                Item: null,
+            });
+            await expect(async () => {
+                await dbgetSingleText(tenantdata.id, lang, categoryID, title);
+            }).rejects.toMatchObject({});
+            //let result = await dbgetSingleText(tenantdata.id, lang, categoryID, title);
+            //expect(result[0]).toStrictEqual(utilMergeMeta(TextCategory, [TextCategoryinfo], tenantdata.categories));
+        });
+    });
+    describe('undefined', function () {
+        it('text is not in tenant', async () => {
+            ddbMock.on(GetCommand).resolvesOnce({
+                Item: tenantdata,
+            }).resolvesOnce({
+                Item: tenantdata,
+            }).resolvesOnce({
+                Item: TextCategory,
+            }).resolvesOnce({
+                Item: TextCategoryinfo,
+            });
+            let result = await dbgetSingleText(tenantdata.id, lang, categoryID, title);
+            expect(result[0]).toBe(undefined);
         });
     });
 
