@@ -34,12 +34,10 @@ Translatify is a MultiTenant based Web Application used to help organize, manage
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Hosted on Amawon Web Services this software offers a multiplatform backend where an organization can add and translate texts in different languages and an API library to allow to retrive the texts in the desired language and use them on their own  Websites and Web Applications as pleased. 
+Hosted on Amazon Web Services this software offers a multiplatform backend where an organization can add and translate texts in different languages and an API library to allow to retrive the texts in the desired language and use them on their own  Websites and Web Applications as pleased. 
 
 ### API
 
