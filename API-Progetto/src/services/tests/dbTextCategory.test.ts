@@ -1,11 +1,11 @@
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { BatchWriteCommand, DynamoDBDocumentClient, GetCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 
 
 const ddbMock = mockClient(DynamoDBDocumentClient);
 //setup of the test environement
 import { ddb } from "../__mocks__/dbConnection";
-import { dbpostOriginalText, dbpostTranslation, utilMergeMeta } from "../dbTextCategory";
+import { dbpostOriginalText, dbpostTranslation, dbputTextCategory, dbputTranslation, updateText, utilMergeMeta } from "../dbTextCategory";
 
 
 var crypto = require('crypto');
@@ -16,7 +16,7 @@ var TextCategory = require("./mockdata/mockTextCategory.json");
 
 var TextCategoryinfo = require("./mockdata/mockTextInfo.json");
 //simpler access to data inside the mock
-// var lang = TextCategory.language_category_title.split("&")[0].split("<")[1];
+var lang = TextCategory.language_category_title.split("&")[0].split("<")[1];
 var categoryID = TextCategory.language_category_title.split("'")[0].split("&")[1];
 var title = TextCategory.language_category_title.split(">")[0].split("'")[1];
 //create e credible UUID
@@ -96,6 +96,51 @@ describe('dbTextCategory file', function () {
             await expect(async () => {
                 await dbpostTranslation(tenantdata.id, title, categoryID, "new Text", "comment", "")
             }).rejects.toThrow();
+        });
+    });
+    describe('dbputTextCategory function ', function () {
+        it('correct function', async () => {
+            ddbMock.on(ScanCommand).resolvesOnce({
+                Items: [TextCategory],
+            }).resolvesOnce({
+                Items: [TextCategoryinfo],
+            });
+            ddbMock.on(BatchWriteCommand).resolves({
+            });
+
+            await dbputTextCategory(tenantdata.id, categoryID, title, categoryID);
+
+            //expect(result).toBe(true);
+        });
+    });
+    describe('dbputOriginalText function ', function () {
+        it('error function', async () => {
+            ddbMock.on(GetCommand).resolvesOnce({
+                Item: tenantdata,
+            }).resolvesOnce({
+                Item: TextCategory,
+            }).resolvesOnce({
+                Item: TextCategoryinfo,
+            });
+
+            await expect(async () => {
+                await dbputTranslation(tenantdata.id, title, categoryID, lang, TextCategory.text, TextCategory.state);
+            }).rejects.toMatchObject({
+                "err": {
+                    "error": "couldn't collect the categories",
+                },
+            });
+        });
+    });
+    describe('updateText function ', function () {
+        it('correct function', async () => {
+            ddbMock.on(GetCommand).resolvesOnce({
+                Item: tenantdata,
+            });
+            await expect(async () => {
+                await updateText(tenantdata.id, title, categoryID, lang, TextCategory.text, TextCategory.state);
+            }).rejects.toMatchObject({});
+
         });
     });
 });
