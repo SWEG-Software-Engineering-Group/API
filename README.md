@@ -56,8 +56,6 @@ _For more examples, please refer to the [Documentation](https://github.com/SWEG-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -96,28 +94,24 @@ Make sure you have the latest version of [npm][npm-url].
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- USAGE EXAMPLES -->
 ## Usage
 
 Import `SWEG.postman_environment.json` and `translatify_postman.json` into Postman.
 Go under environment variables and change the Authentication Token with the one you get afer logging in inside the platform as Admin. Then you can change the other parameters used in the calls on your need.
 
-
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[AWS.com]: https://p.kindpng.com/picc/s/152-1522129_how-to-manage-and-automate-aws-ebs-snapshots.pngstyle=for-the-badge&logo=nextdotjs&logoColor=white
+[AWS.com]: https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white
 [AWS-url]: https://aws.amazon.com/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
-[Node.js]: https://www.extraordy.com/wp-content/uploads/2013/11/nodejs1-300x99.png
+[Node.js]: https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white
 [Node-url]: https://nodejs.org/
-[Typescript.js]: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxKb9uozM0xitpv6k8O016WGAhIJ13ka2s0H1WirPkt4pML3sHYaadM276qBR6afOjmXA
+[Typescript.js]: https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white
 [Typescript-url]: https://www.typescriptlang.org/
 [npm-url]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 [aws-cli-url]: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
