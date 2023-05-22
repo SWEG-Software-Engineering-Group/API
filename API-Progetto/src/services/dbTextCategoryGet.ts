@@ -82,7 +82,6 @@ const dbgetByCategory = async (tenant: string, category: string, language: strin
         if (dbTenant == null)
             throw { "error": "Tenant not found" };
         const categories: Category[] = await (dbgetCategories(tenant));
-        console.log(categories)
         if (categories == null)
             throw { "error": "couldn't collect the categories" };
         // IF Category is not in categories
@@ -92,11 +91,7 @@ const dbgetByCategory = async (tenant: string, category: string, language: strin
             category = categories.find(c => c.name === category).id;
         }
         let stringT = "<" + language + "&" + category + "'" + title + ">"
-        let decodeUri = decodeURI(stringT)
         stringT = stringT.replace(/%20/g, " ");
-        console.log(stringT);
-        console.log(decodeUri)
-        console.log(tenant);
         const getparamT: GetCommandInput = {
             TableName: environment.dynamo.TextCategoryTable.tableName,
             Key: {
@@ -111,10 +106,8 @@ const dbgetByCategory = async (tenant: string, category: string, language: strin
                 language_category_title: stringT,
             }
         };
-        const text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
-        const info = (await ddbDocClient.send(new GetCommand(getparamI))).Item as TextCategoryInfo;
-        console.log(text);
-        console.log(info);
+        let text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
+        let info = (await ddbDocClient.send(new GetCommand(getparamI))).Item as TextCategoryInfo;
         if (text != null) {
             if (text.state === state.verificato) {
                 return ({
@@ -132,14 +125,10 @@ const dbgetByCategory = async (tenant: string, category: string, language: strin
                 console.log("text not verified")
                 let mainlang = dbTenant.defaultLanguage;
                 stringT = "<" + mainlang + "&" + category + "'" + title + ">"
-                console.log("StringT testo non veri:", stringT);
                 getparamI.Key.language_category_title = stringT;
                 getparamT.Key.language_category_title = stringT;
-                const text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
-                const info = (await ddbDocClient.send(new GetCommand(getparamI))).Item as TextCategoryInfo;
-                console.log("Text & Info non veri:")
-                console.log(text);
-                console.log(info);
+                text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
+                info = (await ddbDocClient.send(new GetCommand(getparamI))).Item as TextCategoryInfo;
                 if (text != null) {
                     return ({
                         idTenant: text.idTenant,
@@ -158,8 +147,29 @@ const dbgetByCategory = async (tenant: string, category: string, language: strin
                 }
             }
         } else {
-            console.log("failed to retrieve text")
-            return false;
+            let mainlang = dbTenant.defaultLanguage;
+            stringT = "<" + mainlang + "&" + category + "'" + title + ">"
+            console.log("StringT testo non veri:", stringT);
+            getparamI.Key.language_category_title = stringT;
+            getparamT.Key.language_category_title = stringT;
+            text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
+            info = (await ddbDocClient.send(new GetCommand(getparamI))).Item as TextCategoryInfo;
+            if (text != null) {
+                return ({
+                    idTenant: text.idTenant,
+                    language: decodeURI(mainlang),
+                    category: categories.find(element => element.id === category),
+                    title: decodeURI(title),
+                    text: decodeURI(text.text),
+                    state: text.state,
+                    comment: decodeURI(info.comment),
+                    link: decodeURI(info.link),
+                    feedback: decodeURI(info.feedback),
+                } as Text);
+            } else {
+                console.log("failed to retrieve text")
+                return false;
+            }
         }
 
     } catch (err) {
