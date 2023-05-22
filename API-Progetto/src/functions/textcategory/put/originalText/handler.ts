@@ -1,7 +1,8 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { dbputOriginalText, dbputTextCategory, dbgetSingleText, dbgetTranslationsLanguages, dbpostTranslation, dbdeleteSingleText } from 'src/services/dbTextCategoryPut';
+import { dbputOriginalText, dbputTextCategory, dbpostTranslation, dbdeleteSingleText } from 'src/services/dbTextCategory';
+import { dbgetSingleText, dbgetTranslationsLanguages } from 'src/services/dbTextCategoryGet';
 import { dbAddCategoryToTenant, dbgetTenantinfo } from 'src/services/dbTenant';
 import sanitizeHtml from 'sanitize-html';
 import schema from './schema';

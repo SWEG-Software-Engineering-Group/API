@@ -6,7 +6,7 @@ import { TextCategory, state } from "../../src/types/TextCategory";
 import { Tenant, Category } from "../../src/types/Tenant";
 import { ddbDocClient } from "./dbConnection";
 import { dbgetTenantinfo, dbgetCategories, dbgetDefaultLanguage } from "./dbTenant";
-import { TextCategoryInfo } from "../../src/types/TextCategoryinfo";
+import { TextCategoryInfo } from "../../src/types/TextCategoryInfo";
 import { dbdeleteSingleText, utilMergeMeta } from "./dbTextCategory";
 //---------------------
 //DB functions that will be called by the LAMBDA API calls
@@ -82,11 +82,15 @@ const dbgetByCategory = async (tenant: string, category: string, language: strin
         if (dbTenant == null)
             throw { "error": "Tenant not found" };
         const categories: Category[] = await (dbgetCategories(tenant));
+        console.log(categories)
         if (categories == null)
             throw { "error": "couldn't collect the categories" };
         // IF Category is not in categories
-        if (categories.findIndex(c => c.id === category) === -1)
+        if (categories.findIndex(c => c.name === category) === -1)
             throw { "error": "Category not found" };
+        else {
+            category = categories.find(c => c.name === category).id;
+        }
         let stringT = "<" + language + "&" + category + "'" + title + ">"
         let decodeUri = decodeURI(stringT)
         stringT = stringT.replace(/%20/g, " ");
@@ -128,8 +132,14 @@ const dbgetByCategory = async (tenant: string, category: string, language: strin
                 console.log("text not verified")
                 let mainlang = dbTenant.defaultLanguage;
                 stringT = "<" + mainlang + "&" + category + "'" + title + ">"
+                console.log("StringT testo non veri:", stringT);
+                getparamI.Key.language_category_title = stringT;
+                getparamT.Key.language_category_title = stringT;
                 const text = (await ddbDocClient.send(new GetCommand(getparamT))).Item as TextCategory;
                 const info = (await ddbDocClient.send(new GetCommand(getparamI))).Item as TextCategoryInfo;
+                console.log("Text & Info non veri:")
+                console.log(text);
+                console.log(info);
                 if (text != null) {
                     return ({
                         idTenant: text.idTenant,
